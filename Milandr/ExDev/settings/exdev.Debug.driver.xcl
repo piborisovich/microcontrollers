@@ -1,0 +1,19 @@
+"--endian=little" 
+
+"--cpu=Cortex-M3" 
+
+"--fpu=None" 
+
+"-p" 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\CONFIG\debugger\Milandr\MDR32F9Q2I.ddf" 
+
+"--semihosting" 
+
+"--device=MDR32F9Q2I" 
+
+"--multicore_nr_of_cores=1" 
+
+
+
+
