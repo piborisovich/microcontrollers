@@ -18,13 +18,17 @@
 extern "C" {
 #endif
 
-typedef struct _Serial
+typedef struct _SerialFlags
 {
-	void (*printDateTime)(DATE_TIME_BCD *date_time);
-} Serial;
+	uint8_t rx_flag      : 1;
+	uint8_t rx_cplt_flag : 1;
+	uint8_t empty        : 6;
+} SerialFlags;
 
-void serial_init( UART_HandleTypeDef *huart, Serial* serial );
-
+void serial_init( void (*dateTimeReceivedCallback)(DATE_TIME_BCD *date_time) );
+void serial_process();
+void serial_print_date_time( DATE_TIME_BCD *date_time );
+void serial_print( const char *data );
 
 #ifdef __cplusplus
 }

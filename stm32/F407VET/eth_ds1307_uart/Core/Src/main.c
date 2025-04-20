@@ -33,7 +33,6 @@ typedef struct _TIMERS
 {
 	uint32_t blink_timer;
 	uint32_t serial_sending_period;
-	uint32_t ds307_read_data_period;
 } TIMERS;
 
 /* USER CODE END PTD */
@@ -41,7 +40,6 @@ typedef struct _TIMERS
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define BLINK_PERIOD_MS 100
-#define READ_DS1307_DATA_PERIOD 100
 #define SERIAL_SENDING_PERIOD 1000
 /* USER CODE END PD */
 
@@ -51,15 +49,10 @@ typedef struct _TIMERS
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
 IWDG_HandleTypeDef hiwdg;
-UART_HandleTypeDef huart1;
 
 DATE_TIME_BCD dateTime;
 
-Serial serial;
-
-DS1307 ds1307 = {};
 TIMERS timers = {};
 
 /* USER CODE BEGIN PV */
@@ -70,8 +63,8 @@ extern struct netif gnetif;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_IWDG_Init(void);
-static void MX_I2C1_Init(void);
-static void MX_USART1_UART_Init(void);
+
+void dateTimeReceivedCallback(DATE_TIME_BCD *dateTimeBCD);
 
 /* USER CODE BEGIN PFP */
 
@@ -112,17 +105,15 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_IWDG_Init();
-  MX_I2C1_Init();
-  MX_USART1_UART_Init();
   MX_LWIP_Init();
 
-  DS1307_init( &hi2c1, &ds1307 );
+  DS1307_init();
+  serial_init( dateTimeReceivedCallback );
 
   netif_set_hostname(&gnetif, "STM32F4xx");
 
   /* USER CODE BEGIN 2 */
 
-  serial_init(&huart1, &serial);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -132,6 +123,8 @@ int main(void)
     /* USER CODE END WHILE */
 
 	  MX_LWIP_Process();
+	  DS1307_process();
+	  serial_process();
 
 	  if ( HAL_GetTick() - timers.blink_timer > BLINK_PERIOD_MS ) {
 		  timers.blink_timer = HAL_GetTick();
@@ -142,16 +135,11 @@ int main(void)
 		  }
 	  }
 
-	  if ( HAL_GetTick() - timers.ds307_read_data_period > READ_DS1307_DATA_PERIOD ) {
-		  timers.ds307_read_data_period = HAL_GetTick();
-		  ds1307.regs.read_data();
-	  }
-
 	  if ( HAL_GetTick() - timers.serial_sending_period > SERIAL_SENDING_PERIOD ) {
 		  timers.serial_sending_period = HAL_GetTick();
 
-		  ds1307.regs.get_date_time(&dateTime);
-		  serial.printDateTime(&dateTime);
+		  DS1307_get_datetime(&dateTime);
+		  serial_print_date_time(&dateTime);
 	  }
 
 	  HAL_IWDG_Refresh(&hiwdg);
@@ -267,70 +255,12 @@ static void MX_IWDG_Init(void)
 
 }
 
-static void MX_I2C1_Init(void)
+void dateTimeReceivedCallback(DATE_TIME_BCD *dateTimeBCD)
 {
-
-  /* USER CODE BEGIN I2C1_Init 0 */
-
-  /* USER CODE END I2C1_Init 0 */
-
-  /* USER CODE BEGIN I2C1_Init 1 */
-
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
-
-  /* USER CODE END I2C1_Init 2 */
-
+	dateTime = *dateTimeBCD;
+	DS1307_set_datetime(dateTimeBCD);
+	serial_print("OK\n");
 }
-
-/**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART1_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART1_Init 0 */
-
-  /* USER CODE END USART1_Init 0 */
-
-  /* USER CODE BEGIN USART1_Init 1 */
-
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART1_Init 2 */
-
-  /* USER CODE END USART1_Init 2 */
-
-}
-
-
 
 /* USER CODE BEGIN 4 */
 
