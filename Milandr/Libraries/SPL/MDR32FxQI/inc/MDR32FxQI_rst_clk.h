@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_rst_clk.h
   * @author  Milandr Application Team
-  * @version V2.0.2i
-  * @date    10/03/2022
+  * @version V2.2.0i
+  * @date    24/09/2024
   * @brief   This file contains all the functions prototypes for the RST_CLK
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -77,7 +77,7 @@ typedef enum
                                  ((HSE) == RST_CLK_HSE_ON)  || \
                                  ((HSE) == RST_CLK_HSE_Bypass))
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /**
   * @brief RST_CLK HSE2 (High Speed External 2) clock mode and source selection constants
   */
@@ -91,7 +91,7 @@ typedef enum
 #define IS_RST_CLK_HSE2(HSE2)   (((HSE2) == RST_CLK_HSE2_OFF) || \
                                  ((HSE2) == RST_CLK_HSE2_ON)  || \
                                  ((HSE2) == RST_CLK_HSE2_Bypass))
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /**
   * @brief RST_CLK LSE (Low Speed External) clock mode and source selection constants
@@ -145,8 +145,10 @@ typedef enum
 typedef enum
 {
     RST_CLK_CPU_PLLmul1  = ((uint32_t)0x00),
+#if defined (USE_MDR32F9xI) || defined (USE_MDR32F1QI) || defined (USE_MDR32FG16S1QI)
     RST_CLK_CPU_PLLmul2  = ((uint32_t)0x01),
     RST_CLK_CPU_PLLmul3  = ((uint32_t)0x02),
+#endif
     RST_CLK_CPU_PLLmul4  = ((uint32_t)0x03),
     RST_CLK_CPU_PLLmul5  = ((uint32_t)0x04),
     RST_CLK_CPU_PLLmul6  = ((uint32_t)0x05),
@@ -162,7 +164,12 @@ typedef enum
     RST_CLK_CPU_PLLmul16 = ((uint32_t)0x0F)
 } RST_CLK_CPU_PLL_Multiplier;
 
-#define IS_RST_CLK_CPU_PLL_MUL(SRC)     ((SRC) <= 0x0F)
+#if defined (USE_MDR32F9xI) || defined (USE_MDR32F1QI) || defined (USE_MDR32FG16S1QI)
+    #define IS_RST_CLK_CPU_PLL_MUL(SRC)     ((SRC) <= 0x0F)
+#else
+    #define IS_RST_CLK_CPU_PLL_MUL(SRC)     (((SRC) == 0) || \
+                                            (((SRC) >= 0x03) && ((SRC) <= 0x0F)))
+#endif
 
 /**
   * @brief RST_CLK USB_PLL clock mode and source selection constants
@@ -186,8 +193,10 @@ typedef enum
 typedef enum
 {
     RST_CLK_USB_PLLmul1  = ((uint32_t)0x00),
+#if defined (USE_MDR32F9xI) || defined (USE_MDR32F1QI) || defined (USE_MDR32FG16S1QI)
     RST_CLK_USB_PLLmul2  = ((uint32_t)0x01),
     RST_CLK_USB_PLLmul3  = ((uint32_t)0x02),
+#endif
     RST_CLK_USB_PLLmul4  = ((uint32_t)0x03),
     RST_CLK_USB_PLLmul5  = ((uint32_t)0x04),
     RST_CLK_USB_PLLmul6  = ((uint32_t)0x05),
@@ -203,7 +212,12 @@ typedef enum
     RST_CLK_USB_PLLmul16 = ((uint32_t)0x0F)
 } RST_CLK_USB_PLL_Multiplier;
 
-#define IS_RST_CLK_USB_PLL_MUL(SRC)     ((SRC) <= 0x0F)
+#if defined (USE_MDR32F9xI) || defined (USE_MDR32F1QI) || defined (USE_MDR32FG16S1QI)
+    #define IS_RST_CLK_USB_PLL_MUL(SRC)     ((SRC) <= 0x0F)
+#else
+    #define IS_RST_CLK_USB_PLL_MUL(SRC)     (((SRC) == 0) || \
+                                            (((SRC) >= 0x03) && ((SRC) <= 0x0F)))
+#endif
 
 /**
   * @brief RST_CLK CPU_PLL output clock CPU_CLK_DIV divider constants
@@ -474,6 +488,78 @@ typedef enum
                                          ((PRESCALER) == DSP_PRESCALER2))
 #endif /* #if defined (USE_MDR32FG16S1QI) */
 
+#if (defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI))
+/**
+ * @brief RST_CLK DMA_DONE_STICK channels.
+ */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_UART1_TX   RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK0  /*!< DMA_DONE signal fixation for channel 0. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_UART1_RX   RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK1  /*!< DMA_DONE signal fixation for channel 1. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_UART2_TX   RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK2  /*!< DMA_DONE signal fixation for channel 2. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_UART2_RX   RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK3  /*!< DMA_DONE signal fixation for channel 3. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_SSP1_TX    RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK4  /*!< DMA_DONE signal fixation for channel 4. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_SSP1_RX    RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK5  /*!< DMA_DONE signal fixation for channel 5. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_SSP2_TX    RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK6  /*!< DMA_DONE signal fixation for channel 6. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_SSP2_RX    RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK7  /*!< DMA_DONE signal fixation for channel 7. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_SSP3_TX    RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK8  /*!< DMA_DONE signal fixation for channel 8. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_SSP3_RX    RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK9  /*!< DMA_DONE signal fixation for channel 9. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1       RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK10 /*!< DMA_DONE signal fixation for channel 10. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2       RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK11 /*!< DMA_DONE signal fixation for channel 11. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3       RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK12 /*!< DMA_DONE signal fixation for channel 12. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4       RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK13 /*!< DMA_DONE signal fixation for channel 13. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ1  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK14 /*!< DMA_DONE signal fixation for channel 14. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ2  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK15 /*!< DMA_DONE signal fixation for channel 15. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ3  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK16 /*!< DMA_DONE signal fixation for channel 16. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ4  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK17 /*!< DMA_DONE signal fixation for channel 17. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ1  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK18 /*!< DMA_DONE signal fixation for channel 18. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ2  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK19 /*!< DMA_DONE signal fixation for channel 19. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ3  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK20 /*!< DMA_DONE signal fixation for channel 20. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ4  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK21 /*!< DMA_DONE signal fixation for channel 21. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ1  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK22 /*!< DMA_DONE signal fixation for channel 22. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ2  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK23 /*!< DMA_DONE signal fixation for channel 23. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ3  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK24 /*!< DMA_DONE signal fixation for channel 24. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ4  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK25 /*!< DMA_DONE signal fixation for channel 25. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ1  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK26 /*!< DMA_DONE signal fixation for channel 26. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ2  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK27 /*!< DMA_DONE signal fixation for channel 27. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ3  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK28 /*!< DMA_DONE signal fixation for channel 28. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ4  RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK29 /*!< DMA_DONE signal fixation for channel 29. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_ADC        RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK30 /*!< DMA_DONE signal fixation for channel 30. */
+#define RST_CLK_DMA_DONE_STICK_CHANNEL_SW1        RST_CLK_DMA_DONE_STICK_DMA_DONE_STICK31  /*!< DMA_DONE signal fixation for channel 31. */
+
+
+#define IS_RST_CLK_DMA_DONE_STICK_CHANNEL(CH) (((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_UART1_TX)  || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_UART1_RX)  || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_UART2_TX)  || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_UART2_RX)  || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_SSP1_TX)   || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_SSP1_RX)   || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_SSP2_TX)   || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_SSP2_RX)   || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_SSP3_TX)   || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_SSP3_RX)   || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1)      || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2)      || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3)      || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4)      || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ1) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ2) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ3) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM1_REQ4) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ1) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ2) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ3) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM2_REQ4) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ1) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ2) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ3) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM3_REQ4) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ1) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ2) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ3) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_TIM4_REQ4) || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_ADC)       || \
+                                               ((CH) == RST_CLK_DMA_DONE_STICK_CHANNEL_SW1))
+#endif /* #if defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI) */
+
 /** @} */ /* End of group RST_CLK_Exported_Types */
 
 
@@ -491,7 +577,7 @@ typedef enum
 
 #define PCLK_BIT(BASE)                  ((uint32_t)(1U << ((((uint32_t)BASE) >> 15) & 0x1F)))
 
-#if defined (USE_MDR32F9Q2I)
+#if defined (USE_K1986VE9xI)
 
     #define RST_CLK_PCLK_CAN1           PCLK_BIT(MDR_CAN1_BASE)
     #define RST_CLK_PCLK_CAN2           PCLK_BIT(MDR_CAN2_BASE)
@@ -531,7 +617,7 @@ typedef enum
                                          (((PCLK) & RST_CLK_PCLK_26) == 0x00) && \
                                          (((PCLK) & RST_CLK_PCLK_28) == 0x00) && \
                                          (((PCLK) & RST_CLK_PCLK_31) == 0x00))
-#endif /* #if defined (USE_MDR32F9Q2I) */
+#endif /* #if defined (USE_K1986VE9xI) */
 
 #if defined (USE_MDR32FG16S1QI)
 
@@ -573,7 +659,7 @@ typedef enum
 #endif /* #if defined (USE_MDR32FG16S1QI) */
 
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     #define RST_CLK_PCLK_CAN1           PCLK_BIT(MDR_CAN1_BASE)
     #define RST_CLK_PCLK_CAN2           PCLK_BIT(MDR_CAN2_BASE)
     #define RST_CLK_PCLK_USB            PCLK_BIT(MDR_USB_BASE)
@@ -609,7 +695,7 @@ typedef enum
 
 
     #define IS_RST_CLK_PCLK(PCLK)       (((PCLK) & ~0xFFFFFFFF) == 0)
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group CLK_peripheral */
 
@@ -628,10 +714,10 @@ void RST_CLK_WarmDeInit(void);
 
 void RST_CLK_HSEconfig(RST_CLK_HSE_Mode RST_CLK_HSE);
 ErrorStatus RST_CLK_HSEstatus(void);
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     void RST_CLK_HSE2config(RST_CLK_HSE2_Mode RST_CLK_HSE2);
     ErrorStatus RST_CLK_HSE2status(void);
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 void RST_CLK_LSEconfig(RST_CLK_LSE_Mode RST_CLK_LSE);
 ErrorStatus RST_CLK_LSEstatus(void);
@@ -695,6 +781,12 @@ FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
     void RST_CLK_DSPCmd(FunctionalState NewState);
 #endif /* #if defined (USE_MDR32FG16S1QI) */
 
+#if defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI)
+FlagStatus RST_CLK_DMADone_GetFlagStatus(uint32_t Channel);
+uint32_t   RST_CLK_DMADone_GetStatus(void);
+void       RST_CLK_DMADone_ClearFlags(uint32_t Channels);
+#endif /* #if defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI) */
+
 /** @} */ /* End of group RST_CLK_Exported_Functions */
 
 /** @} */ /* End of group RST_CLK */
@@ -707,8 +799,7 @@ FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
 
 #endif /* __MDR32FxQI_RST_CLK_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_rst_clk.h */
-
 

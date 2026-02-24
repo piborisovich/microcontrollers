@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -173,7 +173,7 @@ FlagStatus IWDG_GetFlagStatus(IWDG_Flags IWDG_FLAG)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_iwdg.c */
 

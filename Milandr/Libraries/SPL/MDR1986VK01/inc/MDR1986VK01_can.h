@@ -2,21 +2,21 @@
   ******************************************************************************
   * @file    MDR1986VK01_can.h
   * @author  Milandr Application Team
-  * @version V1.1.0
-  * @date    06/04/2022
+  * @version V1.1.1
+  * @date    19/01/2024
   * @brief   This file contains all the functions prototypes for the CAN
   *          firmware library.
   ******************************************************************************
   * <br><br>
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   * FILE MDR1986VK01_can.h
   */
@@ -183,8 +183,8 @@ typedef struct
   * @{
   */
 
-#define IS_CAN_ALL_PERIPH(PERIPH)          (((PERIPH) == MDR_CAN1) || \
-                                            ((PERIPH) == MDR_CAN2))
+#define IS_CAN_ALL_PERIPH(PERIPH)          (((PERIPH) == MDR_CAN0) || \
+                                            ((PERIPH) == MDR_CAN1))
 
 /** @defgroup CAN_Propagation_time CAN Propagation time
   * @{
@@ -517,7 +517,7 @@ void CAN_BRGInit(MDR_CAN_TypeDef* CANx, uint32_t CAN_BRG);
 
 #endif /* __MDR1986VK01_CAN_H */
 
-/******************* (C) COPYRIGHT 2023 Milandr *********
+/******************* (C) COPYRIGHT 2025 Milandr *********
 *
 * END OF FILE MDR1986VK01_can.h */
 

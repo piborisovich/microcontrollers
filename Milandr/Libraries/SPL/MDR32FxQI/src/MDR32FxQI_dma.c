@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_dma.c
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    14/02/2023
+  * @version V2.1.1i
+  * @date    23/07/2024
   * @brief   This file contains all the DMA firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -38,39 +38,60 @@
   * @brief DMA Channel Control Data Table
   */
 
-/* Select data alignment */
-#if (DMA_Channels_Number == 1)
-    #define DATA_ALIGN 32
-#elif (DMA_Channels_Number == 2)
-    #define DATA_ALIGN 64
-#elif ((DMA_Channels_Number >= 3) && (DMA_Channels_Number <= 4))
-    #define DATA_ALIGN 128
-#elif ((DMA_Channels_Number >= 5) && (DMA_Channels_Number <= 8))
-    #define DATA_ALIGN 256
-#elif ((DMA_Channels_Number >= 9) && (DMA_Channels_Number <= 16))
-    #define DATA_ALIGN 512
-#elif ((DMA_Channels_Number >= 17) && (DMA_Channels_Number <= 32))
-    #define DATA_ALIGN 1024
-#endif
-
 #if defined (__ICCARM__) /* IAR Compiler */
-    #pragma data_alignment = DATA_ALIGN
-    #if defined (USE_MDR32F1QI)
-        DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number * (1 + DMA_AlternateData)] IAR_SECTION ("EXECUTABLE_MEMORY_SECTION");
+    #pragma data_alignment = 1024
+    #if defined (USE_K1986VE1xI)
+        #if (DMA_AlternateData == 0)
+            DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number] IAR_SECTION ("EXECUTABLE_MEMORY_SECTION");
+        #endif
+        #if (DMA_AlternateData == 1)
+            DMA_CtrlDataTypeDef DMA_ControlTable[(32 * DMA_AlternateData) + DMA_Channels_Number] IAR_SECTION ("EXECUTABLE_MEMORY_SECTION");
+        #endif
     #else
-        DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number * (1 + DMA_AlternateData)];
-    #endif
+        #if (DMA_AlternateData == 0)
+            DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number];
+        #endif
+        #if (DMA_AlternateData == 1)
+            DMA_CtrlDataTypeDef DMA_ControlTable[(32 * DMA_AlternateData) + DMA_Channels_Number];
+        #endif		
+    #endif /* #if defined (USE_K1986VE1xI) */
 
 #elif defined (__CMCARM__) /* Phyton CMC-ARM Compiler */
-    #pragma locate DMA_ControlTable 0x20000000 noinit
-    DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number * (1 + DMA_AlternateData)];
+    #if defined (USE_K1986VE1xI)
+    #pragma locate DMA_ControlTable 0x20100000 noinit
+        #if (DMA_AlternateData == 0)
+            DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number];
+        #endif
+        #if (DMA_AlternateData == 1)
+            DMA_CtrlDataTypeDef DMA_ControlTable[(32 * DMA_AlternateData) + DMA_Channels_Number];
+        #endif
+        #else
+        #pragma locate DMA_ControlTable 0x20000000 noinit
+        #if (DMA_AlternateData == 0)
+            DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number];
+        #endif
+        #if (DMA_AlternateData == 1)
+            DMA_CtrlDataTypeDef DMA_ControlTable[(32 * DMA_AlternateData) + DMA_Channels_Number];
+        #endif
+    #endif /* #if defined (USE_K1986VE1xI) */
 
 #elif defined (__ARMCC_VERSION) /* ARM Compiler */
-    #if defined (USE_MDR32F1QI)
-        DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number * (1 + DMA_AlternateData)] __attribute__((section("EXECUTABLE_MEMORY_SECTION"))) __attribute__ ((aligned (DATA_ALIGN)));
+    #if defined (USE_K1986VE1xI)
+        #if (DMA_AlternateData == 0)
+            DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number] __attribute__((section("EXECUTABLE_MEMORY_SECTION"))) __attribute__ ((aligned (1024)));
+        #endif
+        #if (DMA_AlternateData == 1)
+            DMA_CtrlDataTypeDef DMA_ControlTable[(32 * DMA_AlternateData) + DMA_Channels_Number] __attribute__((section("EXECUTABLE_MEMORY_SECTION"))) __attribute__ ((aligned (1024)));
+        #endif
     #else
-        DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number * (1 + DMA_AlternateData)] __attribute__ ((aligned (DATA_ALIGN)));
-    #endif
+        #if (DMA_AlternateData == 0)
+            DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number] __attribute__ ((aligned (1024)));
+        #endif
+        #if (DMA_AlternateData == 1)
+            DMA_CtrlDataTypeDef DMA_ControlTable[(32 * DMA_AlternateData) + DMA_Channels_Number] __attribute__ ((aligned (1024)));
+        #endif
+    #endif /* #if defined (USE_K1986VE1xI) */
+
 #endif
 
 /** @} */ /* End of group DMA_Private_Variables */
@@ -554,7 +575,7 @@ FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_dma.c */
 

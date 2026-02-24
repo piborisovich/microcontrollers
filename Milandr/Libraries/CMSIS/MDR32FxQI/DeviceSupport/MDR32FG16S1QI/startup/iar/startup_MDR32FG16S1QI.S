@@ -5,7 +5,7 @@
 ; * @brief	CMSIS Cortex-CM3 Peripheral Access Layer Header File for
 ; * 		MDR32FG16S1QI from Milandr
 ; * @version	1.0
-; * @date	2014-02-06
+; * @date	2024-07-22
 ; *****************************************************************************
 ; * <br><br>
 ; *
@@ -16,7 +16,7 @@
 ; * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
 ; * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
 ; *
-; * <h2><center>&copy; COPYRIGHT {YYYY} Milandr </center></h2>
+; * <h2><center>&copy; COPYRIGHT 2025 Milandr </center></h2>
 ; *****************************************************************************
 ; * FILE startup_MDR32FG16S1QI.s
 ; */
@@ -34,6 +34,9 @@
         PUBLIC  __vector_table
 
         DATA
+
+; Attention for NonMaskableInt_Handler:
+; Called by software only (bit [31] of the ICSR register). Used for mission critical applications
 __vector_table
                  DCD     sfe(CSTACK)                  ; Top of Stack
                  DCD     Reset_Handler                ; Reset Handler
@@ -306,3 +309,5 @@ EXT_INT4_IRQHandler
 		   BL EXT_INT4_IRQHandler
 
 	END
+
+

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_can.h
   * @author  Milandr Application Team
-  * @version V2.0.0i
-  * @date    10/03/2022
+  * @version V2.1.1i
+  * @date    23/03/2024
   * @brief   This file contains all the functions prototypes for the CAN
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -35,7 +35,7 @@ extern "C" {
   * @{
   */
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_K1986VE1xI)
 
 /** @addtogroup CAN
   * @{
@@ -523,7 +523,7 @@ void CAN_BRGInit(MDR_CAN_TypeDef* CANx, CAN_Clock_BRG CAN_BRG);
 
 /** @} */ /* End of group CAN */
 
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
@@ -533,7 +533,7 @@ void CAN_BRGInit(MDR_CAN_TypeDef* CANx, CAN_Clock_BRG CAN_BRG);
 
 #endif /* __MDR32FxQI_CAN_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_can.h */
 

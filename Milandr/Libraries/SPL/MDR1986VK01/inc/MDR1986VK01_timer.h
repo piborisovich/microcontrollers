@@ -2,21 +2,21 @@
   ******************************************************************************
   * @file	 MDR1986VK01_timer.h
   * @author	 Milandr Application Team
-  * @version V1.1.0
-  * @date    06/04/2022
+  * @version V1.1.1
+  * @date    19/01/2024
   * @brief   This file contains all the functions prototypes for the TIMER
   * 		 firmware library.
   ******************************************************************************
   * <br><br>
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr </center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr </center></h2>
   ******************************************************************************
   * FILE MDR1986VK01_timer.h
   */
@@ -393,7 +393,7 @@ typedef struct
 #define IS_TIMER_ALL_PERIPH(PERIPH) (((PERIPH) == MDR_TIMER0) || \
             ((PERIPH) == MDR_TIMER1) || \
                 ((PERIPH) == MDR_TIMER2) || \
-                    ((PERIPH) == MDR_TIMER3)))
+                    ((PERIPH) == MDR_TIMER3))
 
 /** @defgroup TIMER_Counter_Mode TIMER Counter Mode
 * @{
@@ -448,8 +448,8 @@ typedef struct
                 ((SOURCE) == TIMER_EvSrc_CH2 ) || \
                     ((SOURCE) == TIMER_EvSrc_CH3 ) || \
                         ((SOURCE) == TIMER_EvSrc_CH4 ) || \
-                            ((SOURCE) == TIMER_EvSrc_ETR_RE )) || \
-                                ((SOURCE) == TIMER_EvSrc_ETR_FE )) || \
+                            ((SOURCE) == TIMER_EvSrc_ETR_RE ) || \
+                                ((SOURCE) == TIMER_EvSrc_ETR_FE ) || \
                                     ((SOURCE) == TIMER_EvSrc_TM3 ))
 
 /** @} */ /* End of group TIMER_Event_Source */
@@ -786,23 +786,23 @@ typedef struct
 * @{
 */
 
-#define TIMER_STATUS_CNT_ZERO                 (((uint32_t)0x1) <<  0) /*!< The (CNT == 0) condition occured. */
-#define TIMER_STATUS_CNT_ARR                  (((uint32_t)0x1) <<  1) /*!< The (CNT == ARR) condition occured. */
-#define TIMER_STATUS_ETR_RISING_EDGE          (((uint32_t)0x1) <<  2) /*!< The ETR rising edge occured. */
-#define TIMER_STATUS_ETR_FALLING_EDGE         (((uint32_t)0x1) <<  3) /*!< The ETR falling edge occured. */
-#define TIMER_STATUS_BRK                      (((uint32_t)0x1) <<  4) /*!< The (BRK == 1) condition occured. */
-#define TIMER_STATUS_CCR_CAP_CH1              (((uint32_t)0x1) <<  5) /*!< The Channel 1 CCR capture condition occured. */
-#define TIMER_STATUS_CCR_CAP_CH2              (((uint32_t)0x1) <<  6) /*!< The Channel 2 CCR capture condition occured. */
-#define TIMER_STATUS_CCR_CAP_CH3              (((uint32_t)0x1) <<  7) /*!< The Channel 3 CCR capture condition occured. */
-#define TIMER_STATUS_CCR_CAP_CH4              (((uint32_t)0x1) <<  8) /*!< The Channel 4 CCR capture condition occured. */
-#define TIMER_STATUS_CCR_REF_CH1              (((uint32_t)0x1) <<  9) /*!< The Channel 1 (REF == 1) condition occured. */
-#define TIMER_STATUS_CCR_REF_CH2              (((uint32_t)0x1) << 10) /*!< The Channel 2 (REF == 1) condition occured. */
-#define TIMER_STATUS_CCR_REF_CH3              (((uint32_t)0x1) << 11) /*!< The Channel 3 (REF == 1) condition occured. */
-#define TIMER_STATUS_CCR_REF_CH4              (((uint32_t)0x1) << 12) /*!< The Channel 4 (REF == 1) condition occured. */
-#define TIMER_STATUS_CCR_CAP1_CH1             (((uint32_t)0x1) << 13) /*!< The Channel 1 CCR1 capture condition occured. */
-#define TIMER_STATUS_CCR_CAP1_CH2             (((uint32_t)0x1) << 14) /*!< The Channel 2 CCR1 capture condition occured. */
-#define TIMER_STATUS_CCR_CAP1_CH3             (((uint32_t)0x1) << 15) /*!< The Channel 3 CCR1 capture condition occured. */
-#define TIMER_STATUS_CCR_CAP1_CH4             (((uint32_t)0x1) << 16) /*!< The Channel 4 CCR1 capture condition occured. */
+#define TIMER_STATUS_CNT_ZERO                 (((uint32_t)0x1) <<  0) /*!< The (CNT == 0) condition occurred. */
+#define TIMER_STATUS_CNT_ARR                  (((uint32_t)0x1) <<  1) /*!< The (CNT == ARR) condition occurred. */
+#define TIMER_STATUS_ETR_RISING_EDGE          (((uint32_t)0x1) <<  2) /*!< The ETR rising edge occurred. */
+#define TIMER_STATUS_ETR_FALLING_EDGE         (((uint32_t)0x1) <<  3) /*!< The ETR falling edge occurred. */
+#define TIMER_STATUS_BRK                      (((uint32_t)0x1) <<  4) /*!< The (BRK == 1) condition occurred. */
+#define TIMER_STATUS_CCR_CAP_CH1              (((uint32_t)0x1) <<  5) /*!< The Channel 1 CCR capture condition occurred. */
+#define TIMER_STATUS_CCR_CAP_CH2              (((uint32_t)0x1) <<  6) /*!< The Channel 2 CCR capture condition occurred. */
+#define TIMER_STATUS_CCR_CAP_CH3              (((uint32_t)0x1) <<  7) /*!< The Channel 3 CCR capture condition occurred. */
+#define TIMER_STATUS_CCR_CAP_CH4              (((uint32_t)0x1) <<  8) /*!< The Channel 4 CCR capture condition occurred. */
+#define TIMER_STATUS_CCR_REF_CH1              (((uint32_t)0x1) <<  9) /*!< The Channel 1 (REF == 1) condition occurred. */
+#define TIMER_STATUS_CCR_REF_CH2              (((uint32_t)0x1) << 10) /*!< The Channel 2 (REF == 1) condition occurred. */
+#define TIMER_STATUS_CCR_REF_CH3              (((uint32_t)0x1) << 11) /*!< The Channel 3 (REF == 1) condition occurred. */
+#define TIMER_STATUS_CCR_REF_CH4              (((uint32_t)0x1) << 12) /*!< The Channel 4 (REF == 1) condition occurred. */
+#define TIMER_STATUS_CCR_CAP1_CH1             (((uint32_t)0x1) << 13) /*!< The Channel 1 CCR1 capture condition occurred. */
+#define TIMER_STATUS_CCR_CAP1_CH2             (((uint32_t)0x1) << 14) /*!< The Channel 2 CCR1 capture condition occurred. */
+#define TIMER_STATUS_CCR_CAP1_CH3             (((uint32_t)0x1) << 15) /*!< The Channel 3 CCR1 capture condition occurred. */
+#define TIMER_STATUS_CCR_CAP1_CH4             (((uint32_t)0x1) << 16) /*!< The Channel 4 CCR1 capture condition occurred. */
 
 #define TIMER_STATUS_Msk                      (TIMER_STATUS_CNT_ZERO         | \
 TIMER_STATUS_CNT_ARR          | \
@@ -874,23 +874,23 @@ TIMER_STATUS_CNT_ARR          | \
 * @param  TIMERx: where x can be 0 to 3 to select the TIMER peripheral.
 * @param  TIMER_IT: specifies the pending bit to clear.
 *         This parameter can be any combination of the TIMER_StatusFlags:
-*           @arg TIMER_STATUS_CNT_ZERO:         the (CNT == 0) condition occured;
-*           @arg TIMER_STATUS_CNT_ARR:          the (CNT == ARR) condition occured;
-*           @arg TIMER_STATUS_ETR_RISING_EDGE:  the ETR rising edge occured;
-*           @arg TIMER_STATUS_ETR_FALLING_EDGE: the ETR falling edge occured;
-*           @arg TIMER_STATUS_BRK:              the (BRK == 1) condition occured;
-*           @arg TIMER_STATUS_CCR_CAP_CH1:      the Channel 1 CCR capture condition occured;
-*           @arg TIMER_STATUS_CCR_CAP_CH2:      the Channel 2 CCR capture condition occured;
-*           @arg TIMER_STATUS_CCR_CAP_CH3:      the Channel 3 CCR capture condition occured;
-*           @arg TIMER_STATUS_CCR_CAP_CH4:      the Channel 4 CCR capture condition occured;
-*           @arg TIMER_STATUS_CCR_REF_CH1:      the Channel 1 (REF == 1) condition occured;
-*           @arg TIMER_STATUS_CCR_REF_CH2:      the Channel 2 (REF == 1) condition occured;
-*           @arg TIMER_STATUS_CCR_REF_CH3:      the Channel 3 (REF == 1) condition occured;
-*           @arg TIMER_STATUS_CCR_REF_CH4:      the Channel 4 (REF == 1) condition occured;
-*           @arg TIMER_STATUS_CCR_CAP1_CH1:     the Channel 1 CCR1 capture condition occured;
-*           @arg TIMER_STATUS_CCR_CAP1_CH2:     the Channel 2 CCR1 capture condition occured;
-*           @arg TIMER_STATUS_CCR_CAP1_CH3:     the Channel 3 CCR1 capture condition occured;
-*           @arg TIMER_STATUS_CCR_CAP1_CH4:     the Channel 4 CCR1 capture condition occured.
+*           @arg TIMER_STATUS_CNT_ZERO:         the (CNT == 0) condition occurred;
+*           @arg TIMER_STATUS_CNT_ARR:          the (CNT == ARR) condition occurred;
+*           @arg TIMER_STATUS_ETR_RISING_EDGE:  the ETR rising edge occurred;
+*           @arg TIMER_STATUS_ETR_FALLING_EDGE: the ETR falling edge occurred;
+*           @arg TIMER_STATUS_BRK:              the (BRK == 1) condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP_CH1:      the Channel 1 CCR capture condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP_CH2:      the Channel 2 CCR capture condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP_CH3:      the Channel 3 CCR capture condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP_CH4:      the Channel 4 CCR capture condition occurred;
+*           @arg TIMER_STATUS_CCR_REF_CH1:      the Channel 1 (REF == 1) condition occurred;
+*           @arg TIMER_STATUS_CCR_REF_CH2:      the Channel 2 (REF == 1) condition occurred;
+*           @arg TIMER_STATUS_CCR_REF_CH3:      the Channel 3 (REF == 1) condition occurred;
+*           @arg TIMER_STATUS_CCR_REF_CH4:      the Channel 4 (REF == 1) condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP1_CH1:     the Channel 1 CCR1 capture condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP1_CH2:     the Channel 2 CCR1 capture condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP1_CH3:     the Channel 3 CCR1 capture condition occurred;
+*           @arg TIMER_STATUS_CCR_CAP1_CH4:     the Channel 4 CCR1 capture condition occurred.
 * @retval None
 */
 #define TIMER_ClearITPendingBit(TIMERx, TIMER_IT) TIMER_ClearFlag(TIMERx, TIMER_IT)
@@ -975,7 +975,7 @@ void TIMER_BRGInit(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_BRG);
 
 #endif /* __MDR1986VK01_TIMER_H */
 
-/******************* (C) COPYRIGHT 2023 Milandr *********************************
+/******************* (C) COPYRIGHT 2025 Milandr *********************************
 *
 * END OF FILE MDR1986VK01_timer.h */
 

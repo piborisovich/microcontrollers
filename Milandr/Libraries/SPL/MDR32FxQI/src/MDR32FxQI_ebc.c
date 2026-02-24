@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_ebc.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    25/04/2023
+  * @version V2.1.1i
+  * @date    24/07/2024
   * @brief   This file contains all the ADC firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -58,7 +58,7 @@ void EBC_DeInit(void)
     MDR_EBC->CONTROL     = 0;
     MDR_EBC->NAND_CYCLES = 0;
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI) || (defined (USE_K1986VE9xI) && !defined(USE_MDR32F9xI))
     MDR_EBC->MEM_REGION[0] = 0;
     MDR_EBC->MEM_REGION[1] = 0;
     MDR_EBC->MEM_REGION[2] = 0;
@@ -95,7 +95,7 @@ void EBC_Init(const EBC_InitTypeDef* EBC_InitStruct)
                    | (EBC_InitStruct->EBC_Cpol)
                    | (EBC_InitStruct->EBC_WaitState << EBC_CONTROL_WAIT_STATE_Pos);
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI) || (defined (USE_K1986VE9xI) && !defined(USE_MDR32F9xI))
     /* Using the alignment data by LSB EBC */
     tmpreg_CONTROL |= EBC_InitStruct->EBC_DataAlignment;
 #endif
@@ -133,7 +133,7 @@ void EBC_StructInit(EBC_InitTypeDef* EBC_InitStruct)
     EBC_InitStruct->EBC_NandTwhr      = EBC_NAND_CYCLES_0HCLK;
     EBC_InitStruct->EBC_NandTalea     = EBC_NAND_CYCLES_0HCLK;
     EBC_InitStruct->EBC_NandTrr       = EBC_NAND_CYCLES_0HCLK;
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI) || (defined (USE_K1986VE9xI) && !defined(USE_MDR32F9xI))
     EBC_InitStruct->EBC_DataAlignment = EBC_EBC_DATA_ALIGNMENT_OFF;
     EBC_InitStruct->EBC_UseMemRegion  = EBC_USE_MEM_REGION_NONE;
 #endif
@@ -233,10 +233,10 @@ FlagStatus EBC_GetBusyStatus(void)
     return tmpreg_BUSY_STS;
 }
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI) || (defined (USE_K1986VE9xI) && !defined(USE_MDR32F9xI))
 /**
   * @brief   Fills each EBC_MemRegionInitStruct member with its default value.
-  * @warning This function can be used only for MCU MDR32F1QI
+  * @warning This function can be used only for MCU MDR32F1QI, K1986VE1xI and K1986VE9xI
   * @param   EBC_MemRegionInitStruct: pointer to a @ref EBC_MemRegionInitTypeDef
   *          structure which will be initialized.
   * @retval  None
@@ -254,7 +254,7 @@ void EBC_MemRegionStructInit(EBC_MemRegionInitTypeDef * EBC_MemRegionInitStruct)
 /**
   * @brief   Initializes the EBC Memory Region according to the specified
   *          parameters in the EBC_MemRegionInitStruct.
-  * @warning This function can be used only for MCU MDR32F1QI
+  * @warning This function can be used only for MCU MDR32F1QI, K1986VE1xI and K1986VE9xI
   * @param   EBC_MemRegionInitStruct: pointer to a @ref EBC_MemRegionInitTypeDef structure that
   *          contains the configuration information for the specified EBC Memory Region.
   * @param   EBC_MEM_REGIONx - @ref EBC_Mem_Region_Select - Select the specified memory region.
@@ -283,7 +283,7 @@ void EBC_MemRegionInit(EBC_MemRegionInitTypeDef* EBC_MemRegionInitStruct, EBC_Me
 
 /**
   * @brief   Enables or disables the specified EBC Memory Region settigs.
-  * @warning This function can be used only for MCU MDR32F1QI
+  * @warning This function can be used only for MCU MDR32F1QI, K1986VE1xI and K1986VE9xI
   * @param   EBC_MEM_REGIONx - @ref EBC_Mem_Region_Select - Select the specified memory region.
   * @param   NewState - @ref FunctionalState - new state of the EBC Memory Region settings.
   * @retval  None
@@ -306,7 +306,7 @@ void EBC_MemRegionCMD(EBC_Mem_Region_Select EBC_MEM_REGIONx, FunctionalState New
     }
 }
 
-#endif /* defined (USE_MDR32F1QI) */
+#endif /* defined (USE_K1986VE1xI) || (defined (USE_K1986VE9xI) && !defined(USE_MDR32F9xI)) */
 
 /** @} */ /* End of group EBC_Exported_Functions */
 
@@ -314,8 +314,7 @@ void EBC_MemRegionCMD(EBC_Mem_Region_Select EBC_MEM_REGIONx, FunctionalState New
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_ebc.c */
-
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_eth.h
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    06/07/2023
+  * @version V2.1.1i
+  * @date    23/07/2024
   * @brief   This file contains all the functions prototypes for the ETHERNET
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -35,7 +35,7 @@ extern "C" {
   * @{
   */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /** @addtogroup ETHERNET
   * @{
   */
@@ -582,7 +582,7 @@ FlagStatus ETH_GetFlagStatus(MDR_ETHERNET_TypeDef * ETHERNETx, uint16_t ETH_MAC_
 
 /** @} */ /* End of group ETH_Exported_Functions */
 
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group ETHERNET */
 
@@ -594,7 +594,7 @@ FlagStatus ETH_GetFlagStatus(MDR_ETHERNET_TypeDef * ETHERNETx, uint16_t ETH_MAC_
 
 #endif /* __MDR32FxQI_ETH_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_eth.h */
 

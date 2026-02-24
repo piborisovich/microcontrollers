@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_dma.h
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    30/06/2023
+  * @version V2.2.1i
+  * @date    23/03/2024
   * @brief   This file contains all the functions prototypes for the DMA
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -60,7 +60,7 @@ typedef enum
   */
 typedef enum
 {
-#if defined (USE_MDR32F9Q2I)
+#if defined (USE_K1986VE9xI)
     DMA_Channel_UART1_TX = ((uint8_t)(0)),
     DMA_Channel_UART1_RX = ((uint8_t)(1)),
     DMA_Channel_UART2_TX = ((uint8_t)(2)),
@@ -93,7 +93,7 @@ typedef enum
     DMA_Channel_SW17     = ((uint8_t)(29)),
     DMA_Channel_SW18     = ((uint8_t)(30)),
     DMA_Channel_SW19     = ((uint8_t)(31)),
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
 /*-- req DMA request ---------------------------------------------------------*/
     DMA_Channel_REQ_UART1_TX = ((uint8_t)(0)),
     DMA_Channel_REQ_UART1_RX = ((uint8_t)(1)),
@@ -518,10 +518,6 @@ typedef struct
   * @{
   */
 
-#if (DMA_AlternateData == 1)
-#define DMA_Channels_Number 32
-#endif
-
 #define IS_DMA_CHANNELS(NUMBER) (((NUMBER) >= 1) && ((NUMBER) <= 32))
 
 /** @} */ /* End of group DMA_channels_number */
@@ -597,7 +593,7 @@ FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
 
 #endif /* __MDR32FxQI_DMA_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_dma.h */
 

@@ -3,8 +3,8 @@
   * @file    MDR32F1QI_IT.h
   * @author  Milandr Application Team
   * @version V2.0.0i
-  * @date    14/03/2022
-  * @brief   Main Interrupt Service Routines for MPU MDR32F1QI.
+  * @date    24/07/2024
+  * @brief   Main Interrupt Service Routines for MCU MDR32F1QI.
   ******************************************************************************
   * <br><br>
   *
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -489,8 +489,7 @@ void Hard_fault_handler_c(unsigned int* hardfault_args)
 
 #endif /* #if defined (USE_MDR32F1QI) */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32F1QI_IT.c */
-
 

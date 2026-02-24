@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_mil_std_1553.h
   * @author  Milandr Application Team
-  * @version V2.0.0i
-  * @date    10/03/2022
+  * @version V2.0.1i
+  * @date    24/03/2024
   * @brief   This file contains all the functions prototypes for the MIL STD 1553
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -35,9 +35,9 @@ extern "C" {
   * @{
   */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /** @addtogroup MIL_STD_1553
- *  @warning This module can be used only for MCU USE_MDR32F1QI.
+ *  @warning This module can be used only for MCU K1986VE1xI.
   * @{
   */
 
@@ -204,9 +204,9 @@ typedef struct
                                                                   This parameter can be a value of @ref FunctionalState. */
     FunctionalState       MIL_STD_1553_Automatic_Adjustment; /*!< This member enables or disables the automatic adjustment of the mid bit intervals.
                                                                   This parameter can be a value of @ref FunctionalState. */
-#elif defined (USE_MDR32F1QI_REV6)
+#elif defined (USE_MDR32F1QI_REV6) || (defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI))
     /**
-     * @note This members may be used only for MDR32F1QI rev. 6 and later.
+     * @note This members may be used only for MDR32F1QI rev. 6 and later and for K1986VE1xI.
      */
     FunctionalState       MIL_STD_1553_EN_FLT;               /*!< This option enables or disables impulse noise filtering.
                                                                   It is recommended to set to zero (RESET).
@@ -325,7 +325,7 @@ void MIL_STD_1553_RERRCmd(MDR_MIL_STD_1553_TypeDef * MIL_STD_1553x, FunctionalSt
 /** @} */ /* End of group MIL_STD_1553_Exported_Functions */
 
 /** @} */ /* End of group MIL_STD_1553 */
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
@@ -335,7 +335,7 @@ void MIL_STD_1553_RERRCmd(MDR_MIL_STD_1553_TypeDef * MIL_STD_1553x, FunctionalSt
 
 #endif /* MDR32FxQI_MIL_STD_1553_H_ */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_mil_std_1553.h */
 

@@ -1,4 +1,3 @@
-
 /**
   * FILE MDR32F1QI.h
   */
@@ -22,7 +21,7 @@
 extern "C" {
 #endif
 
-#if defined ( __CC_ARM   )
+#if defined ( __CC_ARM )
   #pragma anon_unions
 #endif
 
@@ -33,13 +32,15 @@ extern "C" {
 typedef enum IRQn
 {
 /*----- Processor Exceptions Numbers -------------------------------------------*/
+/* Attention for NonMaskableInt_IRQn: */
+/* Called by software only (bit [31] of the ICSR register). Used for mission critical applications */
   NonMaskableInt_IRQn         = -14,    /*!< 2 Non Maskable Interrupt           */
   HardFault_IRQn              = -13,    /*!< 3 Hard Fault Interrupt             */
   SVCall_IRQn                 = -5,     /*!< 11 SV Call Interrupt               */
   PendSV_IRQn                 = -2,     /*!< 14 Pend SV Interrupt               */
   SysTick_IRQn                = -1,     /*!< 15 System Tick Interrupt           */
 
-/*----- MDR32F1QI specific Interrupt Numbers -------------------------------------*/
+/*----- MDR32F1QI specific Interrupt Numbers -----------------------------------*/
   MIL_STD_1553B2_IRQn         = 0,      /*!< MIL_STD_1553B2 Interrupt           */
   MIL_STD_1553B1_IRQn         = 1,      /*!< MIL_STD_1553B1 Interrupt           */
   USB_IRQn                    = 2,      /*!< USB Host Interrupt                 */
@@ -72,7 +73,7 @@ typedef enum IRQn
   EXT_INT4_IRQn               = 31      /*!< EXT_INT4 Interrupt                 */
 }IRQn_Type;
 
-/** @addtogroup __MDR32F1QI___Configuration_of_CMSIS Configuration of CMSIS
+/** @addtogroup Configuration_of_CMSIS Configuration of CMSIS
   * @{
   */
 /* Configuration of the Processor and Core Peripherals */
@@ -88,7 +89,7 @@ typedef enum IRQn
 #include "core_cm1.h"
 #include "system_MDR32F1QI.h"
 
-/** @defgroup __MDR32F1QI___Exported_types Exported types
+/** @defgroup Exported_types Exported types
   * @{
   */
 typedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus, BitStatus;
@@ -102,15 +103,97 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
 
 /** @} */ /* End of group __Exported_types */
 
+/** @addtogroup Memory_Map Memory Map
+  * @{
+  */
+
+#define ROM_BOOT_BASE            ((uint32_t)0x00000000)
+#define ROM_BOOT_SIZE            ((uint32_t)0x00001000)
+
+#define EEPROM_BASE              ((uint32_t)0x00000000)
+#define EEPROM_SIZE              ((uint32_t)0x00020000)
+
+#define EBC_CODE_BASE            ((uint32_t)0x00000000)
+#define EBC_CODE_SIZE            ((uint32_t)0x20000000)
+
+#define EBC_CODE_ITCMLA_BASE     ((uint32_t)0x00100000)
+#define EBC_CODE_ITCMLA_SIZE     ((uint32_t)0x1FF00000)
+
+#define RAM_DTCM_BASE            ((uint32_t)0x20000000)
+#define RAM_DTCM_SIZE            ((uint32_t)0x00008000)
+
+#define RAM_AHB_BASE             ((uint32_t)0x20100000)
+#define RAM_AHB_SIZE             ((uint32_t)0x00004000)
+
+#define ETH1_REG_BASE            ((uint32_t)0x30000000)
+#define ETH1_REG_SIZE            ((uint32_t)0x00000038)
+
+#define ETH1_RAM_BASE            ((uint32_t)0x38000000)
+#define ETH1_RAM_SIZE            ((uint32_t)0x00002000)
+
+#define PERIPH_BASE              ((uint32_t)0x40000000)
+#define PERIPH_SIZE              ((uint32_t)0x00100000)
+
+#define EBC_PERIPH_BASE          ((uint32_t)0x50000000)
+#define EBC_PERIPH_SIZE          ((uint32_t)0x10000000)
+
+#define EBC_RAM_BASE             ((uint32_t)0x60000000)
+#define EBC_RAM_SIZE             ((uint32_t)0x40000000)
+
+#define EBC_DEVICE_BASE          ((uint32_t)0xA0000000)
+#define EBC_DEVICE_SIZE          ((uint32_t)0x40000000)
+
+/** @} */ /* End of group Memory_Map */
+
+/** @defgroup Peripheral_Memory_Map Peripheral Memory Map
+  * @{
+  */
+
+#define MDR_CAN1_BASE          (PERIPH_BASE + (uint32_t)0x00000000)
+#define MDR_CAN2_BASE          (PERIPH_BASE + (uint32_t)0x00008000)
+#define MDR_USB_BASE           (PERIPH_BASE + (uint32_t)0x00010000)
+#define MDR_EEPROM_BASE        (PERIPH_BASE + (uint32_t)0x00018000)
+#define MDR_RST_CLK_BASE       (PERIPH_BASE + (uint32_t)0x00020000)
+#define MDR_DMA_BASE           (PERIPH_BASE + (uint32_t)0x00028000)
+#define MDR_UART1_BASE         (PERIPH_BASE + (uint32_t)0x00030000)
+#define MDR_UART2_BASE         (PERIPH_BASE + (uint32_t)0x00038000)
+#define MDR_SSP1_BASE          (PERIPH_BASE + (uint32_t)0x00040000)
+#define MDR_MIL_STD_15531_BASE (PERIPH_BASE + (uint32_t)0x00048000)
+#define MDR_MIL_STD_15532_BASE (PERIPH_BASE + (uint32_t)0x00050000)
+#define MDR_POWER_BASE         (PERIPH_BASE + (uint32_t)0x00058000)
+#define MDR_WWDG_BASE          (PERIPH_BASE + (uint32_t)0x00060000)
+#define MDR_IWDG_BASE          (PERIPH_BASE + (uint32_t)0x00068000)
+#define MDR_TIMER1_BASE        (PERIPH_BASE + (uint32_t)0x00070000)
+#define MDR_TIMER2_BASE        (PERIPH_BASE + (uint32_t)0x00078000)
+#define MDR_TIMER3_BASE        (PERIPH_BASE + (uint32_t)0x00080000)
+#define MDR_ADC_BASE           (PERIPH_BASE + (uint32_t)0x00088000)
+#define MDR_DAC_BASE           (PERIPH_BASE + (uint32_t)0x00090000)
+#define MDR_TIMER4_BASE        (PERIPH_BASE + (uint32_t)0x00098000)
+#define MDR_SSP2_BASE          (PERIPH_BASE + (uint32_t)0x000A0000)
+#define MDR_PORTA_BASE         (PERIPH_BASE + (uint32_t)0x000A8000)
+#define MDR_PORTB_BASE         (PERIPH_BASE + (uint32_t)0x000B0000)
+#define MDR_PORTC_BASE         (PERIPH_BASE + (uint32_t)0x000B8000)
+#define MDR_PORTD_BASE         (PERIPH_BASE + (uint32_t)0x000C0000)
+#define MDR_PORTE_BASE         (PERIPH_BASE + (uint32_t)0x000C8000)
+#define MDR_ARINC429R_BASE     (PERIPH_BASE + (uint32_t)0x000D0000)
+#define MDR_BKP_BASE           (PERIPH_BASE + (uint32_t)0x000D8000)
+#define MDR_ARINC429T_BASE     (PERIPH_BASE + (uint32_t)0x000E0000)
+#define MDR_PORTF_BASE         (PERIPH_BASE + (uint32_t)0x000E8000)
+#define MDR_EBC_BASE           (PERIPH_BASE + (uint32_t)0x000F0000)
+#define MDR_SSP3_BASE          (PERIPH_BASE + (uint32_t)0x000F8000)
+#define MDR_ETHERNET1_BASE     (ETH1_REG_BASE + (uint32_t)0x00000000)
+
+/** @} */ /* End of group Peripheral_Memory_Map */
+
 /** @defgroup __MDR32F1QI_Peripheral_Units MDR32F1QI Peripheral Units
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_CAN CAN
+/** @defgroup MDR32F1QI_Periph_CAN CAN
   * @{
   */
 
-/** @defgroup __MDR32F1QI_CAN_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_CAN_Data_Structures Data Structures
   * @{
   */
 
@@ -161,7 +244,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_CAN_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_CAN_Defines Defines
+/** @defgroup MDR32F1QI_Periph_CAN_Defines Defines
   * @{
   */
 
@@ -384,11 +467,11 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_CAN CAN */
 
-/** @defgroup __MDR32F1QI_Periph_USB USB
+/** @defgroup MDR32F1QI_Periph_USB USB
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_USB_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_USB_Data_Structures Data Structures
   * @{
   */
 
@@ -462,7 +545,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_USB_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_USB_Defines Defines
+/** @defgroup MDR32F1QI_Periph_USB_Defines Defines
   * @{
   */
 
@@ -727,11 +810,11 @@ typedef struct
 /** @} */ /* End of group __MDR32F1QI_Periph_USB */
 
 
-/** @defgroup __MDR32F1QI_Periph_EEPROM EEPROM
+/** @defgroup MDR32F1QI_Periph_EEPROM EEPROM
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_EEPROM_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_EEPROM_Data_Structures Data Structures
   * @{
   */
 
@@ -747,7 +830,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_EEPROM_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_EEPROM_Defines Defines
+/** @defgroup MDR32F1QI_Periph_EEPROM_Defines Defines
   * @{
   */
 
@@ -786,7 +869,7 @@ typedef struct
 
 /** @}*/ /* End of group MDR32F1QI_Periph_EEPROM EEPROM */
 
-/** @defgroup __MDR32F1QI_Periph_RST_CLK RST_CLK
+/** @defgroup MDR32F1QI_Periph_RST_CLK RST_CLK
   * @{
   */
 
@@ -851,7 +934,6 @@ typedef struct {
 #define RST_CLK_PLL_CONTROL_PLL_USB_MUL_Pos     4
 #define RST_CLK_PLL_CONTROL_PLL_CPU_MUL_Pos     8
 
-
 /* Bit field masks: */
 #define RST_CLK_PLL_CONTROL_PLL_USB_ON          ((uint32_t)0x00000001)
 #define RST_CLK_PLL_CONTROL_PLL_USB_RLD         ((uint32_t)0x00000002)
@@ -859,7 +941,6 @@ typedef struct {
 #define RST_CLK_PLL_CONTROL_PLL_CPU_RLD         ((uint32_t)0x00000008)
 #define RST_CLK_PLL_CONTROL_PLL_USB_MUL_Msk     ((uint32_t)0x000000F0)
 #define RST_CLK_PLL_CONTROL_PLL_CPU_MUL_Msk     ((uint32_t)0x00000F00)
-
 
 /** @} */ /* End of group RST_CLK_PLL_CONTROL */
 
@@ -962,6 +1043,147 @@ typedef struct {
 
 /** @} */ /* End of group RST_CLK_RTC_CLOCK */
 
+/** @defgroup __MDR32F1QI_Periph_RST_CLK_PER_CLOCK RST_CLK PER_CLOCK
+  * @{
+  */
+
+/*-- RST_CLK_PER_CLOCK:RST_CLK PER_CLOCK Register -----*/
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_CAN1_Pos           0
+#define RST_CLK_PER_CLOCK_PCLK_EN_CAN1_Msk           (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_CAN1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_CAN1               RST_CLK_PER_CLOCK_PCLK_EN_CAN1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_CAN2_Pos           1
+#define RST_CLK_PER_CLOCK_PCLK_EN_CAN2_Msk           (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_CAN2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_CAN2               RST_CLK_PER_CLOCK_PCLK_EN_CAN2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_USB_Pos            2
+#define RST_CLK_PER_CLOCK_PCLK_EN_USB_Msk            (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_USB_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_USB                RST_CLK_PER_CLOCK_PCLK_EN_USB_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Pos         3
+#define RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Msk         (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_EEPROM             RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Pos        4
+#define RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Msk        (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK            RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_DMA_Pos            5
+#define RST_CLK_PER_CLOCK_PCLK_EN_DMA_Msk            (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_DMA_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_DMA                RST_CLK_PER_CLOCK_PCLK_EN_DMA_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART1_Pos          6
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART1_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_UART1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART1              RST_CLK_PER_CLOCK_PCLK_EN_UART1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART2_Pos          7
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART2_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_UART2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART2              RST_CLK_PER_CLOCK_PCLK_EN_UART2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Pos           8
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Msk           (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP1               RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B1_Pos 9
+#define RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B1_Msk (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B1     RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B2_Pos 10
+#define RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B2_Msk (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B2     RST_CLK_PER_CLOCK_PCLK_EN_MIL_STD_1553B2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_POWER_Pos          11
+#define RST_CLK_PER_CLOCK_PCLK_EN_POWER_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_POWER_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_POWER              RST_CLK_PER_CLOCK_PCLK_EN_POWER_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Pos           12
+#define RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Msk           (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_WWDG               RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Pos           13
+#define RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Msk           (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_IWDG               RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Pos         14
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Msk         (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER1             RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Pos         15
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Msk         (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER2             RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Pos         16
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Msk         (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER3             RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_ADC_Pos            17
+#define RST_CLK_PER_CLOCK_PCLK_EN_ADC_Msk            (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_ADC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_ADC                RST_CLK_PER_CLOCK_PCLK_EN_ADC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_DAC_Pos            18
+#define RST_CLK_PER_CLOCK_PCLK_EN_DAC_Msk            (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_DAC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_DAC                RST_CLK_PER_CLOCK_PCLK_EN_DAC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER4_Pos         19
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER4_Msk         (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_TIMER4_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER4             RST_CLK_PER_CLOCK_PCLK_EN_TIMER4_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Pos           20
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Msk           (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP2               RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Pos          21
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTA              RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Pos          22
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTB              RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Pos          23
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTC              RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Pos          24
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTD              RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Pos          25
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTE              RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_ARINC429R_Pos      26
+#define RST_CLK_PER_CLOCK_PCLK_EN_ARINC429R_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_ARINC429R_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_ARINC429R          RST_CLK_PER_CLOCK_PCLK_EN_ARINC429R_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_BKP_Pos            27
+#define RST_CLK_PER_CLOCK_PCLK_EN_BKP_Msk            (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_BKP_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_BKP                RST_CLK_PER_CLOCK_PCLK_EN_BKP_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_ARINC429T_Pos      28
+#define RST_CLK_PER_CLOCK_PCLK_EN_ARINC429T_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_ARINC429T_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_ARINC429T          RST_CLK_PER_CLOCK_PCLK_EN_ARINC429T_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Pos          29
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Msk          (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTF              RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_EBC_Pos            30
+#define RST_CLK_PER_CLOCK_PCLK_EN_EBC_Msk            (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_EBC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_EBC                RST_CLK_PER_CLOCK_PCLK_EN_EBC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Pos           31
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Msk           (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP3               RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Msk
+
+/* Bit field positions: */
+#define RST_CLK_PER_CLOCK_PCLK_EN_Pos                0
+
+/* Bit field masks: */
+#define RST_CLK_PER_CLOCK_PCLK_EN_Msk                ((uint32_t)0xFFFFFFFF)
+
+/** @} */ /* End of group RST_CLK_PER_CLOCK */
 
 /** @defgroup __MDR32F1QI_Periph_RST_CLK_CAN_CLOCK	RST CLK CAN CLOCK
   * @{
@@ -1090,11 +1312,11 @@ typedef struct {
 /** @} */ /* End of group Periph_RST_CLK */
 
 
-/** @defgroup __MDR32F1QI_Periph_DMA DMA
+/** @defgroup MDR32F1QI_Periph_DMA DMA
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_DMA_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_DMA_Data_Structures Data Structures
   * @{
   */
 
@@ -1123,7 +1345,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_DMA_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_DMA_Defines Defines
+/** @defgroup MDR32F1QI_Periph_DMA_Defines Defines
   * @{
   */
 
@@ -1166,7 +1388,7 @@ typedef struct
 /** @} */ /* End of group __MDR32F1QI_Periph_DMA */
 
 
-/** @defgroup __MDR32F1QI_Periph_Periph_UART UART
+/** @defgroup MDR32F1QI_Periph_Periph_UART UART
   * @{
   */
 
@@ -1522,7 +1744,7 @@ typedef struct {
 /** @} */ /* End of group Periph_UART */
 
 
-/** @defgroup __MDR32F1QI_Periph_SPI SPI
+/** @defgroup MDR32F1QI_Periph_SPI SPI
   * @{
   */
 
@@ -1776,7 +1998,7 @@ typedef struct
 
 /** @} */ /* End of group Periph_SPI */
 
-/** @defgroup __MDR32F1QI_Periph_MIL_STD_1553 MIL_STD_1553
+/** @defgroup MDR32F1QI_Periph_MIL_STD_1553 MIL_STD_1553
   * @{
   */
 
@@ -1920,11 +2142,11 @@ typedef struct {
 /** @} */ /* End of group Periph_MIL_STD_1553 */
 
 
-/** @defgroup __MDR32F1QI_Periph_POWER POWER
+/** @defgroup MDR32F1QI_Periph_POWER POWER
  * @{
  */
 
-/** @defgroup __MDR32F1QI_Periph_POWER_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_POWER_Data_Structures Data Structures
   * @{
   */
 
@@ -1936,7 +2158,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_POWER_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_POWER_Defines Defines
+/** @defgroup MDR32F1QI_Periph_POWER_Defines Defines
   * @{
   */
 
@@ -1975,11 +2197,11 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_POWER */
 
-/** @defgroup __MDR32F1QI_Periph_WWDG WWDG
+/** @defgroup MDR32F1QI_Periph_WWDG WWDG
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_WWDG_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_WWDG_Data_Structures Data Structures
   * @{
   */
 
@@ -1993,7 +2215,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_WWDG_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_WWDG_Defines Defines
+/** @defgroup MDR32F1QI_Periph_WWDG_Defines Defines
   * @{
   */
 
@@ -2033,11 +2255,11 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_WWDG */
 
-/** @defgroup __MDR32F1QI_Periph_IWDG IWDG
+/** @defgroup MDR32F1QI_Periph_IWDG IWDG
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_IWDG_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_IWDG_Data_Structures Data Structures
   * @{
   */
 
@@ -2052,7 +2274,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_IWDG_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_IWDG_Defines Defines
+/** @defgroup MDR32F1QI_Periph_IWDG_Defines Defines
   * @{
   */
 
@@ -2076,7 +2298,7 @@ typedef struct
 /** @} */ /* End of group __MDR32F1QI_Periph_IWDG */
 
 
-/** @defgroup __MDR32F1QI_Periph_TIMER TIMER
+/** @defgroup MDR32F1QI_Periph_TIMER TIMER
   * @{
   */
 
@@ -2352,7 +2574,7 @@ typedef struct {
 
 /** @} */ /* End of group Periph_TIMER */
 
-/** @defgroup __MDR32F1QI_Periph_ADC ADC
+/** @defgroup MDR32F1QI_Periph_ADC ADC
   * @{
   */
 
@@ -2502,7 +2724,7 @@ typedef struct {
 
 /** @} */ /* End of group Periph_ADC */
 
-/** @defgroup __MDR32F1QI_Periph_DAC DAC
+/** @defgroup MDR32F1QI_Periph_DAC DAC
   * @{
   */
 
@@ -2600,7 +2822,7 @@ typedef struct {
 
 /** @} */ /* End of group Periph_DAC */
 
-/** @defgroup __MDR32F1QI_Periph_PORT PORT
+/** @defgroup MDR32F1QI_Periph_PORT PORT
   * @{
   */
 
@@ -2755,11 +2977,11 @@ typedef struct {
 
 /** @} */ /* End of group Periph_PORT */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429R ARINC429R
+/** @defgroup MDR32F1QI_Periph_ARINC429R ARINC429R
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_ARINC429R_Data_Structures Data Structures
   * @{
   */
 
@@ -2783,17 +3005,15 @@ typedef struct
 	__IO uint32_t RESERVED3;
 	__IO uint32_t CONTROL8;
 	__IO uint32_t CONTROL9;
-	__IO uint32_t CONTROL10;
-	__IO uint32_t CONTROL11;
 }MDR_ARINC429R_TypeDef;
 
 /** @} */ /* End of group Periph_ARINC429R_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_Defines Defines
+/** @defgroup MDR32F1QI_Periph_ARINC429R_Defines Defines
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL1	ARINC429R CONTROL1
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL1 ARINC429R CONTROL1
   * @{
   */ 
 
@@ -2833,15 +3053,15 @@ typedef struct
 #define ARINC429R_CONTROL1_CLK5                 ((uint32_t)0x00040000)
 #define ARINC429R_CONTROL1_CLK6                 ((uint32_t)0x00080000)
 #define ARINC429R_CONTROL1_CLK7                 ((uint32_t)0x00100000)
-#define ARINC429R_CONTROL1_DIV_Msk	            ((uint32_t)0xF0000000)
+#define ARINC429R_CONTROL1_DIV_Msk              ((uint32_t)0xF0000000)
 
 /** @} */ /* End of group ARINC429R_CONTROL1 */
 
-/** @defgroup __MDR32F1QI_Periph_ARICN429R_CONTROL2	ARICN429R CONTROL2
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL2 ARINC429R CONTROL2
   * @{
   */ 
 
-/*-- ARICN429R_CONTROL2: ARICN429R CONTROL2 Register -----*/
+/*-- ARINC429R_CONTROL2: ARINC429R CONTROL2 Register -----*/
 /* Bit field positions: */
 #define ARINC429R_CONTROL2_DIV_6_4_Pos         0
 #define ARINC429R_CONTROL2_LB_EN1_Pos          3
@@ -2860,10 +3080,10 @@ typedef struct
 #define ARINC429R_CONTROL2_SD_EN6_Pos          22
 #define ARINC429R_CONTROL2_SD_EN7_Pos          23
 #define ARINC429R_CONTROL2_SD_EN8_Pos          24
-#define ARINC429R_CONTROL2_DA_Pos			   31
+#define ARINC429R_CONTROL2_DA_Pos              31
 
 /* Bit field masks: */
-#define ARINC429R_CONTROL2_DIV_6_4_Msk			((uint32_t)0x00000007)
+#define ARINC429R_CONTROL2_DIV_6_4_Msk          ((uint32_t)0x00000007)
 #define ARINC429R_CONTROL2_LB_EN1               ((uint32_t)0x00000008)
 #define ARINC429R_CONTROL2_LB_EN2               ((uint32_t)0x00000010)
 #define ARINC429R_CONTROL2_LB_EN3               ((uint32_t)0x00000020)
@@ -2880,11 +3100,11 @@ typedef struct
 #define ARINC429R_CONTROL2_SD_EN6               ((uint32_t)0x00400000)
 #define ARINC429R_CONTROL2_SD_EN7               ((uint32_t)0x00800000)
 #define ARINC429R_CONTROL2_SD_EN8               ((uint32_t)0x01000000)
-#define ARINC429R_CONTROL2_DA			   		((uint32_t)0x80000000)
+#define ARINC429R_CONTROL2_DA                   ((uint32_t)0x80000000)
 
-/** @} */ /* End of group ARICN429R_CONTROL2 */
+/** @} */ /* End of group ARINC429R_CONTROL2 */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL3	ARINC429R CONTROL3
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL3 ARINC429R CONTROL3
   * @{
   */ 
 
@@ -2935,141 +3155,28 @@ typedef struct
 
 /** @} */ /* End of group ARINC429R_CONTROL3 */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL4	ARINC429R CONTROL4
-  * @{
-  */ 
-
-/*-- ARINC429R_CONTROL4: ARINC429R CONTROL4 Register -----*/
-/* Bit field positions: */
-#define ARINC429R_CONTROL4_DIV_CH1_Pos            	 0
-#define ARINC429R_CONTROL4_DIV_CH2_Pos            	 8
-#define ARINC429R_CONTROL4_DIV_CH3_Pos            	 16
-#define ARINC429R_CONTROL4_DIV_CH4_Pos            	 24
-
-/* Bit field masks: */
-#define ARINC429R_CONTROL4_DIV_CH1_Msk               ((uint32_t)0x000000FF)
-#define ARINC429R_CONTROL4_DIV_CH2_Msk               ((uint32_t)0x0000FF00)
-#define ARINC429R_CONTROL4_DIV_CH3_Msk               ((uint32_t)0x00FF0000)
-#define ARINC429R_CONTROL4_DIV_CH4_Msk               ((uint32_t)0xFF000000)
-
-/** @} */ /* End of group ARINC429R_CONTROL4 */
-
-/** @defgroup __MDR32F1QI_Periph_ARINC492_CONTROL5	ARINC492 CONTROL5
-  * @{
-  */ 
-
-/*-- ARINC492_CONTROL5: ARINC492 CONTROL5 Register -----*/
-/* Bit field positions: */
-#define ARINC429R_CONTROL5_DIV_CH5_Pos            	 0
-#define ARINC429R_CONTROL5_DIV_CH6_Pos            	 8
-#define ARINC429R_CONTROL5_DIV_CH7_Pos            	 16
-#define ARINC429R_CONTROL5_DIV_CH8_Pos            	 24
-
-/* Bit field masks: */
-#define ARINC429R_CONTROL5_DIV_CH5_Msk               ((uint32_t)0x000000FF)
-#define ARINC429R_CONTROL5_DIV_CH6_Msk               ((uint32_t)0x0000FF00)
-#define ARINC429R_CONTROL5_DIV_CH7_Msk               ((uint32_t)0x00FF0000)
-#define ARINC429R_CONTROL5_DIV_CH8_Msk				 ((uint32_t)0xFF000000)
-
-/** @} */ /* End of group ARINC492_CONTROL5 */
-
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_INTMASK	ARINC429R INTMASK
-  * @{
-  */ 
-
-/*-- ARINC429R_INTMASK: ARINC429R INTMASK register -----*/
-/* Bit field positions: */
-#define ARINC429R_INTMASK_IEHF1_Pos					0
-#define ARINC429R_INTMASK_IEFF1_Pos					1
-#define ARINC429R_INTMASK_IEER1_Pos					2
-#define ARINC429R_INTMASK_IEDR1_Pos					3
-#define ARINC429R_INTMASK_IEHF2_Pos					4
-#define ARINC429R_INTMASK_IEFF2_Pos					5
-#define ARINC429R_INTMASK_IEER2_Pos					6
-#define ARINC429R_INTMASK_IEDR2_Pos					7
-#define ARINC429R_INTMASK_IEHF3_Pos					8
-#define ARINC429R_INTMASK_IEFF3_Pos					9
-#define ARINC429R_INTMASK_IEER3_Pos					10
-#define ARINC429R_INTMASK_IEDR3_Pos					11
-#define ARINC429R_INTMASK_IEHF4_Pos					12
-#define ARINC429R_INTMASK_IEFF4_Pos					13
-#define ARINC429R_INTMASK_IEER4_Pos					14
-#define ARINC429R_INTMASK_IEDR4_Pos					15
-#define ARINC429R_INTMASK_IEHF5_Pos					16
-#define ARINC429R_INTMASK_IEFF5_Pos					17
-#define ARINC429R_INTMASK_IEER5_Pos					18
-#define ARINC429R_INTMASK_IEDR5_Pos					19
-#define ARINC429R_INTMASK_IEHF6_Pos					20
-#define ARINC429R_INTMASK_IEFF6_Pos					21
-#define ARINC429R_INTMASK_IEER6_Pos					22
-#define ARINC429R_INTMASK_IEDR6_Pos					23
-#define ARINC429R_INTMASK_IEHF7_Pos					24
-#define ARINC429R_INTMASK_IEFF7_Pos					25
-#define ARINC429R_INTMASK_IEER7_Pos					26
-#define ARINC429R_INTMASK_IEDR7_Pos					27
-#define ARINC429R_INTMASK_IEHF8_Pos					28
-#define ARINC429R_INTMASK_IEFF8_Pos					29
-#define ARINC429R_INTMASK_IEER8_Pos					30
-#define ARINC429R_INTMASK_IEDR8_Pos					31
-
-/* Bit field masks: */
-#define ARINC429R_INTMASK_IEHF1						((uint32_t)0x00000001))
-#define ARINC429R_INTMASK_IEFF1						((uint32_t)0x00000002))
-#define ARINC429R_INTMASK_IEER1						((uint32_t)0x00000004))
-#define ARINC429R_INTMASK_IEDR1						((uint32_t)0x00000008))
-#define ARINC429R_INTMASK_IEHF2						((uint32_t)0x00000010))
-#define ARINC429R_INTMASK_IEFF2						((uint32_t)0x00000020))
-#define ARINC429R_INTMASK_IEER2						((uint32_t)0x00000040))
-#define ARINC429R_INTMASK_IEDR2						((uint32_t)0x00000080))
-#define ARINC429R_INTMASK_IEHF3						((uint32_t)0x00000100))
-#define ARINC429R_INTMASK_IEFF3						((uint32_t)0x00000200))
-#define ARINC429R_INTMASK_IEER3						((uint32_t)0x00000400))
-#define ARINC429R_INTMASK_IEDR3						((uint32_t)0x00000800))
-#define ARINC429R_INTMASK_IEHF4						((uint32_t)0x00001000))
-#define ARINC429R_INTMASK_IEFF4						((uint32_t)0x00002000))
-#define ARINC429R_INTMASK_IEER4						((uint32_t)0x00004000))
-#define ARINC429R_INTMASK_IEDR4						((uint32_t)0x00008000))
-#define ARINC429R_INTMASK_IEHF5						((uint32_t)0x00010000))
-#define ARINC429R_INTMASK_IEFF5						((uint32_t)0x00020000))
-#define ARINC429R_INTMASK_IEER5						((uint32_t)0x00040000))
-#define ARINC429R_INTMASK_IEDR5						((uint32_t)0x00080000))
-#define ARINC429R_INTMASK_IEHF6						((uint32_t)0x00100000))
-#define ARINC429R_INTMASK_IEFF6						((uint32_t)0x00200000))
-#define ARINC429R_INTMASK_IEER6						((uint32_t)0x00400000))
-#define ARINC429R_INTMASK_IEDR6						((uint32_t)0x00800000))
-#define ARINC429R_INTMASK_IEHF7						((uint32_t)0x01000000))
-#define ARINC429R_INTMASK_IEFF7						((uint32_t)0x02000000))
-#define ARINC429R_INTMASK_IEER7						((uint32_t)0x04000000))
-#define ARINC429R_INTMASK_IEDR7						((uint32_t)0x08000000))
-#define ARINC429R_INTMASK_IEHF8						((uint32_t)0x10000000))
-#define ARINC429R_INTMASK_IEFF8						((uint32_t)0x20000000))
-#define ARINC429R_INTMASK_IEER8						((uint32_t)0x40000000))
-#define ARINC429R_INTMASK_IEDR8						((uint32_t)0x80000000))
-
-/** @} */ /* End of group ARINC429R_INTMASK */
-
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_STATUS1	ARINC429R STATUS1
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_STATUS1 ARINC429R STATUS1
   * @{
   */ 
 
 /*-- ARINC429R_STATUS1: ARINC429R STATUS1 Register -----*/
 /* Bit field positions: */
-#define ARINC429R_STATUS1_DR1_Pos              0
-#define ARINC429R_STATUS1_DR2_Pos              1
-#define ARINC429R_STATUS1_DR3_Pos              2
-#define ARINC429R_STATUS1_DR4_Pos              3
-#define ARINC429R_STATUS1_DR5_Pos              4
-#define ARINC429R_STATUS1_DR6_Pos              5
-#define ARINC429R_STATUS1_DR7_Pos              6
-#define ARINC429R_STATUS1_DR8_Pos              7
-#define ARINC429R_STATUS1_ERR1_Pos             14
-#define ARINC429R_STATUS1_ERR2_Pos             15
-#define ARINC429R_STATUS1_ERR3_Pos             16
-#define ARINC429R_STATUS1_ERR4_Pos             17
-#define ARINC429R_STATUS1_ERR5_Pos             18
-#define ARINC429R_STATUS1_ERR6_Pos             19
-#define ARINC429R_STATUS1_ERR7_Pos             20
-#define ARINC429R_STATUS1_ERR8_Pos             21
+#define ARINC429R_STATUS1_DR1_Pos               0
+#define ARINC429R_STATUS1_DR2_Pos               1
+#define ARINC429R_STATUS1_DR3_Pos               2
+#define ARINC429R_STATUS1_DR4_Pos               3
+#define ARINC429R_STATUS1_DR5_Pos               4
+#define ARINC429R_STATUS1_DR6_Pos               5
+#define ARINC429R_STATUS1_DR7_Pos               6
+#define ARINC429R_STATUS1_DR8_Pos               7
+#define ARINC429R_STATUS1_ERR1_Pos              14
+#define ARINC429R_STATUS1_ERR2_Pos              15
+#define ARINC429R_STATUS1_ERR3_Pos              16
+#define ARINC429R_STATUS1_ERR4_Pos              17
+#define ARINC429R_STATUS1_ERR5_Pos              18
+#define ARINC429R_STATUS1_ERR6_Pos              19
+#define ARINC429R_STATUS1_ERR7_Pos              20
+#define ARINC429R_STATUS1_ERR8_Pos              21
 
 /* Bit field masks: */
 #define ARINC429R_STATUS1_DR1                   ((uint32_t)0x00000001)
@@ -3091,28 +3198,28 @@ typedef struct
 
 /** @} */ /* End of group ARINC429R_STATUS1 */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429R_STATUS2	ARINC429R STATUS2
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_STATUS2 ARINC429R STATUS2
   * @{
   */ 
 
 /*-- ARINC429R_STATUS2: ARINC429R STATUS2 Register -----*/
 /* Bit field positions: */
-#define ARINC429R_STATUS2_FF1_Pos              0
-#define ARINC429R_STATUS2_FF2_Pos              1
-#define ARINC429R_STATUS2_FF3_Pos              2
-#define ARINC429R_STATUS2_FF4_Pos              3
-#define ARINC429R_STATUS2_FF5_Pos              4
-#define ARINC429R_STATUS2_FF6_Pos              5
-#define ARINC429R_STATUS2_FF7_Pos              6
-#define ARINC429R_STATUS2_FF8_Pos              7
-#define ARINC429R_STATUS2_HF1_Pos              14
-#define ARINC429R_STATUS2_HF2_Pos              15
-#define ARINC429R_STATUS2_HF3_Pos              16
-#define ARINC429R_STATUS2_HF4_Pos              17
-#define ARINC429R_STATUS2_HF5_Pos              18
-#define ARINC429R_STATUS2_HF6_Pos              19
-#define ARINC429R_STATUS2_HF7_Pos              20
-#define ARINC429R_STATUS2_HF8_Pos              21
+#define ARINC429R_STATUS2_FF1_Pos               0
+#define ARINC429R_STATUS2_FF2_Pos               1
+#define ARINC429R_STATUS2_FF3_Pos               2
+#define ARINC429R_STATUS2_FF4_Pos               3
+#define ARINC429R_STATUS2_FF5_Pos               4
+#define ARINC429R_STATUS2_FF6_Pos               5
+#define ARINC429R_STATUS2_FF7_Pos               6
+#define ARINC429R_STATUS2_FF8_Pos               7
+#define ARINC429R_STATUS2_HF1_Pos               14
+#define ARINC429R_STATUS2_HF2_Pos               15
+#define ARINC429R_STATUS2_HF3_Pos               16
+#define ARINC429R_STATUS2_HF4_Pos               17
+#define ARINC429R_STATUS2_HF5_Pos               18
+#define ARINC429R_STATUS2_HF6_Pos               19
+#define ARINC429R_STATUS2_HF7_Pos               20
+#define ARINC429R_STATUS2_HF8_Pos               21
 
 /* Bit field masks: */
 #define ARINC429R_STATUS2_FF1                   ((uint32_t)0x00000001)
@@ -3134,15 +3241,170 @@ typedef struct
 
 /** @} */ /* End of group ARINC429R_STATUS2 */
 
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL4 ARINC429R CONTROL4
+  * @{
+  */ 
+
+/*-- ARINC429R_CONTROL4: ARINC429R CONTROL4 Register -----*/
+/* Bit field positions: */
+#define ARINC429R_CONTROL4_DIV_CH1_Pos               0
+#define ARINC429R_CONTROL4_DIV_CH2_Pos               8
+#define ARINC429R_CONTROL4_DIV_CH3_Pos               16
+#define ARINC429R_CONTROL4_DIV_CH4_Pos               24
+
+/* Bit field masks: */
+#define ARINC429R_CONTROL4_DIV_CH1_Msk               ((uint32_t)0x000000FF)
+#define ARINC429R_CONTROL4_DIV_CH2_Msk               ((uint32_t)0x0000FF00)
+#define ARINC429R_CONTROL4_DIV_CH3_Msk               ((uint32_t)0x00FF0000)
+#define ARINC429R_CONTROL4_DIV_CH4_Msk               ((uint32_t)0xFF000000)
+
+/** @} */ /* End of group ARINC429R_CONTROL4 */
+
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL5 ARINC429R CONTROL5
+  * @{
+  */ 
+
+/*-- ARINC429R_CONTROL5: ARINC429R CONTROL5 Register -----*/
+/* Bit field positions: */
+#define ARINC429R_CONTROL5_DIV_CH5_Pos               0
+#define ARINC429R_CONTROL5_DIV_CH6_Pos               8
+#define ARINC429R_CONTROL5_DIV_CH7_Pos               16
+#define ARINC429R_CONTROL5_DIV_CH8_Pos               24
+
+/* Bit field masks: */
+#define ARINC429R_CONTROL5_DIV_CH5_Msk               ((uint32_t)0x000000FF)
+#define ARINC429R_CONTROL5_DIV_CH6_Msk               ((uint32_t)0x0000FF00)
+#define ARINC429R_CONTROL5_DIV_CH7_Msk               ((uint32_t)0x00FF0000)
+#define ARINC429R_CONTROL5_DIV_CH8_Msk               ((uint32_t)0xFF000000)
+
+/** @} */ /* End of group ARINC429R_CONTROL5 */
+
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CHANNEL ARINC429R CHANNEL
+  * @{
+  */ 
+
+/*-- ARINC429R_CHANNEL: ARINC429R CHANNEL Register -----*/
+/* Bit field positions: */
+#define ARINC429R_CHANNEL_CHAN_Pos                  0
+
+/* Bit field masks: */
+#define ARINC429R_CHANNEL_CHAN_Msk                  ((uint32_t)0x0000000F)
+
+/** @} */ /* End of group Periph_ARINC429R_CHANNEL */
+
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_INTMASK ARINC429R INTMASK
+  * @{
+  */ 
+
+/*-- ARINC429R_INTMASK: ARINC429R INTMASK register -----*/
+/* Bit field positions: */
+#define ARINC429R_INTMASK_IEHF1_Pos                 0
+#define ARINC429R_INTMASK_IEFF1_Pos                 1
+#define ARINC429R_INTMASK_IEER1_Pos                 2
+#define ARINC429R_INTMASK_IEDR1_Pos                 3
+#define ARINC429R_INTMASK_IEHF2_Pos                 4
+#define ARINC429R_INTMASK_IEFF2_Pos                 5
+#define ARINC429R_INTMASK_IEER2_Pos                 6
+#define ARINC429R_INTMASK_IEDR2_Pos                 7
+#define ARINC429R_INTMASK_IEHF3_Pos                 8
+#define ARINC429R_INTMASK_IEFF3_Pos                 9
+#define ARINC429R_INTMASK_IEER3_Pos                 10
+#define ARINC429R_INTMASK_IEDR3_Pos                 11
+#define ARINC429R_INTMASK_IEHF4_Pos                 12
+#define ARINC429R_INTMASK_IEFF4_Pos                 13
+#define ARINC429R_INTMASK_IEER4_Pos                 14
+#define ARINC429R_INTMASK_IEDR4_Pos                 15
+#define ARINC429R_INTMASK_IEHF5_Pos                 16
+#define ARINC429R_INTMASK_IEFF5_Pos                 17
+#define ARINC429R_INTMASK_IEER5_Pos                 18
+#define ARINC429R_INTMASK_IEDR5_Pos                 19
+#define ARINC429R_INTMASK_IEHF6_Pos                 20
+#define ARINC429R_INTMASK_IEFF6_Pos                 21
+#define ARINC429R_INTMASK_IEER6_Pos                 22
+#define ARINC429R_INTMASK_IEDR6_Pos                 23
+#define ARINC429R_INTMASK_IEHF7_Pos                 24
+#define ARINC429R_INTMASK_IEFF7_Pos                 25
+#define ARINC429R_INTMASK_IEER7_Pos                 26
+#define ARINC429R_INTMASK_IEDR7_Pos                 27
+#define ARINC429R_INTMASK_IEHF8_Pos                 28
+#define ARINC429R_INTMASK_IEFF8_Pos                 29
+#define ARINC429R_INTMASK_IEER8_Pos                 30
+#define ARINC429R_INTMASK_IEDR8_Pos                 31
+
+/* Bit field masks: */
+#define ARINC429R_INTMASK_IEHF1                     ((uint32_t)0x00000001))
+#define ARINC429R_INTMASK_IEFF1                     ((uint32_t)0x00000002))
+#define ARINC429R_INTMASK_IEER1                     ((uint32_t)0x00000004))
+#define ARINC429R_INTMASK_IEDR1                     ((uint32_t)0x00000008))
+#define ARINC429R_INTMASK_IEHF2                     ((uint32_t)0x00000010))
+#define ARINC429R_INTMASK_IEFF2                     ((uint32_t)0x00000020))
+#define ARINC429R_INTMASK_IEER2                     ((uint32_t)0x00000040))
+#define ARINC429R_INTMASK_IEDR2                     ((uint32_t)0x00000080))
+#define ARINC429R_INTMASK_IEHF3                     ((uint32_t)0x00000100))
+#define ARINC429R_INTMASK_IEFF3                     ((uint32_t)0x00000200))
+#define ARINC429R_INTMASK_IEER3                     ((uint32_t)0x00000400))
+#define ARINC429R_INTMASK_IEDR3                     ((uint32_t)0x00000800))
+#define ARINC429R_INTMASK_IEHF4                     ((uint32_t)0x00001000))
+#define ARINC429R_INTMASK_IEFF4                     ((uint32_t)0x00002000))
+#define ARINC429R_INTMASK_IEER4                     ((uint32_t)0x00004000))
+#define ARINC429R_INTMASK_IEDR4                     ((uint32_t)0x00008000))
+#define ARINC429R_INTMASK_IEHF5                     ((uint32_t)0x00010000))
+#define ARINC429R_INTMASK_IEFF5                     ((uint32_t)0x00020000))
+#define ARINC429R_INTMASK_IEER5                     ((uint32_t)0x00040000))
+#define ARINC429R_INTMASK_IEDR5                     ((uint32_t)0x00080000))
+#define ARINC429R_INTMASK_IEHF6                     ((uint32_t)0x00100000))
+#define ARINC429R_INTMASK_IEFF6                     ((uint32_t)0x00200000))
+#define ARINC429R_INTMASK_IEER6                     ((uint32_t)0x00400000))
+#define ARINC429R_INTMASK_IEDR6                     ((uint32_t)0x00800000))
+#define ARINC429R_INTMASK_IEHF7                     ((uint32_t)0x01000000))
+#define ARINC429R_INTMASK_IEFF7                     ((uint32_t)0x02000000))
+#define ARINC429R_INTMASK_IEER7                     ((uint32_t)0x04000000))
+#define ARINC429R_INTMASK_IEDR7                     ((uint32_t)0x08000000))
+#define ARINC429R_INTMASK_IEHF8                     ((uint32_t)0x10000000))
+#define ARINC429R_INTMASK_IEFF8                     ((uint32_t)0x20000000))
+#define ARINC429R_INTMASK_IEER8                     ((uint32_t)0x40000000))
+#define ARINC429R_INTMASK_IEDR8                     ((uint32_t)0x80000000))
+
+/** @} */ /* End of group ARINC429R_INTMASK */
+
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL8 ARINC429R CONTROL8
+  * @{
+  */ 
+
+#define ARINC429R_CONTROL8_ENPAR_Pos                0
+#define ARINC429R_CONTROL8_ENPAR_Msk                (0xFFUL << ARINC429R_CONTROL8_ENPAR_Pos)
+
+#define ARINC429R_CONTROL8_ODD_Pos                  14
+#define ARINC429R_CONTROL8_ODD_Msk                  (0xFFUL << ARINC429R_CONTROL8_ODD_Pos)
+
+#define ARINC429R_CONTROL8_DA0_Pos                  28
+#define ARINC429R_CONTROL8_DA0_Msk                  (0x1UL << ARINC429R_CONTROL8_DA0_Pos)
+#define ARINC429R_CONTROL8_DA0                      ARINC429R_CONTROL8_DA0_Msk
+
+#define ARINC429R_CONTROL8_DA1_Pos                  29
+#define ARINC429R_CONTROL8_DA1_Msk                  (0x1UL << ARINC429R_CONTROL8_DA1_Pos)
+#define ARINC429R_CONTROL8_DA1                      ARINC429R_CONTROL8_DA1_Msk
+
+/** @} */ /* End of group ARINC429R_CONTROL8 */
+
+/** @defgroup __MDR32F1QI_Periph_ARINC429R_CONTROL9 ARINC429R CONTROL9
+  * @{
+  */ 
+
+#define ARINC429R_CONTROL9_ENSYNC_Pos               0
+#define ARINC429R_CONTROL9_ENSYNC_Msk               (0xFFUL << ARINC429R_CONTROL9_ENSYNC_Pos)
+
+/** @} */ /* End of group ARINC429R_CONTROL9 */
+
 /** @} */ /* End of group __MDR32F1QI_Periph_ARINC429R_Defines */
 
 /** @} */ /* End of group __MDR32F1QI_Periph_ARINC429R */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429T ARINC429T
+/** @defgroup MDR32F1QI_Periph_ARINC429T ARINC429T
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429T_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_ARINC429T_Data_Structures Data Structures
   * @{
   */
 
@@ -3162,100 +3424,135 @@ typedef struct
 
 /** @} */ /* End of group Periph_ARINC429T_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429T_Defines Defines
+/** @defgroup MDR32F1QI_Periph_ARINC429T_Defines Defines
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429T_CONTROL1	ARINC429T CONTROL1
+/** @defgroup __MDR32F1QI_Periph_ARINC429T_CONTROL1 ARINC429T CONTROL1
   * @{
   */ 
 
 /*-- ARINC429T_CONTROL1: ARINC429T CONTROL1 Register -----*/
 /* Bit field positions: */
-#define ARINC429T_CONTROL1_CH_EN1_Pos          0
-#define ARINC429T_CONTROL1_CLK1_Pos            1
-#define ARINC429T_CONTROL1_EN_PAR1_Pos         2
-#define ARINC429T_CONTROL1_ODD1_Pos            3
-#define ARINC429T_CONTROL1_CH_EN2_Pos          4
-#define ARINC429T_CONTROL1_CLK2_Pos            5
-#define ARINC429T_CONTROL1_EN_PAR2_Pos         6
-#define ARINC429T_CONTROL1_ODD2_Pos            7
-#define ARINC429T_CONTROL1_DIV_Pos             8
-#define ARINC429T_CONTROL1_INTE_FFT1_Pos       15
-#define ARINC429T_CONTROL1_INTE_TXR1_Pos       16
-#define ARINC429T_CONTROL1_INTE_HFT1_Pos       17
-#define ARINC429T_CONTROL1_INTE_FFT2_Pos       18
-#define ARINC429T_CONTROL1_INTE_TXR2_Pos       19
-#define ARINC429T_CONTROL1_INTE_HFT2_Pos       20
+#define ARINC429T_CONTROL1_CH_EN1_Pos               0
+#define ARINC429T_CONTROL1_CLK1_Pos                 1
+#define ARINC429T_CONTROL1_EN_PAR1_Pos              2
+#define ARINC429T_CONTROL1_ODD1_Pos                 3
+#define ARINC429T_CONTROL1_CH_EN2_Pos               4
+#define ARINC429T_CONTROL1_CLK2_Pos                 5
+#define ARINC429T_CONTROL1_EN_PAR2_Pos              6
+#define ARINC429T_CONTROL1_ODD2_Pos                 7
+#define ARINC429T_CONTROL1_DIV_Pos                  8
+#define ARINC429T_CONTROL1_INTE_FFT1_Pos            15
+#define ARINC429T_CONTROL1_INTE_TXR1_Pos            16
+#define ARINC429T_CONTROL1_INTE_HFT1_Pos            17
+#define ARINC429T_CONTROL1_INTE_FFT2_Pos            18
+#define ARINC429T_CONTROL1_INTE_TXR2_Pos            19
+#define ARINC429T_CONTROL1_INTE_HFT2_Pos            20
 
 /* Bit field masks: */
-#define ARINC429T_CONTROL1_CH_EN1               ((uint32_t)0x00000001)
-#define ARINC429T_CONTROL1_CLK1                 ((uint32_t)0x00000002)
-#define ARINC429T_CONTROL1_EN_PAR1              ((uint32_t)0x00000004)
-#define ARINC429T_CONTROL1_ODD1                 ((uint32_t)0x00000008)
-#define ARINC429T_CONTROL1_CH_EN2               ((uint32_t)0x00000010)
-#define ARINC429T_CONTROL1_CLK2                 ((uint32_t)0x00000020)
-#define ARINC429T_CONTROL1_EN_PAR2              ((uint32_t)0x00000040)
-#define ARINC429T_CONTROL1_ODD2                 ((uint32_t)0x00000080)
-#define ARINC429T_CONTROL1_DIV_MASK             ((uint32_t)0x00007F00)
-#define ARINC429T_CONTROL1_INTE_FFT1            ((uint32_t)0x00008000)
-#define ARINC429T_CONTROL1_INTE_TXR1            ((uint32_t)0x00010000)
-#define ARINC429T_CONTROL1_INTE_HFT1            ((uint32_t)0x00020000)
-#define ARINC429T_CONTROL1_INTE_FFT2            ((uint32_t)0x00040000)
-#define ARINC429T_CONTROL1_INTE_TXR2            ((uint32_t)0x00080000)
-#define ARINC429T_CONTROL1_INTE_HFT2            ((uint32_t)0x00100000)
+#define ARINC429T_CONTROL1_CH_EN1                   ((uint32_t)0x00000001)
+#define ARINC429T_CONTROL1_CLK1                     ((uint32_t)0x00000002)
+#define ARINC429T_CONTROL1_EN_PAR1                  ((uint32_t)0x00000004)
+#define ARINC429T_CONTROL1_ODD1                     ((uint32_t)0x00000008)
+#define ARINC429T_CONTROL1_CH_EN2                   ((uint32_t)0x00000010)
+#define ARINC429T_CONTROL1_CLK2                     ((uint32_t)0x00000020)
+#define ARINC429T_CONTROL1_EN_PAR2                  ((uint32_t)0x00000040)
+#define ARINC429T_CONTROL1_ODD2                     ((uint32_t)0x00000080)
+#define ARINC429T_CONTROL1_DIV_MASK                 ((uint32_t)0x00007F00)
+#define ARINC429T_CONTROL1_INTE_FFT1                ((uint32_t)0x00008000)
+#define ARINC429T_CONTROL1_INTE_TXR1                ((uint32_t)0x00010000)
+#define ARINC429T_CONTROL1_INTE_HFT1                ((uint32_t)0x00020000)
+#define ARINC429T_CONTROL1_INTE_FFT2                ((uint32_t)0x00040000)
+#define ARINC429T_CONTROL1_INTE_TXR2                ((uint32_t)0x00080000)
+#define ARINC429T_CONTROL1_INTE_HFT2                ((uint32_t)0x00100000)
 
 /** @} */ /* End of group ARINC429T_CONTROL1 */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429T_CONTROL2	ARINC429T CONTROL2
+/** @defgroup __MDR32F1QI_Periph_ARINC429T_CONTROL2 ARINC429T CONTROL2
   * @{
   */ 
 
 /*-- ARINC429T_CONTROL2: ARINC429T CONTROL2 Register -----*/
 /* Bit field positions: */
-#define ARINC429T_CONTROL2_CH_EN3_Pos          0
-#define ARINC429T_CONTROL2_CLK3_Pos            1
-#define ARINC429T_CONTROL2_EN_PAR3_Pos         2
-#define ARINC429T_CONTROL2_ODD3_Pos            3
-#define ARINC429T_CONTROL2_CH_EN4_Pos          4
-#define ARINC429T_CONTROL2_CLK4_Pos            5
-#define ARINC429T_CONTROL2_EN_PAR4_Pos         6
-#define ARINC429T_CONTROL2_ODD4_Pos            7
-#define ARINC429T_CONTROL2_INTE_FFT3_Pos       15
-#define ARINC429T_CONTROL2_INTE_TXR3_Pos       16
-#define ARINC429T_CONTROL2_INTE_HFT3_Pos       17
-#define ARINC429T_CONTROL2_INTE_FFT4_Pos       18
-#define ARINC429T_CONTROL2_INTE_TXR4_Pos       19
-#define ARINC429T_CONTROL2_INTE_HFT4_Pos       20
+#define ARINC429T_CONTROL2_CH_EN3_Pos               0
+#define ARINC429T_CONTROL2_CLK3_Pos                 1
+#define ARINC429T_CONTROL2_EN_PAR3_Pos              2
+#define ARINC429T_CONTROL2_ODD3_Pos                 3
+#define ARINC429T_CONTROL2_CH_EN4_Pos               4
+#define ARINC429T_CONTROL2_CLK4_Pos                 5
+#define ARINC429T_CONTROL2_EN_PAR4_Pos              6
+#define ARINC429T_CONTROL2_ODD4_Pos                 7
+#define ARINC429T_CONTROL2_INTE_FFT3_Pos            15
+#define ARINC429T_CONTROL2_INTE_TXR3_Pos            16
+#define ARINC429T_CONTROL2_INTE_HFT3_Pos            17
+#define ARINC429T_CONTROL2_INTE_FFT4_Pos            18
+#define ARINC429T_CONTROL2_INTE_TXR4_Pos            19
+#define ARINC429T_CONTROL2_INTE_HFT4_Pos            20
 
 /* Bit field masks: */
-#define ARINC429T_CONTROL2_CH_EN3               ((uint32_t)0x00000001)
-#define ARINC429T_CONTROL2_CLK3                 ((uint32_t)0x00000002)
-#define ARINC429T_CONTROL2_EN_PAR3              ((uint32_t)0x00000004)
-#define ARINC429T_CONTROL2_ODD3                 ((uint32_t)0x00000008)
-#define ARINC429T_CONTROL2_CH_EN4               ((uint32_t)0x00000010)
-#define ARINC429T_CONTROL2_CLK4                 ((uint32_t)0x00000020)
-#define ARINC429T_CONTROL2_EN_PAR4              ((uint32_t)0x00000040)
-#define ARINC429T_CONTROL2_ODD4                 ((uint32_t)0x00000080)
-#define ARINC429T_CONTROL2_INTE_FFT3            ((uint32_t)0x00008000)
-#define ARINC429T_CONTROL2_INTE_TXR3            ((uint32_t)0x00010000)
-#define ARINC429T_CONTROL2_INTE_HFT3            ((uint32_t)0x00020000)
-#define ARINC429T_CONTROL2_INTE_FFT4            ((uint32_t)0x00040000)
-#define ARINC429T_CONTROL2_INTE_TXR4            ((uint32_t)0x00080000)
-#define ARINC429T_CONTROL2_INTE_HFT4            ((uint32_t)0x00100000)
+#define ARINC429T_CONTROL2_CH_EN3                   ((uint32_t)0x00000001)
+#define ARINC429T_CONTROL2_CLK3                     ((uint32_t)0x00000002)
+#define ARINC429T_CONTROL2_EN_PAR3                  ((uint32_t)0x00000004)
+#define ARINC429T_CONTROL2_ODD3                     ((uint32_t)0x00000008)
+#define ARINC429T_CONTROL2_CH_EN4                   ((uint32_t)0x00000010)
+#define ARINC429T_CONTROL2_CLK4                     ((uint32_t)0x00000020)
+#define ARINC429T_CONTROL2_EN_PAR4                  ((uint32_t)0x00000040)
+#define ARINC429T_CONTROL2_ODD4                     ((uint32_t)0x00000080)
+#define ARINC429T_CONTROL2_INTE_FFT3                ((uint32_t)0x00008000)
+#define ARINC429T_CONTROL2_INTE_TXR3                ((uint32_t)0x00010000)
+#define ARINC429T_CONTROL2_INTE_HFT3                ((uint32_t)0x00020000)
+#define ARINC429T_CONTROL2_INTE_FFT4                ((uint32_t)0x00040000)
+#define ARINC429T_CONTROL2_INTE_TXR4                ((uint32_t)0x00080000)
+#define ARINC429T_CONTROL2_INTE_HFT4                ((uint32_t)0x00100000)
 
 /** @} */ /* End of group ARINC429T_CONTROL2 */
 
-/** @defgroup __MDR32F1QI_Periph_ARINC429T_CONTROL3	ARINC429T CONTROL3
+/** @defgroup __MDR32F1QI_Periph_ARINC429T_STATUS ARINC429T STATUS
+  * @{
+  */ 
+
+/*-- ARINC429T_STATUS: ARINC429T STATUS Register -----*/
+/* Bit field positions: */
+#define ARINC429T_STATUS_TX_R1_Pos                  0
+#define ARINC429T_STATUS_FFT1_Pos                   1
+#define ARINC429T_STATUS_HFT1_Pos                   2
+#define ARINC429T_STATUS_TX_R2_Pos                  3
+#define ARINC429T_STATUS_FFT2_Pos                   4
+#define ARINC429T_STATUS_HFT2_Pos                   5
+#define ARINC429T_STATUS_TX_R3_Pos                  8
+#define ARINC429T_STATUS_FFT3_Pos                   9
+#define ARINC429T_STATUS_HFT3_Pos                   10
+#define ARINC429T_STATUS_TX_R4_Pos                  11
+#define ARINC429T_STATUS_FFT4_Pos                   12
+#define ARINC429T_STATUS_HFT4_Pos                   13
+
+/* Bit field masks: */
+#define ARINC429T_STATUS_TX_R1                      ((uint32_t)0x00000001)
+#define ARINC429T_STATUS_FFT1                       ((uint32_t)0x00000002)
+#define ARINC429T_STATUS_HFT1                       ((uint32_t)0x00000004)
+#define ARINC429T_STATUS_TX_R2                      ((uint32_t)0x00000008)
+#define ARINC429T_STATUS_FFT2                       ((uint32_t)0x00000010)
+#define ARINC429T_STATUS_HFT2                       ((uint32_t)0x00000020)
+#define ARINC429T_STATUS_TX_R3                      ((uint32_t)0x00000100)
+#define ARINC429T_STATUS_FFT3                       ((uint32_t)0x00000200)
+#define ARINC429T_STATUS_HFT3                       ((uint32_t)0x00000400)
+#define ARINC429T_STATUS_TX_R4                      ((uint32_t)0x00000800)
+#define ARINC429T_STATUS_FFT4                       ((uint32_t)0x00001000)
+#define ARINC429T_STATUS_HFT4                       ((uint32_t)0x00002000)
+
+/** @} */ /* End of group ARINC429T_STATUS */
+
+/** @defgroup __MDR32F1QI_Periph_ARINC429T_CONTROL3 ARINC429T CONTROL3
   * @{
   */ 
 
 /*-- ARINC429T_CONTROL3: ARINC429T CONTROL3 Register -----*/
 /* Bit field positions: */
-#define ARINC429T_CONTROL3_DIV_CH1_Pos            	 0
-#define ARINC429T_CONTROL3_DIV_CH2_Pos            	 8
-#define ARINC429T_CONTROL3_DIV_CH3_Pos            	 16
-#define ARINC429T_CONTROL3_DIV_CH4_Pos            	 24
+#define ARINC429T_CONTROL3_DIV_CH1_Pos               0
+#define ARINC429T_CONTROL3_DIV_CH2_Pos               8
+#define ARINC429T_CONTROL3_DIV_CH3_Pos               16
+#define ARINC429T_CONTROL3_DIV_CH4_Pos               24
 
 /* Bit field masks: */
 #define ARINC429T_CONTROL3_DIV_CH1_Msk               ((uint32_t)0x000000FF)
@@ -3265,50 +3562,24 @@ typedef struct
 
 /** @} */ /* End of group ARINC429T_CONTROL3 */
 
-/** @defgroup __MDR32F1QI_Periph_ARIN?429T_STATUS	ARIN?429T STATUS
+/** @defgroup __MDR32F1QI_Periph_ARINC429T_CONTROL4 ARINC429T CONTROL4
   * @{
   */ 
 
-/*-- ARIN?429T_STATUS: ARIN?429T STATUS Register -----*/
-/* Bit field positions: */
-#define ARINC429T_STATUS_TX_R1_Pos             0
-#define ARINC429T_STATUS_FFT1_Pos              1
-#define ARINC429T_STATUS_HFT1_Pos              2
-#define ARINC429T_STATUS_TX_R2_Pos             3
-#define ARINC429T_STATUS_FFT2_Pos              4
-#define ARINC429T_STATUS_HFT2_Pos              5
-#define ARINC429T_STATUS_TX_R3_Pos             8
-#define ARINC429T_STATUS_FFT3_Pos              9
-#define ARINC429T_STATUS_HFT3_Pos              10
-#define ARINC429T_STATUS_TX_R4_Pos             11
-#define ARINC429T_STATUS_FFT4_Pos              12
-#define ARINC429T_STATUS_HFT4_Pos              13
+#define ARINC429T_CONTROL4_ENSYNC_Pos               0
+#define ARINC429T_CONTROL4_ENSYNC_Msk               (0xFFUL << ARINC429T_CONTROL4_ENSYNC_Pos)
 
-/* Bit field masks: */
-#define ARINC429T_STATUS_TX_R1                  ((uint32_t)0x00000001)
-#define ARINC429T_STATUS_FFT1                   ((uint32_t)0x00000002)
-#define ARINC429T_STATUS_HFT1                   ((uint32_t)0x00000004)
-#define ARINC429T_STATUS_TX_R2                  ((uint32_t)0x00000008)
-#define ARINC429T_STATUS_FFT2                   ((uint32_t)0x00000010)
-#define ARINC429T_STATUS_HFT2                   ((uint32_t)0x00000020)
-#define ARINC429T_STATUS_TX_R3                  ((uint32_t)0x00000100)
-#define ARINC429T_STATUS_FFT3                   ((uint32_t)0x00000200)
-#define ARINC429T_STATUS_HFT3                   ((uint32_t)0x00000400)
-#define ARINC429T_STATUS_TX_R4                  ((uint32_t)0x00000800)
-#define ARINC429T_STATUS_FFT4                   ((uint32_t)0x00001000)
-#define ARINC429T_STATUS_HFT4                   ((uint32_t)0x00002000)
-
-/** @} */ /* End of group ARIN?429T_STATUS */
+/** @} */ /* End of group Periph_ARINC429T_CONTROL4 */
 
 /** @} */ /* End of group __MDR32F1QI_Periph_ARINC429T_Defines */
 
 /** @} */ /* End of group __MDR32F1QI_Periph_ARINC429T */
 
-/** @defgroup __MDR32F1QI_Periph_BKP BKP
+/** @defgroup MDR32F1QI_Periph_BKP BKP
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_BKP_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_BKP_Data_Structures Data Structures
   * @{
   */
 
@@ -3340,7 +3611,7 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_BKP_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_BKP_Defines Defines
+/** @defgroup MDR32F1QI_Periph_BKP_Defines Defines
   * @{
   */
 
@@ -3362,6 +3633,8 @@ typedef struct
 #define BKP_REG_0E_LOW_Msk                      ((uint32_t)0x00000007)
 #define BKP_REG_0E_SELECTRI_Msk                 ((uint32_t)0x00000038)
 #define BKP_REG_0E_SANDALONE					((uint32_t)0x00000040)
+#define BKP_REG_0E_TRIM_02_Msk                  ((uint32_t)0x00000700)
+#define BKP_REG_0E_TRIM_34_Msk                  ((uint32_t)0x00003000)
 #define BKP_REG_0E_TRIM_Msk                     ((uint32_t)0x00003700)
 #define BKP_REG_0E_FPOR                         ((uint32_t)0x00000800)
 #define BKP_REG_0E_ILIMEN						((uint32_t)0x00008000)
@@ -3440,11 +3713,11 @@ typedef struct
 
 /** @} */ /* End of group __MDR32F1QI_Periph_BKP */
 
-/** @defgroup __MDR32F1QI_Periph_EBC EBC
+/** @defgroup MDR32F1QI_Periph_EBC EBC
  *  @{
  */
 
-/** @defgroup __MDR32F1QI_Periph_EBC_Data_structures Data Structures
+/** @defgroup MDR32F1QI_Periph_EBC_Data_structures Data Structures
  *  @{
  */
 
@@ -3459,7 +3732,7 @@ typedef struct
 
 /** @} */ /* End of groupe MDR32F1QI_Periph_EBC_Data_structures Data Structures */
 
-/** @defgroup __MDR32F1QI_Periph_EBC_Defines Defines
+/** @defgroup __MDR32F1QI_MDR32F1QI_Periph_EBC_Defines Defines
   * @{
   */
 
@@ -3542,11 +3815,11 @@ typedef struct
 
 /** @} */ /* End of groupe __MDR32F1QI_Periph_EBC EBC */
 
-/** @defgroup __MDR32F1QI_Periph_ETHERNET ETHERNET
+/** @defgroup MDR32F1QI_Periph_ETHERNET ETHERNET
   * @{
   */
 
-/** @defgroup __MDR32F1QI_Periph_Data_Structures Data Structures
+/** @defgroup MDR32F1QI_Periph_Data_Structures Data Structures
   * @{
   */
 
@@ -3583,7 +3856,7 @@ typedef struct {
 
 /** @} */ /* End of group __MDR32F1QI_Periph_Data_Structures */
 
-/** @defgroup __MDR32F1QI_Periph_ETHERNET_Defines Defines
+/** @defgroup MDR32F1QI_Periph_ETHERNET_Defines Defines
   * @{
   */
 
@@ -3899,49 +4172,7 @@ typedef struct {
 
 /** @} */ /* End of group __MDR32F1QI_Peripheral_Units */
 
-
-/** @defgroup __MDR32F1QI___Peripheral_Memory_Map Peripheral Memory Map
-  * @{
-  */
-
-#define MDR_CAN1_BASE			  (0x40000000)	// 0
-#define MDR_CAN2_BASE			  (0x40008000)	// 1
-#define MDR_USB_BASE			  (0x40010000)	// 2
-#define MDR_EEPROM_BASE 		  (0x40018000)	// 3
-#define MDR_RST_CLK_BASE		  (0x40020000)	// 4
-#define MDR_DMA_BASE			  (0x40028000)	// 5
-#define MDR_UART1_BASE			  (0x40030000)	// 6
-#define MDR_UART2_BASE			  (0x40038000)	// 7
-#define MDR_SSP1_BASE			  (0x40040000)	// 8
-#define MDR_MIL_STD_15531_BASE	  (0x40048000)	// 9
-#define MDR_MIL_STD_15532_BASE	  (0x40050000)	// 10
-#define MDR_POWER_BASE			  (0x40058000)	// 11
-#define MDR_WWDG_BASE			  (0x40060000)	// 12
-#define MDR_IWDG_BASE			  (0x40068000)	// 13
-#define MDR_TIMER1_BASE 		  (0x40070000)	// 14
-#define MDR_TIMER2_BASE 		  (0x40078000) 	// 15
-#define MDR_TIMER3_BASE 		  (0x40080000)	// 16
-#define MDR_ADC_BASE			  (0x40088000)	// 17
-#define MDR_DAC_BASE			  (0x40090000)	// 18
-#define MDR_TIMER4_BASE 		  (0x40098000)	// 19
-#define MDR_SSP2_BASE			  (0x400A0000)	// 20
-#define MDR_PORTA_BASE			  (0x400A8000)	// 21
-#define MDR_PORTB_BASE			  (0x400B0000)	// 22
-#define MDR_PORTC_BASE			  (0x400B8000)	// 23
-#define MDR_PORTD_BASE			  (0x400C0000)	// 24
-#define MDR_PORTE_BASE			  (0x400C8000)  // 25
-#define MDR_ARINC429R_BASE		  (0x400D0000)	// 26
-#define MDR_BKP_BASE			  (0x400D8000)	// 27
-#define MDR_ARINC429T_BASE		  (0x400E0000)  // 28
-#define MDR_PORTF_BASE			  (0x400E8000)	// 29
-#define MDR_EBC_BASE	 	      (0x400F0000)	// 30
-#define MDR_SSP3_BASE			  (0x400F8000)	// 31
-#define MDR_ETHERNET1_BASE		  (0x30000000)
-#define MDR_SYS_BASE			  (0xE000E000)
-
-/** @} */ /* End of group __Peripheral_Memory_Map */
-
-/** @defgroup __MDR32F1QI___Peripheral_declaration Peripheral declaration
+/** @defgroup Peripheral_declaration Peripheral declaration
   * @{
   */
 
@@ -3978,9 +4209,8 @@ typedef struct {
 #define MDR_EBC		  			  ((MDR_EBC_TypeDef           *)MDR_EBC_BASE          )
 #define MDR_SSP3				  ((MDR_SSP_TypeDef 		  *)MDR_SSP3_BASE		  )
 #define MDR_ETHERNET1			  ((MDR_ETHERNET_TypeDef	  *)MDR_ETHERNET1_BASE	  )
-#define MDR_SYS 				  ((MDR_SYS_TypeDef 		  *)MDR_SYS_BASE		  )
 
-/** @} */ /* End of group __Peripheral_declaration */
+/** @} */ /* End of group Peripheral_declaration */
 
 /** @} */ /* End of group MDR32F1QI_Peripheral MDR32F1QI Peripheral */
 
@@ -3997,6 +4227,4 @@ typedef struct {
 /*
 *
 * END OF FILE MDR32F1QI.h */
-
-
 

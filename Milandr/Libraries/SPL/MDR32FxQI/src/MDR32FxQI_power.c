@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_power.c
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    14/04/2023
+  * @version V2.2.1i
+  * @date    24/07/2024
   * @brief   This file contains all the POWER firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -34,10 +34,8 @@
   * @{
   */
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
 /* POWER registers bit address in the alias region */
-#define PERIPH_BASE                 0x40000000
-#define PERIPH_BB_BASE              0x42000000
 #define POWER_OFFSET                (MDR_POWER_BASE - PERIPH_BASE)
 #define BKP_OFFSET                  (MDR_BKP_BASE - PERIPH_BASE)
 
@@ -51,7 +49,7 @@
 #define BKP_FPOR_BB                 BKP_BB(REG_0E, BKP_REG_0E_FPOR_Pos)
 #define BKP_STANDBY_BB              BKP_BB(REG_0F, BKP_REG_0F_STANDBY_Pos)
 
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
 /* --------------------- POWER registers bit mask ------------------------ */
 
@@ -80,8 +78,8 @@ void POWER_DeInit(void)
 
 /**
   * @brief  Enables or disables the Power Voltage Detectors:
-  *             - PVD, PVBD for MDR32F9Q2I and MDR32FG16S1QI;
-  *             - PVD for MDR32F1QI.
+  *             - PVD, PVBD for MDR32F9Q2I, K1986VE9xI and MDR32FG16S1QI;
+  *             - PVD for MDR32F1QI, K1986VE1xI.
   * @param  NewState - @ref FunctionalState - new state of the PVDs.
   * @retval None
   */
@@ -90,9 +88,9 @@ void POWER_PVDenable(FunctionalState NewState)
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) POWER_PVDEN_BB = (uint32_t) NewState;
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
 
     if(NewState != DISABLE)
     {
@@ -105,10 +103,10 @@ void POWER_PVDenable(FunctionalState NewState)
 #endif
 }
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /**
   * @brief  Enables or disables the Power Voltage Battery Detector (PVBD).
-  * @note   This function can be used only for MDR32F1QI microcontrollers.
+  * @note   This function can be used only for MDR32F1QI, K1986VE1xI microcontrollers.
   * @param  NewState - @ref FunctionalState - new state of the PVBD.
   * @retval None
   */
@@ -267,7 +265,7 @@ void POWER_PVD_INVconfig(uint32_t POWER_INV, FunctionalState NewState)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_power.c */
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_dac.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    14/04/2023
+  * @version V2.1.1i
+  * @date    24/07/2024
   * @brief   This file contains all the DAC firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -41,14 +41,14 @@
   */
 void DAC_DeInit(void)
 {
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
     MDR_DAC->DAC1_DATA = 0;
 #endif
     MDR_DAC->DAC2_DATA = 0;
     MDR_DAC->CFG       = 0;
 }
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 /**
   * @brief  Initializes the DAC peripheral.
   * @param  SyncMode - @ref DAC_Sync_Mode - specifies the DAC1, DAC2
@@ -112,7 +112,7 @@ void DAC2_Init(DAC2_Ref_Src DAC2_Ref)
     MDR_DAC->CFG = tmpreg_CFG;
 }
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 /**
   * @brief  Enables or disables the DAC1 peripheral.
   * @param  NewState - @ref FunctionalState - new state of the DAC1 peripheral.
@@ -174,7 +174,7 @@ void DAC2_Cmd(FunctionalState NewState)
     MDR_DAC->CFG = tmpreg_CFG;
 }
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 /**
   * @brief  Sets the DAC1 (and DAC2 in Synchronous mode) output data.
   * @param  Data: specifies the DAC output data.
@@ -202,7 +202,7 @@ void DAC2_SetData(uint32_t Data)
     MDR_DAC->DAC2_DATA = Data;
 }
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 /**
   * @brief  Returns the DAC1 output data.
   * @param  None.
@@ -230,7 +230,7 @@ uint32_t DAC2_GetData(void)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_dac.c */
 

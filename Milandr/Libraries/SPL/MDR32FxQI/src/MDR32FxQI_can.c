@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_can.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    17/03/2022
+  * @version V2.1.1i
+  * @date    24/07/2024
   * @brief   This file contains all the CAN firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -26,7 +26,7 @@
   * @{
   */
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_K1986VE1xI)
 
 /** @defgroup CAN CAN
   * @{
@@ -40,14 +40,6 @@
                                     ((PERIPH) == MDR_CAN2))
 
 /** @} */ /* End of group CAN_Private_Defines */
-
-
-/** @defgroup CAN_Private_FunctionPrototypes CAN Private Function Prototypes
-  * @{
-  */
-static uint32_t CAN_ReadBufferSFR(__IO uint32_t* SFR);
-
-/** @} */ /* End of group CAN_Private_FunctionPrototypes */
 
 
 /** @defgroup CAN_Exported_Functions CAN Exported Functions
@@ -465,8 +457,8 @@ void CAN_GetReceivedData(MDR_CAN_TypeDef* CANx, uint32_t BufferNumber, CAN_DataT
     assert_param(IS_CAN_ALL_PERIPH(CANx));
     assert_param(IS_CAN_BUFFER(BufferNumber));
 
-    RxBuffer[0] = CAN_ReadBufferSFR(&(CANx->CAN_BUF[BufferNumber].DATAL));
-    RxBuffer[1] = CAN_ReadBufferSFR(&(CANx->CAN_BUF[BufferNumber].DATAH));
+    RxBuffer[0] = CANx->CAN_BUF[BufferNumber].DATAL;
+    RxBuffer[1] = CANx->CAN_BUF[BufferNumber].DATAH;
 }
 
 /**
@@ -486,7 +478,7 @@ void CAN_GetRawReceivedData(MDR_CAN_TypeDef* CANx, uint32_t BufferNumber, CAN_Rx
     assert_param(IS_CAN_BUFFER(BufferNumber));
 
     /* Get the DLC */
-    tmpreg = CAN_ReadBufferSFR(&(CANx->CAN_BUF[BufferNumber].DLC));
+    tmpreg = CANx->CAN_BUF[BufferNumber].DLC;
 
     RxMessage->Rx_Header.DLC = (uint8_t)(tmpreg & CAN_DLC_DATA_LENGTH);
     /* Get the IDE */
@@ -497,17 +489,17 @@ void CAN_GetRawReceivedData(MDR_CAN_TypeDef* CANx, uint32_t BufferNumber, CAN_Rx
     }
     /* Get the OVER_EN */
     RxMessage->Rx_Header.OVER_EN = DISABLE;
-    tmpreg = CAN_ReadBufferSFR(&(CANx->BUF_CON[BufferNumber]));
+    tmpreg = CANx->BUF_CON[BufferNumber];
     if ((tmpreg & CAN_BUF_CON_OVER_EN) != 0)
     {
         RxMessage->Rx_Header.OVER_EN = ENABLE;
     }
     /* Get the Id */
-    RxMessage->Rx_Header.ID = CAN_ReadBufferSFR(&(CANx->CAN_BUF[BufferNumber].ID));
+    RxMessage->Rx_Header.ID = CANx->CAN_BUF[BufferNumber].ID;
 
     /* Get the data field */
-    RxMessage->Data[0] = CAN_ReadBufferSFR(&(CANx->CAN_BUF[BufferNumber].DATAL));
-    RxMessage->Data[1] = CAN_ReadBufferSFR(&(CANx->CAN_BUF[BufferNumber].DATAH));
+    RxMessage->Data[0] = CANx->CAN_BUF[BufferNumber].DATAL;
+    RxMessage->Data[1] = CANx->CAN_BUF[BufferNumber].DATAH;
 }
 
 /**
@@ -844,55 +836,13 @@ void CAN_BRGInit(MDR_CAN_TypeDef* CANx, CAN_Clock_BRG CAN_BRG)
 
 /** @} */ /* End of group CAN_Exported_Functions */
 
-/** @defgroup CAN_Private_Functions CAN Private Functions
-  * @{
-  */
-
-/**
-  * @brief  Service function for some SFRs reading supporting
-  *         MDR32FxQI Series Errata Notice, Error 0002 workaround.
-  * @note   If WORKAROUND_MDR32F9QX_ERROR_0002 is defined the function performs
-  *         corrective actions (IMPORTANT: after SFR reading it enables IRQs in this mode),
-  *         otherwise, just reads SFR.
-  * @param  SFR: specifies SFR address
-  * @retval SFR value
-  */
-static __INLINE uint32_t CAN_ReadBufferSFR(__IO uint32_t* SFR)
-{
-#ifdef WORKAROUND_MDR32F9QX_ERROR_0002
-    /*
-     * MDR32FxQI Series Errata Notice, Error 0002:
-     * The registers CAN_BUFxx_ID, CAN_BUFxx_DLC, CAN_BUFxx_DATAL,
-     * CAN_BUFxx_DATAH, CAN_BUFxx_MASK or CAN_BUFxx_FILTER value
-     * may be incorrectly read as 0 if CAN controller accessed any
-     * of that registers at the moment of reading.
-     * In such case, another read should be performed in a time less
-     * than minimum CAN package.
-     */
-    uint32_t tmpreg;
-    
-    __disable_irq();
-    tmpreg = *SFR;
-    if (tmpreg == 0)
-    {
-        tmpreg = *SFR;
-    }
-    __enable_irq();
-    return tmpreg;
-#else
-    return *SFR;
-#endif  /* WORKAROUND_MDR32F9QX_ERROR_0002 */
-}
-
-/** @} */ /* End of group CAN_Private_Functions */
-
 /** @} */ /* End of group CAN */
 
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_can.c */
 

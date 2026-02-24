@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_eth.c
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    26/06/2023
+  * @version V2.1.2i
+  * @date    24/07/2024
   * @brief   This file contains all the ETHERNET firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -32,9 +32,9 @@
   * @{
   */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /** @defgroup ETHERNET ETHERNET
- *  @warning This module can be used only for MCU MDR32F1QI.
+ *  @warning This module can be used only for MCU K1986VE1xI.
   * @{
   */
 
@@ -186,7 +186,7 @@ void ETH_PHY_Reset(MDR_ETHERNET_TypeDef * ETHERNETx)
 
 /**
   * @brief  Enables or disables the PHY.
-  * @note   If WORKAROUND_MDR32F1QI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION is defined
+  * @note   If WORKAROUND_K1986VE1xI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION is defined
   *         the function takes corrective action when the PHY is enable (performs a PHY
   *         start check in 10BaseT mode), otherwise it simply enable the PHY.
   * @param  ETHERNETx: Select the ETHERNET peripheral.
@@ -196,7 +196,7 @@ void ETH_PHY_Reset(MDR_ETHERNET_TypeDef * ETHERNETx)
   */
 void ETH_PHYCmd(MDR_ETHERNET_TypeDef * ETHERNETx, FunctionalState NewState)
 {
-#ifdef WORKAROUND_MDR32F1QI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
+#ifdef WORKAROUND_K1986VE1xI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
     uint32_t tmpreg_PHY_Control_Mode;
 #endif
     /* Check the parameters */
@@ -205,7 +205,7 @@ void ETH_PHYCmd(MDR_ETHERNET_TypeDef * ETHERNETx, FunctionalState NewState)
 
     if(NewState == ENABLE)
     {
-#ifdef WORKAROUND_MDR32F1QI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
+#ifdef WORKAROUND_K1986VE1xI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
         tmpreg_PHY_Control_Mode = ETHERNETx->PHY_Control & ETH_PHY_CONTROL_MODE_Msk;
 
         if(tmpreg_PHY_Control_Mode == ETH_PHY_MODE_10BaseT_Half_Duplex ||
@@ -218,8 +218,9 @@ void ETH_PHYCmd(MDR_ETHERNET_TypeDef * ETHERNETx, FunctionalState NewState)
         {
             ETHERNETx->PHY_Control |= ETH_PHY_CONTROL_nRST;
         }
-#endif
+#else
         ETHERNETx->PHY_Control |= ETH_PHY_CONTROL_nRST;
+#endif
     }
     else
     {
@@ -1394,13 +1395,13 @@ uint16_t ETH_GetTxBufferFreeSize(MDR_ETHERNET_TypeDef * ETHERNETx)
 
 /** @} */ /* End of group ETH_Exported_Functions */
 
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group ETHERNET ETHERNET  */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_eth.c */
 

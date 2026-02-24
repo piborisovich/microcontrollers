@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_adc.h
   * @author  Milandr Application Team
-  * @version V2.0.1i
-  * @date    02/02/2023
+  * @version V2.1.1i
+  * @date    24/07/2024
   * @brief   This file contains all the functions prototypes for the ADC
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -54,9 +54,9 @@ extern "C" {
 /** @defgroup ADC_Int_VRef_Trimming ADC Internal Voltage Reference Trimming
   * @{
   */
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     #define IS_ADC_VREF_TRIMMING_VALUE(VALUE) (((VALUE) & ~0x0F) == 0)
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
     #define IS_ADC_VREF_TRIMMING_VALUE(VALUE) (((VALUE) & ~0x1F) == 0)
 #endif
 
@@ -128,7 +128,7 @@ extern "C" {
   * @{
   */
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
 /**
   * @brief ADC Synchronous Mode
   */
@@ -141,7 +141,7 @@ typedef enum
 #define IS_ADC_SYNC_MODE(MODE) (((MODE) == ADC_SyncMode_Independent) || \
                                 ((MODE) == ADC_SyncMode_Synchronous))
 
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
 /**
   * @brief ADC Temperature Sensor configuration
@@ -370,14 +370,14 @@ typedef enum
     ADC1_FLAG_OVERWRITE         = (ADCx_FLAG_OVERWRITE         <<  0),
     ADC1_FLAG_OUT_OF_RANGE      = (ADCx_FLAG_OUT_OF_RANGE      <<  0),
     ADC1_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION <<  0),
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     ADC2_FLAG_OVERWRITE         = (ADCx_FLAG_OVERWRITE         << 16),
     ADC2_FLAG_OUT_OF_RANGE      = (ADCx_FLAG_OUT_OF_RANGE      << 16),
     ADC2_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 16)
 #endif
 } ADC_Flags;
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     #define IS_ADC_STATUS_FLAG(FLAG) (((FLAG) == ADC1_FLAG_OVERWRITE        ) || \
                                       ((FLAG) == ADC1_FLAG_OUT_OF_RANGE     ) || \
                                       ((FLAG) == ADC1_FLAG_END_OF_CONVERSION) || \
@@ -391,9 +391,9 @@ typedef enum
                                          ADC2_FLAG_OVERWRITE         | \
                                          ADC2_FLAG_OUT_OF_RANGE      | \
                                          ADC2_FLAG_END_OF_CONVERSION)) == 0x0)
-#endif /* #if defined  (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined  (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     #define IS_ADC_STATUS_FLAG(FLAG) (((FLAG) == ADC1_FLAG_OVERWRITE        ) || \
                                       ((FLAG) == ADC1_FLAG_OUT_OF_RANGE     ) || \
                                       ((FLAG) == ADC1_FLAG_END_OF_CONVERSION))
@@ -401,7 +401,7 @@ typedef enum
     #define IS_ADC_STATUS_FLAGS(FLAGS)  (((FLAGS) & ~(ADC1_FLAG_OVERWRITE | \
                                          ADC1_FLAG_OUT_OF_RANGE           | \
                                          ADC1_FLAG_END_OF_CONVERSION)) == 0x0)
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /**
   * @brief ADCx Interrupt definition
@@ -425,13 +425,13 @@ typedef enum
 {
     ADC1_IT_OUT_OF_RANGE      = (ADCx_IT_OUT_OF_RANGE      <<  0),
     ADC1_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION <<  0),
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     ADC2_IT_OUT_OF_RANGE      = (ADCx_IT_OUT_OF_RANGE      << 16),
     ADC2_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 16)
 #endif
 } ADC_IT_Def;
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     #define IS_ADC_CONFIG_IT(IT)            (((IT) == ADC1_IT_OUT_OF_RANGE     ) || \
                                              ((IT) == ADC1_IT_END_OF_CONVERSION) || \
                                              ((IT) == ADC2_IT_OUT_OF_RANGE     ) || \
@@ -440,17 +440,17 @@ typedef enum
                                              ADC1_IT_END_OF_CONVERSION       | \
                                              ADC2_IT_OUT_OF_RANGE            | \
                                              ADC2_IT_END_OF_CONVERSION)) == 0x0)
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     #define IS_ADC_CONFIG_IT(IT)            (((IT) == ADC1_IT_OUT_OF_RANGE     ) || \
                                              ((IT) == ADC1_IT_END_OF_CONVERSION))
     #define IS_ADC_CONFIG_ITS(ITS)          (((ITS) & ~(ADC1_IT_OUT_OF_RANGE | \
                                                ADC1_IT_END_OF_CONVERSION)) == 0x0)
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 
 /**
   * @brief ADC Int_VRef Amplifier state
@@ -464,19 +464,19 @@ typedef enum
 #define IS_ADC_INT_VREF_AMPLIFIER(AMPLIFIER)    (((AMPLIFIER) == ADC_INT_VREF_AMPLIFIER_Enable) ||\
                                                  ((AMPLIFIER) == ADC_INT_VREF_AMPLIFIER_Disable))
 
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /**
   * @brief ADC Init structure definition
   */
 typedef struct
 {
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     ADC_SyncMode               ADC_SynchronousMode;      /*!< Enables or disables the ADC1, ADC2 synchronous mode operation.
                                                               This parameter can be a value of @ref ADC_SyncMode */
     uint32_t                   ADC_StartDelay;           /*!< Specifies the ADC1 and ADC2 conversion start delay.
                                                               This parameter can be a number between 0 and 15. */
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
     ADC_Temp_Sensor            ADC_TempSensor;           /*!< Enables or disables the temperature sensor and internal voltage reference.
                                                               This parameter can be a value of @ref ADC_Temp_Sensor */
     ADC_Temp_Sensor_Amplifier  ADC_TempSensorAmplifier;  /*!< Enables or disables the temperature sensor and internal voltage reference amplifier.
@@ -486,12 +486,12 @@ typedef struct
     ADC_Int_VRef_Conversion    ADC_IntVRefConversion;    /*!< Enables or disables the internal voltage reference conversion.
                                                               This parameter can be a value of @ref ADC_Int_VRef_Conversion */
     uint32_t                   ADC_IntVRefTrimming;      /*!< Configures the internal voltage reference trimming. @ref ADC_Int_VRef_Trimming
-                                                              This parameter can be a number between 0 and 7 for MDR32F9Q2I and MDR32FG16S1QI;
-                                                                                and a number between 0 and 31 for MDR32F1QI. */
-#if defined (USE_MDR32F1QI)
+                                                              This parameter can be a number between 0 and 7 for MDR32F9Q2I, K1986VE9xI, and MDR32FG16S1QI;
+                                                                                and a number between 0 and 31 for MDR32F1QI, K1986VE1xI. */
+#if defined (USE_K1986VE1xI)
     ADC_Int_VRef_Ampl_State    ADC_IntVRefAmplifier;     /*!< Enable or disable the internal voltage reference amplifier.
                                                               This parameter can be a value of @ref ADC_Int_VRef_Ampl_State */
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 } ADC_InitTypeDef;
 
 /**
@@ -586,7 +586,7 @@ ITStatus ADC_GetITStatus(uint32_t ADC_IT);
 ITStatus ADC1_GetITStatus(uint32_t ADCx_IT);
 
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     void ADC2_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
     void ADC2_Cmd(FunctionalState NewState);
     void ADC2_SetChannel(ADCx_Channel_Number Channel);
@@ -606,7 +606,7 @@ ITStatus ADC1_GetITStatus(uint32_t ADCx_IT);
     void ADC2_ClearOutOfRangeFlag(void);
     void ADC2_ITConfig(uint32_t ADCx_IT, FunctionalState NewState);
     ITStatus ADC2_GetITStatus(uint32_t ADCx_IT);
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
 /** @} */ /* End of group ADC_Exported_Functions */
 
@@ -620,7 +620,7 @@ ITStatus ADC1_GetITStatus(uint32_t ADCx_IT);
 
 #endif /* __MDR32FxQI_ADC_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_adc.h */
 

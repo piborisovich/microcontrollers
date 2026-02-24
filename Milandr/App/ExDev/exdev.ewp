@@ -349,7 +349,13 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state></state>
+                    <state>$PROJ_DIR$</state>
+                    <state>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\CoreSupport\CM3</state>
+                    <state>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\inc</state>
+                    <state>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src</state>
+                    <state>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F9Q2I\inc</state>
+                    <state>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F9Q2I\startup</state>
+                    <state>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F9Q2I\startup\iar</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -441,11 +447,11 @@
                 </option>
                 <option>
                     <name>CCEncSource</name>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCEncOutput</name>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCEncOutputBom</name>
@@ -453,7 +459,7 @@
                 </option>
                 <option>
                     <name>CCEncInput</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IccExceptions2</name>
@@ -595,7 +601,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state></state>
+                    <state>$FILE_BNAME$.o</state>
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -637,7 +643,7 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
@@ -645,7 +651,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>exdev.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -653,7 +659,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -764,7 +770,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state></state>
+                    <state>$TOOLKIT_DIR$\config\linker\Milandr\MDR32F9Q2I\MDR32F9Q2I.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -824,7 +830,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state>__iar_program_start</state>
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -997,7 +1003,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>###Unitialized###</state>
+                    <state>exdev_import_lib.o</state>
                 </option>
             </data>
         </settings>
@@ -2056,9 +2062,42 @@
         </settings>
     </configuration>
     <group>
+        <name>Driver</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_bkp.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_eeprom.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_port.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_power.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_rst_clk.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_timer.c</name>
+        </file>
+    </group>
+    <group>
         <name>src</name>
         <file>
             <name>$PROJ_DIR$\src\main.c</name>
+        </file>
+    </group>
+    <group>
+        <name>Startup</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F9Q2I\startup\iar\startup_MDR32F9Q2I.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F9Q2I\startup\system_MDR32F9Q2I.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F9Q2I\startup\system_MDR32F9Q2I.h</name>
         </file>
     </group>
 </project>

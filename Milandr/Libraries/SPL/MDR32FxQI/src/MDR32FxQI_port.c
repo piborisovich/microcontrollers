@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_port.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    25/01/2023
+  * @version V2.2.0i
+  * @date    19/11/2024
   * @brief   This file contains all the PORT firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -57,13 +57,13 @@ void PORT_DeInit(MDR_PORT_TypeDef* MDR_PORTx)
     /* Check the parameters */
     assert_param(IS_PORT_ALL_PERIPH(MDR_PORTx));
 
-    MDR_PORTx->ANALOG = 0;
-    MDR_PORTx->PULL   = 0;
     MDR_PORTx->OE     = 0;
-    MDR_PORTx->RXTX   = 0;
     MDR_PORTx->FUNC   = 0;
-    MDR_PORTx->PD     = 0;
+    MDR_PORTx->ANALOG = 0;
     MDR_PORTx->PWR    = 0;
+    MDR_PORTx->PD     = 0;
+    MDR_PORTx->RXTX   = 0;
+    MDR_PORTx->PULL   = 0;
     MDR_PORTx->GFEN   = 0;
 }
 
@@ -85,7 +85,7 @@ void PORT_Init(MDR_PORT_TypeDef* MDR_PORTx, const PORT_InitTypeDef* PORT_InitStr
     uint32_t tmpreg_PD;
     uint32_t tmpreg_PWR;
     uint32_t tmpreg_GFEN;
-    uint32_t portpin, pos, mask_s, mask_l, mask_d;
+    uint32_t portpin, pos, mask_s, mask_l, mask_d, mask_func;
 
     /* Check the parameters */
     assert_param(IS_PORT_ALL_PERIPH(MDR_PORTx));
@@ -114,6 +114,7 @@ void PORT_Init(MDR_PORT_TypeDef* MDR_PORTx, const PORT_InitTypeDef* PORT_InitStr
     mask_s = 0x0001;
     mask_l = 0x00000003;
     mask_d = 0x00010001;
+    mask_func = 0;
 
     for (portpin = PORT_InitStruct->PORT_Pin; portpin; portpin >>= 1)
     {
@@ -128,6 +129,7 @@ void PORT_Init(MDR_PORT_TypeDef* MDR_PORTx, const PORT_InitTypeDef* PORT_InitStr
                                                       | (PORT_InitStruct->PORT_PD        <<  pos);
             tmpreg_PWR    = (tmpreg_PWR    & ~mask_l) | (PORT_InitStruct->PORT_SPEED     << (pos * 2));
             tmpreg_GFEN   = (tmpreg_GFEN   & ~mask_s) | (PORT_InitStruct->PORT_GFEN      <<  pos);
+            mask_func |= mask_l;
         }
         mask_s <<= 1;
         mask_l <<= 2;
@@ -135,25 +137,35 @@ void PORT_Init(MDR_PORT_TypeDef* MDR_PORTx, const PORT_InitTypeDef* PORT_InitStr
         pos++;
     }
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
-    /* Configure PORT registers with new values */
-    MDR_PORTx->OE     = tmpreg_OE     & (~JTAG_PINS(MDR_PORTx));
-    MDR_PORTx->FUNC   = tmpreg_FUNC   & (~JTAG_PINS2(MDR_PORTx));
-    MDR_PORTx->ANALOG = tmpreg_ANALOG & (~JTAG_PINS(MDR_PORTx));
-    MDR_PORTx->PULL   = tmpreg_PULL   & (~JTAG_PINS3(MDR_PORTx));
-    MDR_PORTx->PD     = tmpreg_PD     & (~JTAG_PINS3(MDR_PORTx));
-    MDR_PORTx->PWR    = tmpreg_PWR    & (~JTAG_PINS2(MDR_PORTx));
-    MDR_PORTx->GFEN   = tmpreg_GFEN   & (~JTAG_PINS(MDR_PORTx));
-#elif defined (USE_MDR32F1QI)
-    /* Configure PORT registers with new values */
-    MDR_PORTx->OE     = tmpreg_OE;
-    MDR_PORTx->FUNC   = tmpreg_FUNC;
-    MDR_PORTx->ANALOG = tmpreg_ANALOG;
-    MDR_PORTx->PULL   = tmpreg_PULL;
-    MDR_PORTx->PD     = tmpreg_PD;
-    MDR_PORTx->PWR    = tmpreg_PWR;
-    MDR_PORTx->GFEN   = tmpreg_GFEN;
+    portpin = (PORT_InitStruct->PORT_Pin);
+
+#if (defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)) && (defined (USE_JTAG_A) || defined (USE_JTAG_B))
+    /* JTAG pins protection. */
+    portpin   |= JTAG_PINS(MDR_PORTx);
+    mask_func |= JTAG_PINS2(MDR_PORTx);
+
+    tmpreg_OE     &= ~JTAG_PINS(MDR_PORTx);
+    tmpreg_ANALOG &= ~JTAG_PINS(MDR_PORTx);
+    tmpreg_FUNC   &= ~JTAG_PINS2(MDR_PORTx);
+    tmpreg_PULL   &= ~JTAG_PINS3(MDR_PORTx);
+    tmpreg_PD     &= ~JTAG_PINS3(MDR_PORTx);
+    tmpreg_PWR    &= ~JTAG_PINS2(MDR_PORTx);
+    tmpreg_GFEN   &= ~JTAG_PINS(MDR_PORTx);
 #endif
+
+    /* Partial deinitialization for all pins which will be configured. */
+    MDR_PORTx->OE     &= ~portpin;
+    MDR_PORTx->FUNC   &= ~mask_func;
+    MDR_PORTx->ANALOG &= ~portpin;
+
+    /* Configure PORT registers with new values. */
+    MDR_PORTx->PULL   = tmpreg_PULL;
+    MDR_PORTx->PWR    = tmpreg_PWR;
+    MDR_PORTx->PD     = tmpreg_PD;
+    MDR_PORTx->GFEN   = tmpreg_GFEN;
+    MDR_PORTx->ANALOG = tmpreg_ANALOG;
+    MDR_PORTx->FUNC   = tmpreg_FUNC;
+    MDR_PORTx->OE     = tmpreg_OE;
 }
 
 /**
@@ -231,11 +243,11 @@ void PORT_SetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin)
     assert_param(IS_PORT_PIN(PORT_Pin));
     assert_param(IS_NOT_JTAG_PIN(MDR_PORTx, PORT_Pin));
 
-#if defined (USE_MDR32F9Q2I)
+#if defined (USE_K1986VE9xI)
     MDR_PORTx->RXTX = (PORT_Pin | MDR_PORTx->RXTX) & (~JTAG_PINS(MDR_PORTx));
 #elif defined (USE_MDR32FG16S1QI)
     MDR_PORTx->SETTX = (PORT_Pin & ~JTAG_PINS(MDR_PORTx));
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
     MDR_PORTx->SETTX = PORT_Pin;
 #endif
 }
@@ -254,11 +266,11 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin)
     assert_param(IS_PORT_PIN(PORT_Pin));
     assert_param(IS_NOT_JTAG_PIN(MDR_PORTx, PORT_Pin));
 
-#if defined (USE_MDR32F9Q2I)
+#if defined (USE_K1986VE9xI)
     MDR_PORTx->RXTX &= ~(PORT_Pin | JTAG_PINS(MDR_PORTx));
 #elif defined (USE_MDR32FG16S1QI)
     MDR_PORTx->CLRTX = (PORT_Pin & ~JTAG_PINS(MDR_PORTx));
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
     MDR_PORTx->CLRTX = PORT_Pin;
 #endif
 }
@@ -284,21 +296,21 @@ void PORT_WriteBit(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin, BitStatus Bit
 
     if (BitVal != 0)
     {
-#if defined (USE_MDR32F9Q2I)
+#if defined (USE_K1986VE9xI)
         MDR_PORTx->RXTX = (PORT_Pin | MDR_PORTx->RXTX) & (~JTAG_PINS(MDR_PORTx));
 #elif defined (USE_MDR32FG16S1QI)
         MDR_PORTx->SETTX = (PORT_Pin & ~JTAG_PINS(MDR_PORTx));
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
         MDR_PORTx->SETTX = PORT_Pin;
 #endif
     }
     else
     {
-#if defined (USE_MDR32F9Q2I)
+#if defined (USE_K1986VE9xI)
         MDR_PORTx->RXTX &= ~(PORT_Pin | JTAG_PINS(MDR_PORTx));
 #elif defined (USE_MDR32FG16S1QI)
         MDR_PORTx->CLRTX = (PORT_Pin & ~JTAG_PINS(MDR_PORTx));
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
         MDR_PORTx->CLRTX = PORT_Pin;
 #endif
     }
@@ -326,7 +338,7 @@ void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_port.c */
 

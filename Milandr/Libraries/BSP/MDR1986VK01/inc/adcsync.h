@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   * FILE adcsync.h
   */
@@ -248,7 +248,7 @@ void AdcStartConv( ADCxControl *adc );
 
 #endif /* __ADCSYNC_H */
 
-/******************* (C) COPYRIGHT 2023 Milandr ********************************
+/******************* (C) COPYRIGHT 2025 Milandr ********************************
 *
 * END OF FILE adcsync.h */
 

@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   * FILE i2c_eeprom.h
   */
@@ -63,7 +63,7 @@ uint8_t I2C_Mem_RwData( uint16_t addr, uint8_t* pData, uint16_t lenght, uint8_t 
 
 #endif /* __I2C_EEPROM_H */
 
-/******************* (C) COPYRIGHT 2023 Milandr ********************************
+/******************* (C) COPYRIGHT 2025 Milandr ********************************
 *
 * END OF FILE i2c_eeprom.h */
 

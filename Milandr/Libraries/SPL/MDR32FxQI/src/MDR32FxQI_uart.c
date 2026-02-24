@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_uart.c
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    22/06/2023
+  * @version V2.2.1i
+  * @date    24/07/2024
   * @brief   This file contains all the UART firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -35,7 +35,7 @@
   * @{
   */
 
-#if defined (USE_MDR32F9Q2I) || defined(USE_MDR32F1QI)
+#if defined (USE_K1986VE9xI) || defined(USE_K1986VE1xI)
     #define IS_UART_ALL_PERIPH(PERIPH)      (((PERIPH) == MDR_UART1) || \
                                              ((PERIPH) == MDR_UART2))
 #elif defined (USE_MDR32FG16S1QI)
@@ -87,7 +87,7 @@
   * @brief  Resets the UARTx peripheral registers to their default reset values.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @retval None
   */
@@ -118,7 +118,7 @@ void UART_DeInit(MDR_UART_TypeDef* UARTx)
   *         parameters in the UART_InitStruct.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_InitStruct: pointer to a @ref UART_InitTypeDef structure
   *         that contains the configuration information for the specified UART peripheral.
@@ -219,7 +219,7 @@ void UART_StructInit(UART_InitTypeDef* UART_InitStruct)
   * @brief  Enables or disables the specified UART peripheral.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  NewState - @ref FunctionalState - new state of the UARTx peripheral.
   * @retval None
@@ -246,7 +246,7 @@ void UART_Cmd(MDR_UART_TypeDef* UARTx, FunctionalState NewState)
   * @brief  Enables or disables the specified UART interrupts.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_IT: specifies the UART interrupt sources to be enabled or disabled.
   *         This parameter can be any combination of @ref UART_IT_TypeDef values.
@@ -274,7 +274,7 @@ void UART_ITConfig(MDR_UART_TypeDef* UARTx, uint32_t UART_IT, FunctionalState Ne
   * @brief  Checks whether the specified UART interrupt has occurred or not.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_IT - @ref UART_IT_TypeDef - specifies the UART interrupt source to check.
   * @retval @ref ITStatus - The state of UART_IT (SET or RESET).
@@ -303,7 +303,7 @@ ITStatus UART_GetITStatus(MDR_UART_TypeDef* UARTx, UART_IT_TypeDef UART_IT)
   * @brief  Checks whether the specified UART interrupt (masked) has occurred or not.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_IT - @ref UART_IT_TypeDef - specifies the UART interrupt source to check.
   * @retval @ref ITStatus - The state of UART_IT (SET or RESET).
@@ -332,7 +332,7 @@ ITStatus UART_GetITStatusMasked(MDR_UART_TypeDef* UARTx, UART_IT_TypeDef UART_IT
   * @brief  Clears the UARTx's interrupt pending bits.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_IT: specifies the interrupt pending bit to clear.
   *         This parameter can be any combination of @ref UART_IT_TypeDef values.
@@ -351,7 +351,7 @@ void UART_ClearITPendingBit(MDR_UART_TypeDef* UARTx, uint32_t UART_IT)
   * @brief  Specified the UART DMA buffer interrupt level.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_IT_RB_LVL - @ref UART_IT_FIFO_TypeDef - specifies the receiver buffer.
   * @param  UART_IT_TB_LVL - @ref UART_IT_FIFO_TypeDef - specifies the transmitter buffer.
@@ -371,7 +371,7 @@ void UART_DMAConfig(MDR_UART_TypeDef* UARTx, UART_IT_FIFO_TypeDef UART_IT_RB_LVL
   * @brief  Enables or disables the UART's DMA interface.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_DMAReq: specifies the DMA request.
   *         This parameter can be any combination of @ref UART_DMA_Req_TypeDef values.
@@ -403,7 +403,7 @@ void UART_DMACmd(MDR_UART_TypeDef* UARTx, uint32_t UART_DMAReq, FunctionalState 
   * @brief  Transmits single data through the UARTx peripheral.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  Data: the data to transmit.
   * @retval None
@@ -437,7 +437,7 @@ uint16_t UART_ReceiveData(MDR_UART_TypeDef* UARTx)
   * @brief  Break transmit.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  NewState - @ref FunctionalState - new state of the Line.
   * @retval None
@@ -464,7 +464,7 @@ void UART_BreakLine(MDR_UART_TypeDef* UARTx, FunctionalState NewState)
   * @brief  Configures the UART's IrDA interface.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_IrDAMode - @ref UART_IrDA_Mode_TypeDef - specifies the IrDA mode.
   * @retval None
@@ -510,7 +510,7 @@ void UART_IrDAConfig(MDR_UART_TypeDef* UARTx, UART_IrDA_Mode_TypeDef UART_IrDAMo
   * @brief  Enables or disables the UART's IrDA interface.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  NewState - @ref FunctionalState - new state of the IrDA mode.
   * @retval None
@@ -537,7 +537,7 @@ void UART_IrDACmd(MDR_UART_TypeDef* UARTx, FunctionalState NewState)
   * @brief  Checks whether the specified UART flag is set or not.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_FLAG - @ref UART_Flags_TypeDef - specifies the flag to check.
   * @retval @ref FlagStatus - The state of UART_FLAG (SET or RESET).
@@ -567,7 +567,7 @@ FlagStatus UART_GetFlagStatus(MDR_UART_TypeDef* UARTx, UART_Flags_TypeDef UART_F
   *         specified parameters.
   * @param  UARTx: Select the UART peripheral.
   *         This parameter can be one of the MDR_UARTx values, where x is a number:
-  *             1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *             1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *             1, 2, 3 for MDR32FG16S1QI.
   * @param  UART_BRG - @ref UART_Clock_BRG_TypeDef - specifies the HCLK division factor.
   * @retval None
@@ -612,7 +612,7 @@ void UART_BRGInit(MDR_UART_TypeDef* UARTx, UART_Clock_BRG_TypeDef UART_BRG)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_uart.c */
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_dac.h
   * @author  Milandr Application Team
-  * @version V2.0.1i
-  * @date    14/04/2023
+  * @version V2.1.1i
+  * @date    24/07/2024
   * @brief   This file contains all the functions prototypes for the DAC
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -43,7 +43,7 @@ extern "C" {
   * @{
   */
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 /**
   * @brief DAC Synchronous Mode
   */
@@ -101,24 +101,24 @@ typedef enum
 
 void DAC_DeInit(void);
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 void DAC_Init(DAC_Sync_Mode SyncMode, DAC1_Ref_Src DAC1_Ref, DAC2_Ref_Src DAC2_Ref);
 
 void DAC1_Init(DAC1_Ref_Src DAC1_Ref);
 #endif
 void DAC2_Init(DAC2_Ref_Src DAC2_Ref);
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 void DAC1_Cmd(FunctionalState NewState);
 #endif
 void DAC2_Cmd(FunctionalState NewState);
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 void DAC1_SetData(uint32_t Data);
 #endif
 void DAC2_SetData(uint32_t Data);
 
-#if !defined (USE_MDR32F9Q2I)
+#if !defined (USE_K1986VE9xI)
 uint32_t DAC1_GetData(void);
 #endif
 uint32_t DAC2_GetData(void);
@@ -135,7 +135,7 @@ uint32_t DAC2_GetData(void);
 
 #endif /* __MDR32FxQI_DAC_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_dac.h */
 

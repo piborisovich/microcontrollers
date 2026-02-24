@@ -1,4 +1,3 @@
-
 /**
   * FILE MDR32FG16S1QI.h
   */
@@ -34,6 +33,8 @@ extern "C" {
 typedef enum IQRn
 {
 /*-- Processor Exceptions Numbers ---------------------------------------------*/
+/* Attention for NonMaskableInt_IRQn: */
+/* Called by software only (bit [31] of the ICSR register). Used for mission critical applications */
     NonMaskableInt_IRQn                   = -14, /*!< 2 Non Maskable Interrupt */
     HardFault_IRQn                        = -13, /*!< 3 Hard Fault Interrupt */
     MemoryManagement_IRQn                 = -12, /*!< 4 Memory Management Interrupt */
@@ -78,7 +79,7 @@ typedef enum IQRn
     EXT_INT4_IRQn                         = 31  /*!< EXT_INT4  Interrupt */
 }IRQn_Type;
 
-/** @addtogroup __MDR32FG16S1QI__Configuration_of_CMSIS Configuration of CMSIS
+/** @addtogroup Configuration_of_CMSIS Configuration of CMSIS
   * @{
   */
 /* Configuration of the Processor and Core Peripherals */
@@ -87,7 +88,7 @@ typedef enum IQRn
 #define __NVIC_PRIO_BITS          3     /*!< Number of Bits used for Priority Levels      */
 #define __Vendor_SysTickConfig    0     /*!< Set to 1 if different SysTick Config is used */
 
-/** @} */ /* End of group __MDR32FG16S1QI__Configuration_of_CMSIS */
+/** @} */ /* End of group Configuration_of_CMSIS */
 
 
 /* Includes ------------------------------------------------------------------*/
@@ -95,7 +96,7 @@ typedef enum IQRn
 #include "core_cm3.h"
 #include "system_MDR32FG16S1QI.h"
 
-/** @defgroup __MDR32FG16S1QI___Exported_types Exported types
+/** @defgroup _Exported_types Exported types
   * @{
   */
 
@@ -108,7 +109,102 @@ typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 
 typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
 
-/** @} */ /* End of group __MDR32FG16S1QI___Exported_types */
+/** @} */ /* End of group _Exported_types */
+
+/** @addtogroup __Memory_Map Memory Map
+  * @{
+  */
+
+#define ROM_BOOT_BASE            ((uint32_t)0x00000000)
+#define ROM_BOOT_SIZE            ((uint32_t)0x00001000)
+
+#define EEPROM_BASE              ((uint32_t)0x08000000)
+#define EEPROM_SIZE              ((uint32_t)0x00020000)
+
+#define EBC_CODE_BASE            ((uint32_t)0x10000000)
+#define EBC_CODE_SIZE            ((uint32_t)0x10000000)
+
+#define RAM_AHB_BASE             ((uint32_t)0x20000000)
+#define RAM_AHB_SIZE             ((uint32_t)0x00008000)
+
+#define RAM_AHB_BB_BASE          ((uint32_t)0x22000000)
+#define RAM_AHB_BB_SIZE          ((uint32_t)0x00100000)
+
+#define DSP_CORE_BASE            ((uint32_t)0x30000000)
+#define DSP_CORE_SIZE            ((uint32_t)0x00000040)
+
+#define DSP_PERIPH_BASE          ((uint32_t)0x30000040)
+#define DSP_PERIPH_SIZE          ((uint32_t)0x000000C0)
+
+#define DSP_RAM_DATA_BASE        ((uint32_t)0x30000100)
+#define DSP_RAM_DATA_SIZE        ((uint32_t)0x0001FF00)
+
+#define DSP_RAM_CODE_BASE        ((uint32_t)0x30020000)
+#define DSP_RAM_CODE_SIZE        ((uint32_t)0x00020000)
+
+#define PERIPH_BASE              ((uint32_t)0x40000000)
+#define PERIPH_SIZE              ((uint32_t)0x00100000)
+
+#define PERIPH_BB_BASE           ((uint32_t)0x42000000)
+#define PERIPH_BB_SIZE           ((uint32_t)0x02000000)
+
+#define EBC_PERIPH_BASE          ((uint32_t)0x50000000)
+#define EBC_PERIPH_SIZE          ((uint32_t)0x10000000)
+
+#define EBC_RAM_BASE             ((uint32_t)0x60000000)
+#define EBC_RAM_SIZE             ((uint32_t)0x40000000)
+
+#define EBC_DEVICE_BASE          ((uint32_t)0xA0000000)
+#define EBC_DEVICE_SIZE          ((uint32_t)0x40000000)
+
+/** @} */ /* End of group __Memory_Map */
+
+/** @defgroup __Peripheral_Memory_Map Peripheral Memory Map
+  * @{
+  */
+
+#define MDR_SSP3_BASE       (PERIPH_BASE + (uint32_t)0x00000000)
+#define MDR_SSP4_BASE       (PERIPH_BASE + (uint32_t)0x00008000)
+#define MDR_USB_BASE        (PERIPH_BASE + (uint32_t)0x00010000)
+#define MDR_EEPROM_BASE     (PERIPH_BASE + (uint32_t)0x00018000)
+#define MDR_RST_CLK_BASE    (PERIPH_BASE + (uint32_t)0x00020000)
+#define MDR_DMA_BASE        (PERIPH_BASE + (uint32_t)0x00028000)
+#define MDR_UART1_BASE      (PERIPH_BASE + (uint32_t)0x00030000)
+#define MDR_UART2_BASE      (PERIPH_BASE + (uint32_t)0x00038000)
+#define MDR_SSP1_BASE       (PERIPH_BASE + (uint32_t)0x00040000)
+#define MDR_SDIO_BASE       (PERIPH_BASE + (uint32_t)0x00048000)
+#define MDR_I2C_BASE        (PERIPH_BASE + (uint32_t)0x00050000)
+#define MDR_POWER_BASE      (PERIPH_BASE + (uint32_t)0x00058000)
+#define MDR_WWDG_BASE       (PERIPH_BASE + (uint32_t)0x00060000)
+#define MDR_IWDG_BASE       (PERIPH_BASE + (uint32_t)0x00068000)
+#define MDR_TIMER1_BASE     (PERIPH_BASE + (uint32_t)0x00070000)
+#define MDR_TIMER2_BASE     (PERIPH_BASE + (uint32_t)0x00078000)
+#define MDR_TIMER3_BASE     (PERIPH_BASE + (uint32_t)0x00080000)
+#define MDR_ADC_BASE        (PERIPH_BASE + (uint32_t)0x00088000)
+#define MDR_DAC_BASE        (PERIPH_BASE + (uint32_t)0x00090000)
+#define MDR_COMP_BASE       (PERIPH_BASE + (uint32_t)0x00098000)
+#define MDR_SSP2_BASE       (PERIPH_BASE + (uint32_t)0x000A0000)
+#define MDR_PORTA_BASE      (PERIPH_BASE + (uint32_t)0x000A8000)
+#define MDR_PORTB_BASE      (PERIPH_BASE + (uint32_t)0x000B0000)
+#define MDR_PORTC_BASE      (PERIPH_BASE + (uint32_t)0x000B8000)
+#define MDR_PORTD_BASE      (PERIPH_BASE + (uint32_t)0x000C0000)
+#define MDR_PORTE_BASE      (PERIPH_BASE + (uint32_t)0x000C8000)
+#define MDR_UART3_BASE      (PERIPH_BASE + (uint32_t)0x000D0000)
+#define MDR_BKP_BASE        (PERIPH_BASE + (uint32_t)0x000D8000)
+#define MDR_PORTF_BASE      (PERIPH_BASE + (uint32_t)0x000E8000)
+#define MDR_EBC_BASE        (PERIPH_BASE + (uint32_t)0x000F0000)
+
+#define MDR_DSP_CORE_BASE   (DSP_CORE_BASE + (uint32_t)0x00000000)
+#define MDR_MCBSP1_BASE     (DSP_PERIPH_BASE + (uint32_t)0x00000000)
+#define MDR_MCBSP2_BASE     (DSP_PERIPH_BASE + (uint32_t)0x00000010)
+#define MDR_MCBSP3_BASE     (DSP_PERIPH_BASE + (uint32_t)0x00000020)
+#define MDR_DSP_TIMER_BASE  (DSP_PERIPH_BASE + (uint32_t)0x00000030)
+#define MDR_DSP_IRQ_BASE    (DSP_PERIPH_BASE + (uint32_t)0x00000038)
+#define MDR_DSP_CRPT_BASE   (DSP_PERIPH_BASE + (uint32_t)0x00000040)
+#define MDR_AUDIO_IP_BASE   (DSP_PERIPH_BASE + (uint32_t)0x00000060)
+#define MDR_DSP_DMA_BASE    (DSP_PERIPH_BASE + (uint32_t)0x00000080)
+
+/** @} */ /* End of group __Peripheral_Memory_Map */
 
 /** @defgroup MDR32FG16S1QI_Peripheral_Units MDR32FG16S1QI Peripheral Units
   * @{
@@ -1247,8 +1343,6 @@ typedef struct {
 #define RST_CLK_PLL_CONTROL_PLL_DSP_RLD_Pos                17
 #define RST_CLK_PLL_CONTROL_PLL_DSP_MUL_Pos                20
 
-
-
 /* Bit field masks: */
 #define RST_CLK_PLL_CONTROL_PLL_USB_ON                     ((uint32_t)0x00000001)
 #define RST_CLK_PLL_CONTROL_PLL_USB_RLD                    ((uint32_t)0x00000002)
@@ -1259,8 +1353,6 @@ typedef struct {
 #define RST_CLK_PLL_CONTROL_PLL_DSP_ON                     ((uint32_t)0x00010000)
 #define RST_CLK_PLL_CONTROL_PLL_DSP_RLD                    ((uint32_t)0x00020000)
 #define RST_CLK_PLL_CONTROL_PLL_DSP_MUL_Msk                ((uint32_t)0x00F00000)
-
-
 
 /** @} */ /* End of group RST_CLK_PLL_CONTROL */
 
@@ -1375,6 +1467,134 @@ typedef struct {
   */
 
 /*-- RST_CLK_PER_CLOCK:RST_CLK PER_CLOCK Register -----*/
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Pos     0
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP3         RST_CLK_PER_CLOCK_PCLK_EN_SSP3_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP4_Pos     1
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP4_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SSP4_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP4         RST_CLK_PER_CLOCK_PCLK_EN_SSP4_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_USB_Pos      2
+#define RST_CLK_PER_CLOCK_PCLK_EN_USB_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_USB_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_USB          RST_CLK_PER_CLOCK_PCLK_EN_USB_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Pos   3
+#define RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Msk   (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_EEPROM       RST_CLK_PER_CLOCK_PCLK_EN_EEPROM_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Pos  4
+#define RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Msk  (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK      RST_CLK_PER_CLOCK_PCLK_EN_RST_CLK_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_DMA_Pos      5
+#define RST_CLK_PER_CLOCK_PCLK_EN_DMA_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_DMA_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_DMA          RST_CLK_PER_CLOCK_PCLK_EN_DMA_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART1_Pos    6
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART1_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_UART1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART1        RST_CLK_PER_CLOCK_PCLK_EN_UART1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART2_Pos    7
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART2_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_UART2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART2        RST_CLK_PER_CLOCK_PCLK_EN_UART2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Pos     8
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP1         RST_CLK_PER_CLOCK_PCLK_EN_SSP1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SDIO_Pos     9
+#define RST_CLK_PER_CLOCK_PCLK_EN_SDIO_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SDIO_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SDIO         RST_CLK_PER_CLOCK_PCLK_EN_SDIO_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_I2C_Pos      10
+#define RST_CLK_PER_CLOCK_PCLK_EN_I2C_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_I2C_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_I2C          RST_CLK_PER_CLOCK_PCLK_EN_I2C_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_POWER_Pos    11
+#define RST_CLK_PER_CLOCK_PCLK_EN_POWER_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_POWER_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_POWER        RST_CLK_PER_CLOCK_PCLK_EN_POWER_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Pos     12
+#define RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_WWDG         RST_CLK_PER_CLOCK_PCLK_EN_WWDG_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Pos     13
+#define RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_IWDG         RST_CLK_PER_CLOCK_PCLK_EN_IWDG_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Pos   14
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Msk   (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER1       RST_CLK_PER_CLOCK_PCLK_EN_TIMER1_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Pos   15
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Msk   (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER2       RST_CLK_PER_CLOCK_PCLK_EN_TIMER2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Pos   16
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Msk   (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_TIMER3       RST_CLK_PER_CLOCK_PCLK_EN_TIMER3_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_ADC_Pos      17
+#define RST_CLK_PER_CLOCK_PCLK_EN_ADC_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_ADC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_ADC          RST_CLK_PER_CLOCK_PCLK_EN_ADC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_DAC_Pos      18
+#define RST_CLK_PER_CLOCK_PCLK_EN_DAC_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_DAC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_DAC          RST_CLK_PER_CLOCK_PCLK_EN_DAC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_COMP_Pos     19
+#define RST_CLK_PER_CLOCK_PCLK_EN_COMP_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_COMP_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_COMP         RST_CLK_PER_CLOCK_PCLK_EN_COMP_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Pos     20
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Msk     (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_SSP2         RST_CLK_PER_CLOCK_PCLK_EN_SSP2_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Pos    21
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTA        RST_CLK_PER_CLOCK_PCLK_EN_PORTA_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Pos    22
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTB        RST_CLK_PER_CLOCK_PCLK_EN_PORTB_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Pos    23
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTC        RST_CLK_PER_CLOCK_PCLK_EN_PORTC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Pos    24
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTD        RST_CLK_PER_CLOCK_PCLK_EN_PORTD_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Pos    25
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTE        RST_CLK_PER_CLOCK_PCLK_EN_PORTE_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART3_Pos    26
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART3_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_UART3_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_UART3        RST_CLK_PER_CLOCK_PCLK_EN_UART3_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_BKP_Pos      27
+#define RST_CLK_PER_CLOCK_PCLK_EN_BKP_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_BKP_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_BKP          RST_CLK_PER_CLOCK_PCLK_EN_BKP_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_AUDIO_IP_Pos 28
+#define RST_CLK_PER_CLOCK_PCLK_EN_AUDIO_IP_Msk (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_AUDIO_IP_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_AUDIO_IP     RST_CLK_PER_CLOCK_PCLK_EN_AUDIO_IP_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Pos    29
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Msk    (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_PORTF        RST_CLK_PER_CLOCK_PCLK_EN_PORTF_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_EBC_Pos      30
+#define RST_CLK_PER_CLOCK_PCLK_EN_EBC_Msk      (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_EBC_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_EBC          RST_CLK_PER_CLOCK_PCLK_EN_EBC_Msk
+
+#define RST_CLK_PER_CLOCK_PCLK_EN_CRYPTO_Pos   31
+#define RST_CLK_PER_CLOCK_PCLK_EN_CRYPTO_Msk   (0x1UL << RST_CLK_PER_CLOCK_PCLK_EN_CRYPTO_Pos)
+#define RST_CLK_PER_CLOCK_PCLK_EN_CRYPTO       RST_CLK_PER_CLOCK_PCLK_EN_CRYPTO_Msk
 
 /* Bit field positions: */
 #define RST_CLK_PER_CLOCK_PCLK_EN_Pos                      0
@@ -5381,52 +5601,6 @@ typedef struct {
 
 /** @} */ /* End of group MDR32FG16S1QI_Peripheral_Units */
 
-/** @defgroup __Peripheral_Memory_Map  Peripheral Memory Map
-  * @{
-  */
-
-#define MDR_SSP3_BASE                  (0x40000000)
-#define MDR_SSP4_BASE                  (0x40008000)
-#define MDR_USB_BASE                   (0x40010000)
-#define MDR_EEPROM_BASE                (0x40018000)
-#define MDR_RST_CLK_BASE               (0x40020000)
-#define MDR_DMA_BASE                   (0x40028000)
-#define MDR_UART1_BASE                 (0x40030000)
-#define MDR_UART2_BASE                 (0x40038000)
-#define MDR_SSP1_BASE                  (0x40040000)
-#define MDR_SDIO_BASE                  (0x40048000)
-#define MDR_I2C_BASE                   (0x40050000)
-#define MDR_POWER_BASE                 (0x40058000)
-#define MDR_WWDG_BASE                  (0x40060000)
-#define MDR_IWDG_BASE                  (0x40068000)
-#define MDR_TIMER1_BASE                (0x40070000)
-#define MDR_TIMER2_BASE                (0x40078000)
-#define MDR_TIMER3_BASE                (0x40080000)
-#define MDR_ADC_BASE                   (0x40088000)
-#define MDR_DAC_BASE                   (0x40090000)
-#define MDR_COMP_BASE                  (0x40098000)
-#define MDR_SSP2_BASE                  (0x400A0000)
-#define MDR_PORTA_BASE                 (0x400A8000)
-#define MDR_PORTB_BASE                 (0x400B0000)
-#define MDR_PORTC_BASE                 (0x400B8000)
-#define MDR_PORTD_BASE                 (0x400C0000)
-#define MDR_PORTE_BASE                 (0x400C8000)
-#define MDR_UART3_BASE                 (0x400D0000)
-#define MDR_BKP_BASE                   (0x400D8000)
-#define MDR_PORTF_BASE                 (0x400E8000)
-#define MDR_EBC_BASE                   (0x400F0000)
-#define MDR_DSP_CORE_BASE              (0x30000000)
-#define MDR_AUDIO_IP_BASE              (0x300000A0)
-#define MDR_MCBSP1_BASE                (0x30000040)
-#define MDR_MCBSP2_BASE                (0x30000050)
-#define MDR_MCBSP3_BASE                (0x30000060)
-#define MDR_DSP_TIMER_BASE             (0x30000070)
-#define MDR_DSP_DMA_BASE               (0x300000C0)
-#define MDR_DSP_CRPT_BASE              (0x30000080)
-#define MDR_DSP_IRQ_BASE			   (0x30000078)
-
-/** @} */ /* End of group __Peripheral_Memory_Map */
-
 /** @defgroup __Peripheral_declaration Peripheral declaration
   * @{
   */
@@ -5488,6 +5662,4 @@ typedef struct {
 /*
 *
 * END OF FILE __MDR32FG16S1QI_H*/
-
-
 

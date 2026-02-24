@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_comp.h
   * @author  Milandr Application Team
-  * @version V2.0.0i
-  * @date    10/03/2022
+  * @version V2.1.1i
+  * @date    23/03/2024
   * @brief   This file contains all the functions prototypes for the COMP
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -36,11 +36,11 @@ extern "C" {
   */
 
 /** @addtogroup COMP
-  * @warning This module can be used only for MCU series MDR32F9Q2I and MDR32FG16S1QI.
+  * @warning This module can be used only for MCU series MDR32F9Q2I, K1986VE9xI and MDR32FG16S1QI.
   * @{
   */
 
-#if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
+#if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
 /** @defgroup COMP_Exported_Types COMP Exported Types
   * @{
   */
@@ -276,7 +276,7 @@ void COMP_ITConfig(FunctionalState NewState);
 
 /** @} */ /* End of group COMP */
 
-#endif /* #if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)) */
+#endif /* #if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)) */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
@@ -286,7 +286,7 @@ void COMP_ITConfig(FunctionalState NewState);
 
 #endif /* __MDR32FxQI_COMP_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_comp.h */
 

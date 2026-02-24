@@ -13,6 +13,9 @@
         PUBLIC  __vector_table
 
         DATA
+
+; Attention for NMI_Handler:
+; Called by software only (bit [31] of the ICSR register). Used for mission critical applications        
 __vector_table
         DCD     sfe(CSTACK)               ; Top of Stack
         DCD     Reset_Handler             ; Reset Handler
@@ -261,3 +264,5 @@ EXT_INT4_IRQHandler
 		BL  EXT_INT4_IRQHandler
 
         END
+
+

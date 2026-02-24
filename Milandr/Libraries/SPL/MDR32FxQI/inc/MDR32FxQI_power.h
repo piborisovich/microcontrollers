@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_power.h
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    21/06/2023
+  * @version V2.1.1i
+  * @date    23/07/2024
   * @brief   This file contains all the functions prototypes for the POWER
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -129,7 +129,7 @@ typedef enum
 void POWER_DeInit(void);
 
 void POWER_PVDenable(FunctionalState NewState);
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     void POWER_PVBDenable(FunctionalState NewState);
 #endif
 void POWER_PVDlevelConfig(PWR_Voltage_Detector_Lvl POWER_PVDlevel);
@@ -151,7 +151,7 @@ void POWER_PVD_INVconfig(uint32_t POWER_INV, FunctionalState NewState);
 
 #endif /* __MDR32FxQI_POWER_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_power.h */
 

@@ -2,20 +2,20 @@
   ******************************************************************************
   * @file    MDR1986VK01_eth.c
   * @author  Milandr Application Team
-  * @version V1.3.0
-  * @date    14/04/2022
+  * @version V1.3.1
+  * @date    18/01/2024
   * @brief   This file contains all the ethernet firmware functions.
   ******************************************************************************
   * <br><br>
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   * FILE MDR1986VK01_eth.c
   */
@@ -45,7 +45,7 @@
 
 #define IS_ETH_COL_WND(WND)						(WND <= 0xFF)
 #define IS_ETH_RETRY_COUNTER(COUNTER)			(COUNTER <= 0x0F)
-#define IS_ETH_DILIMITER(DILIMITER)				((DILIMITER >= 0x5EA) && (DILIMITER <= 0x1A16))
+#define IS_ETH_DELIMITER(DELIMITER)				(((DELIMITER) >= 0x5EA) && ((DELIMITER) <= 0x1A16))
 
 extern DMA_CtrlDataTypeDef DMA_ControlTable[DMA_Channels_Number * (1 + DMA_AlternateData)];
 /** @} */ /* End of group ETH_Exported_Macros */
@@ -241,7 +241,7 @@ void ETH_StructInit(ETH_InitTypeDef * ETH_InitStruct)
     
     /* Set the pacet interval fo falf duplex mode. */
     ETH_InitStruct->ETH_IPG = 0x0060;
-    /* Set the prescaler increment values ​​BAG and JitterWnd. */
+    /* Set the prescaler increment values for BAG and JitterWnd. */
     ETH_InitStruct->ETH_PSC = 0x0031;
     /* Set period the following of packages.*/
     ETH_InitStruct->ETH_BAG = 0x0064;
@@ -344,7 +344,7 @@ void ETH_Init(ETH_InitTypeDef * ETH_InitStruct)
 				 | (ETH_InitStruct->ETH_Receiver_Event_Mode);
 
 	/* Configure the received packets */
-	tmpreg_R_CFG |= (ETH_InitStruct->ETH_Short_Frames_Reception 	<< ETH_R_CFG_LF_EN_Pos)
+	tmpreg_R_CFG |= (ETH_InitStruct->ETH_Short_Frames_Reception 	<< ETH_R_CFG_SF_EN_Pos)
 				 |	(ETH_InitStruct->ETH_Long_Frames_Reception 		<< ETH_R_CFG_LF_EN_Pos)
 				 |	(ETH_InitStruct->ETH_Broadcast_Frames_Reception << ETH_R_CFG_BCA_EN_Pos)
 				 |	(ETH_InitStruct->ETH_Error_CRC_Frames_Reception << ETH_R_CFG_EF_EN_Pos)
@@ -591,7 +591,7 @@ uint16_t ETH_ReadPHYRegister(uint16_t PHYAddress, uint16_t PHYReg)
     uint32_t tmpreg = 0;
     __IO uint32_t timeout = 0;
     /* Check the parameters */
-    assert_param(IS_ETH_PHY_ADDRESS(PHYAddress));
+    //assert_param(IS_ETH_PHY_ADDRESS(PHYAddress));
     assert_param(IS_ETH_PHYReg(PHYReg));
     
     /* Get the ETHERNET MACMIIAR value */
@@ -629,7 +629,7 @@ uint32_t ETH_WritePHYRegister(uint16_t PHYAddress, uint16_t PHYReg, uint16_t PHY
     uint32_t tmpreg = 0;
     __IO uint32_t timeout = 0;
     /* Check the parameters */
-    assert_param(IS_ETH_PHY_ADDRESS(PHYAddress));
+    //assert_param(IS_ETH_PHY_ADDRESS(PHYAddress));
     assert_param(IS_ETH_PHYReg(PHYReg));
     
     /* Get the ETHERNET MACMIIAR value */
@@ -714,8 +714,8 @@ uint32_t ETH_ReceivedFrame(uint32_t * ptr_InputBuffer, uint16_t maxLenght)
             /* Set the new value of the ETH_R_Head register */
             MDR_ETH0->R_HEAD = ((uint32_t)ptr_InputFrame)&0xFFFC;
             break;
-            /* The buffer mode is aoutomatic */
-            case ETH_BUFFER_MODE_AUTOMATIC_CHANGE_POINTERS:
+        /* The buffer mode is automatic */
+        case ETH_BUFFER_MODE_AUTOMATIC_CHANGE_POINTERS:
             /* Set the pointer to input frame */
             Rhead = MDR_ETH0->R_HEAD;
             ptr_InputFrame = (uint32_t *)(ETH_BUFF_BASE_ADDR + Rhead);
@@ -784,7 +784,7 @@ void ETH_SendFrame(MDR_ETH_TypeDef * ETHERNETx, uint32_t * ptr_OutputBuffer, uin
     int32_t EthReceiverFreeBufferSize;
 
     /* Check the parameters */
-    assert_param(IS_ETH_ALL_PERIPH(ETHERNETx));
+    //assert_param(IS_ETH_ALL_PERIPH(ETHERNETx));
 
     /* Read the buffer mode */
     BufferMode = (ETHERNETx->G_CFG & ETH_G_CFG_BUFF_MODE_Msk);
@@ -832,6 +832,8 @@ void ETH_SendFrame(MDR_ETH_TypeDef * ETHERNETx, uint32_t * ptr_OutputBuffer, uin
             ptr_OutputFrame = (uint32_t *)(ETH_BUFF_BASE_ADDR + Xtail);
             /* Send frame */
             EthReceiverFreeBufferSize = (ETH_BUFFER_SIZE - Xtail) / 4;
+            /* Disable IRQ - otherwise a corrupted packet may be sent if IRQ occurs */
+            __disable_irq();
             if(((BufLen + 3) / 4 + 2) < EthReceiverFreeBufferSize)
             {
                 for(i = 0; i < (BufLen + 3) / 4 + 2; i++)
@@ -852,6 +854,7 @@ void ETH_SendFrame(MDR_ETH_TypeDef * ETHERNETx, uint32_t * ptr_OutputBuffer, uin
                     *ptr_OutputFrame++ = ptr_OutputBuffer[i+tmp];
                 }
             }
+            __enable_irq();
             break;
         case ETH_BUFFER_MODE_FIFO:
             /* Set the pointer to input frame */
@@ -943,7 +946,7 @@ void ETH_DMAFrameTx(uint32_t * DstBuf, uint32_t BufferSize, uint32_t * SrcBuf)
 
 /** @} */ /* End of group __MDR1986VK01_StdPeriph_Driver */
 
-/******************* (C) COPYRIGHT 2023 Milandr ********************************
+/******************* (C) COPYRIGHT 2025 Milandr ********************************
 *
 * END OF FILE MDR1986VK01_eth.c */
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_ssp.h
   * @author  Milandr Application Team
-  * @version V2.0.2i
-  * @date    10/03/2022
+  * @version V2.0.3i
+  * @date    27/09/2024
   * @brief   This file contains all the functions prototypes for the SSP
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -222,20 +222,20 @@ typedef enum
 typedef struct
 {
     uint16_t                          SSP_SCR;                 /*!< This member configures the SSP communication speed.
-                                                                    This parameter is number from 0 to 255.
+                                                                    This parameter is a number from 0 to 255.
                                                                     The information rate is computed using the following formula:
-                                                                    F_SSPCLK / ( CPSDVR * (1 + SCR) ) */
+                                                                    F_SSPCLK / (SSP_CPSDVSR * (1 + SSP_SCR)). */
     uint16_t                          SSP_CPSDVSR;             /*!< This member configures the SSP clock divider.
-                                                                    This parameter is an even number from 2 to 254 */
-    SSP_Mode_TypeDef                  SSP_Mode;                /*!< Specifies the number of stop bits transmitted.
+                                                                    This parameter is an even number from 2 to 254. */
+    SSP_Mode_TypeDef                  SSP_Mode;                /*!< Specifies the SSP operation mode (master or slave).
                                                                     This parameter is one of @ref SSP_Mode_TypeDef values. */
     SSP_Word_Length_TypeDef           SSP_WordLength;          /*!< Specifies the number of data bits transmitted or received in a frame.
                                                                     This parameter is one of @ref SSP_Word_Length_TypeDef values. */
-    SSP_Clock_Phase_TypeDef           SSP_SPH;                 /*!< Specifies the number of stop bits transmitted.
+    SSP_Clock_Phase_TypeDef           SSP_SPH;                 /*!< Specifies the phase of SSP_CLK (data sampling on edge the 1st or 2nd).
                                                                     This parameter is one of @ref SSP_Clock_Phase_TypeDef values. */
-    SSP_Clock_Polarity_TypeDef        SSP_SPO;                 /*!< Specifies the number of stop bits transmitted.
+    SSP_Clock_Polarity_TypeDef        SSP_SPO;                 /*!< Specifies the polarity of SSP_CLK (the initial state is low or high).
                                                                     This parameter is one of @ref SSP_Clock_Polarity_TypeDef values. */
-    SSP_Frame_Format_TypeDef          SSP_FRF;                 /*!< Specifies the number of stop bits transmitted.
+    SSP_Frame_Format_TypeDef          SSP_FRF;                 /*!< Specifies the frame format (SPI, SSI, Microwire).
                                                                     This parameter is one of @ref SSP_Frame_Format_TypeDef values. */
     SSP_Hardware_Flow_Control_TypeDef SSP_HardwareFlowControl; /*!< Specifies whether the hardware flow control mode is enabled or disabled.
                                                                     This parameter is one of @ref SSP_Hardware_Flow_Control_TypeDef values. */
@@ -291,7 +291,7 @@ void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
 
 #endif /* __MDR32FxQI_SSP_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_ssp.h */
 

@@ -2,21 +2,21 @@
   ******************************************************************************
   * @file    MDR1986VK01_uart.h
   * @author  Milandr Application Team
-  * @version V1.1.0
-  * @date    06/04/2022
+  * @version V1.1.1
+  * @date    18/01/2024
   * @brief   This file contains all the functions prototypes for the UART
   *          firmware library.
   ******************************************************************************
   * <br><br>
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr </center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr </center></h2>
   ******************************************************************************
   * FILE MDR1986VK01_uart.h
   */
@@ -150,9 +150,9 @@ typedef struct
 #define UART_HardwareFlowControl_TXE        ((uint16_t)0x0100)
 #define UART_HardwareFlowControl_LBE        ((uint16_t)0x0080)
 
-#define UART_HARDWARE_FLOW_CONTROL_MASK		((uint16_t)0xFF80)
+#define UART_HARDWARE_FLOW_CONTROL_MASK         ((uint16_t)0xFF80)
 
-#define IS_UART_HARDWARE_FLOW_CONTROL(CONTROL) 		((CONTROL&(~(UART_HARDWARE_FLOW_CONTROL_MASK))) == 0)
+#define IS_UART_HARDWARE_FLOW_CONTROL(CONTROL)  (((CONTROL)&(~(UART_HARDWARE_FLOW_CONTROL_MASK))) == 0)
 
 /** @} */ /* End of group UART_Hardware_Flow_Control */
 
@@ -288,7 +288,7 @@ typedef struct
 #define UART_HCLKdiv64                      ((uint32_t)0x00000006)
 #define UART_HCLKdiv128                     ((uint32_t)0x00000007)
 
-#define IS_UART_CLOCK_SOURSE(SOURSE)        (((SOURSE) >= 0) && ((SOURSE) <= 13))
+#define IS_UART_CLOCK_SOURCE(SOURCE)        (((SOURCE) >= 0) && ((SOURCE) <= 13))
 
 /** @} */ /* End of group UART_Clock_BRG */
 
@@ -336,7 +336,7 @@ void UART_BRGInit(MDR_UART_TypeDef* UARTx, uint16_t UART_BRG, uint32_t UART_CLK_
 
 #endif /* __MDR1986VK01_UART_H */
 
-/******************* (C) COPYRIGHT 2023 Milandr ********************************
+/******************* (C) COPYRIGHT 2025 Milandr ********************************
 *
 * END OF FILE MDR1986VK01_uart.h */
 

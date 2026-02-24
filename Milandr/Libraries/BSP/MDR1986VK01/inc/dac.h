@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    dac.h
   * @author  Milandr Application Team
-  * @version V1.0.1
-  * @date    11/11/2020
+  * @version V1.0.2
+  * @date    14/10/2022
   * @brief   DAC header file for demo board.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   * FILE dac.h
   */
@@ -41,8 +41,9 @@
 
 void InitDac( uint32_t freq );
 void SetDac( uint16_t usData );
-void DacLoop( void );
+void DacLoop( uint16_t * inputarray );
 void DeinitDac( void );
+void GenSin( void );
 
 /** @} */ /* End of group BSP_DAC_Exported_Functions */
 
@@ -52,9 +53,7 @@ void DeinitDac( void );
 
 #endif /* __DAC_H */
 
-/******************* (C) COPYRIGHT 2023 Milandr ********************************
+/******************* (C) COPYRIGHT 2025 Milandr ********************************
 *
 * END OF FILE dac.h */
-
-
 

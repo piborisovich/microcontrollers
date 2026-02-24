@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    dac.c
   * @author  Milandr Application Team
-  * @version V1.1.0
-  * @date    06/04/2022
+  * @version V1.1.1
+  * @date    14/10/2022
   * @brief   DAC source file for demo board.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   * FILE dac.c
   */
@@ -53,9 +53,10 @@
 
 #define DAC_RST                     (1 << 8)
 
-#define DAC_OUT_2V5                 3100                                                // This code corresponds to 2.5 V at the DAC output
+#define DAC_OUT_2V5                 3100    // This code corresponds to 2.5 V at the DAC output
 
-#define DAC_DATA_SIZE               32000
+#define DAC_ARRAY                   256000  // = DAC Sample Rate
+#define DAC_DATA_SIZE               512
 #define DAC_TEST_FREQ               1000.0F
 
 #define M_PI                        3.1415926535897932384626433832795F
@@ -63,24 +64,25 @@
 /** @} */ /* End of group BSP_DAC_Private_Defines */
 
 uint16_t usDacData[ DAC_DATA_SIZE ];
+uint16_t i;
 
 /** @defgroup BSP_DAC_Exported_Functions BSP_DAC Exported Functions
   * @{
   */
 
-void InitDac( uint32_t freq )
+void GenSin( void )
 {
-    uint16_t i;
-    uint32_t per;
-
     for( i = 0; i < DAC_DATA_SIZE; i++ )
     {
-        //usDacData[ i ] = 4095 * ( ( sin( M_PI * 2 * i / DAC_DATA_SIZE ) + 1 ) / 2 );
-        usDacData[ i ] = DAC_OUT_2V5 * ( ( sin( DAC_TEST_FREQ * 2 * M_PI * i / DAC_DATA_SIZE ) + 1 ) / 2 );
-        //usDacData[ i ] = i;
+        usDacData[ i ] = DAC_OUT_2V5 * ( ( sin( DAC_TEST_FREQ * 2 * M_PI * i / DAC_ARRAY ) + 1 ) / 2 );
     }
+}
 
-    per = SystemCoreClock / freq;                                                       // DAC runs at core frequency
+void InitDac( uint32_t freq )
+{
+    uint32_t per;
+
+    per = SystemCoreClock / freq;   // DAC runs at core frequency
 
     MDR_DAC1->DATA = 0;
     MDR_DAC1->PRD = per;
@@ -101,14 +103,14 @@ void SetDac( uint16_t usData )
     MDR_DAC1->DATA = usData;
 }
 
-void DacLoop( void )
+void DacLoop( uint16_t * inputarray )
 {
     static uint16_t i = 0;
-    static uint16_t j = 100;
+    static uint16_t j = 0;
 
     while( ! ( MDR_DAC1->STS & ( 1 << 3 ) ) )
     {
-        MDR_DAC1->DATA = usDacData[ i++ ];
+        MDR_DAC1->DATA = inputarray[ i++ ];
 
         if( i == DAC_DATA_SIZE )
             i = 0;
@@ -116,7 +118,7 @@ void DacLoop( void )
 
     while( ! ( MDR_DAC2->STS & ( 1 << 3 ) ) )
     {
-        MDR_DAC2->DATA = usDacData[ j++ ];
+        MDR_DAC2->DATA = inputarray[ j++ ];
 
         if( j == DAC_DATA_SIZE )
             j = 0;
@@ -135,9 +137,7 @@ void DeinitDac( void )
 
 /** @} */ /* End of group __MDR1986VK01_BoardPeriph_Driver */
 
-/******************* (C) COPYRIGHT 2023 Milandr ********************************
+/******************* (C) COPYRIGHT 2025 Milandr ********************************
 *
 * END OF FILE dac.c */
-
-
 

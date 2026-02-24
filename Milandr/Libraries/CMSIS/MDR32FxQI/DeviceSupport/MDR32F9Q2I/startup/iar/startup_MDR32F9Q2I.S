@@ -15,6 +15,9 @@
         PUBLIC  __vector_table
 
         DATA
+
+; Attention for NMI_Handler:
+; Called by software only (bit [31] of the ICSR register). Used for mission critical applications        
 __vector_table
         DCD     sfe(CSTACK)
         DCD     Reset_Handler             ; Reset Handler
@@ -236,3 +239,5 @@ EXT_INT4_IRQHandler
 ;/*
 ;*
 ;* END OF FILE startup_MDR32F9Q2I.s */
+
+

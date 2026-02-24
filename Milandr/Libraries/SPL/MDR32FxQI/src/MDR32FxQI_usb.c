@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_usb.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    25/04/2023
+  * @version V2.0.4i
+  * @date    03/06/2024
   * @brief   This file contains all the USB firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -57,18 +57,22 @@
   */
 
 /**
-  * @brief  Initializes the USB peripheral Clock according to the
-  *         specified parameters.
-  * @param  USB_Clock_InitStruct: pointer to a @ref USB_Clock_TypeDef structure
-  *         that contains the configuration information for the USB Clock.
-  * @retval None
+  * @brief   Initializes the USB peripheral Clock according to the
+  *          specified parameters.
+  * @param   USB_Clock_InitStruct: pointer to a @ref USB_Clock_TypeDef structure
+  *          that contains the configuration information for the USB Clock.
+  * @warning For K1986VE9xI, K1986VE1xI:
+  *          USB_Clock_InitStruct->USB_PLLUSBMUL must not be equal to @arg USB_PLLUSBMUL2, @arg USB_PLLUSBMUL3.
+  * @retval  None
   */
 void USB_BRGInit(const USB_Clock_TypeDef* USB_Clock_InitStruct)
 {
     uint32_t tmpreg;
 
     /* Check the parameters */
-    assert_param(IS_USB_CLOCK(USB_Clock_InitStruct->USB_USBC1_Source, USB_Clock_InitStruct->USB_PLLUSBMUL));
+    assert_param(IS_USBC1_CLOCK_BRG(USB_Clock_InitStruct->USB_USBC1_Source));
+    assert_param(IS_PLLUSBMUL(USB_Clock_InitStruct->USB_PLLUSBMUL));
+    assert_param(IS_USB_CLOCK(USB_Clock_InitStruct->USB_PLLUSBMUL, USB_Clock_InitStruct->USB_USBC1_Source));
 
     /* USB_CLOCK Configuration */
     tmpreg  = MDR_RST_CLK->USB_CLOCK;
@@ -832,7 +836,7 @@ void USB_SEPxToggleEPDATASEQ(USB_EP_TypeDef EndPointNumber)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_usb.c */
 

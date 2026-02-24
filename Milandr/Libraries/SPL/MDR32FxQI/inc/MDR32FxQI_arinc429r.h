@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_arinc429r.h
   * @author  Milandr Application Team
-  * @version V2.0.1i
-  * @date    10/03/2022
+  * @version V2.0.3i
+  * @date    23/10/2024
   * @brief   This file contains all the functions prototypes for the ARINC429R
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -36,11 +36,11 @@ extern "C" {
   */
 
 /** @addtogroup ARINC429R ARINC429R
-  * @warning This module can be used only for microcontrollers MDR32F1QI.
+  * @warning This module can be used only for microcontrollers MDR32F1QI, K1986VE1xI.
   * @{
   */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 
 /** @defgroup ARINC429R_Exported_Types ARINC429R Exported Types
   * @{
@@ -73,8 +73,14 @@ typedef enum
     ARINC429R_CHANNEL8  = ((uint32_t)0x7), /*!< Specifies the ARINC429R channel 8. */
 } ARINC429R_Channel;
 
-#define IS_ARINC429R_CHANNEL(CHANNEL)   ((CHANNEL >= ARINC429R_CHANNEL1) && \
-                                         (CHANNEL <= ARINC429R_CHANNEL8))
+#define IS_ARINC429R_CHANNEL(CHANNEL)   (((CHANNEL) == ARINC429R_CHANNEL1) || \
+                                         ((CHANNEL) == ARINC429R_CHANNEL2) || \
+                                         ((CHANNEL) == ARINC429R_CHANNEL3) || \
+                                         ((CHANNEL) == ARINC429R_CHANNEL4) || \
+                                         ((CHANNEL) == ARINC429R_CHANNEL5) || \
+                                         ((CHANNEL) == ARINC429R_CHANNEL6) || \
+                                         ((CHANNEL) == ARINC429R_CHANNEL7) || \
+                                         ((CHANNEL) == ARINC429R_CHANNEL8))
 
 /**
   * @brief ARINC429R Interrupt Defintion
@@ -92,7 +98,7 @@ typedef enum
                              ARINC429R_IT_INT_ER | \
                              ARINC429R_IT_INT_DR)
 
-#define IS_ARINC429R_IT(IT) (((IT) & (~ARINC429R_IT_MASK)) == 0)
+#define IS_ARINC429R_IT(IT) (((IT) & ~(uint32_t)(ARINC429R_IT_MASK)) == 0)
 
 /**
   * @brief ARINC429R Flags
@@ -112,7 +118,7 @@ typedef enum
 
 /**
   * @brief ARINC429R ITMask
-  * @note This enumeration is only for MCU MDR32F1QI at revision 3.
+  * @note This enumeration is only for MCU MDR32F1QI at revision 3 and K1986VE1xI.
   */
 typedef enum
 {
@@ -122,10 +128,10 @@ typedef enum
     ARINC429R_ITMask_DR = ((uint32_t)0x8) /*!< Data presence interrupt mask */
 } ARINC429R_ITMask;
 
-#define IS_ARINC429R_ITMask(ITMask) ((ITMask == ARINC429R_ITMask_HF) || \
-                                     (ITMask == ARINC429R_ITMask_FF) || \
-                                     (ITMask == ARINC429R_ITMask_ER) || \
-                                     (ITMask == ARINC429R_ITMask_DR))
+#define IS_ARINC429R_ITMask(ITMask) (((ITMask) == ARINC429R_ITMask_HF) || \
+                                     ((ITMask) == ARINC429R_ITMask_FF) || \
+                                     ((ITMask) == ARINC429R_ITMask_ER) || \
+                                     ((ITMask) == ARINC429R_ITMask_DR))
 
 /**
   * @brief ARINC429 Init Channel Structure definition
@@ -155,7 +161,7 @@ typedef struct
   */
 #define IS_ARINC429R_BRG(BRG)      (((BRG) & ~0x7F) == 0)
 #define IS_ARINC429R_DIV(DIV)      ((DIV) <= 0xFF)
-#define IS_ARINC429R_LABEL(LABEL)  ((LABEL & 0xFF) == 0)
+#define IS_ARINC429R_LABEL(LABEL)  (((LABEL) & 0xFF) == 0)
 /** @} */ /* End of group ARINC429R_Exported_Constants */
 
 
@@ -179,7 +185,7 @@ uint32_t ARINC429R_ReceiveData(void);
 
 /** @} */ /* End of group ARINC429R */
 
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
@@ -189,8 +195,7 @@ uint32_t ARINC429R_ReceiveData(void);
 
 #endif /* MDR32FxQI_ARINC429R_H_ */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_arinc429r.h */
-
 

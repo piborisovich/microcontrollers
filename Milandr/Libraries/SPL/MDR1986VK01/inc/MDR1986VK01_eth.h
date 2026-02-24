@@ -2,21 +2,21 @@
   ******************************************************************************
   * @file    MDR1986VK01_eth.h
   * @author  Milandr Application Team
-  * @version V1.1.0
-  * @date    06/04/2022
+  * @version V1.1.1
+  * @date    18/01/2024
   * @brief   This file contains all the the functions prototypes for the
   *          ethernet firmware library.
   ******************************************************************************
   * <br><br>
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   * FILE MDR1986VK01_eth.h
   */
@@ -168,7 +168,7 @@ typedef struct {
 
 	uint32_t 			ETH_IPG;							/*!< The value of inter-packet interval for full duplex
 																 This parameter can be a value from 0 to 0xFFFF. */
-	uint32_t 			ETH_PSC;							/*!< Prescaler value increment values ​​BAG and JitterWnd.
+	uint32_t 			ETH_PSC;							/*!< Prescaler value increment values for BAG and JitterWnd.
 																 This parameter can be a value from 0 to 0xFFFF. */
 	uint32_t 			ETH_BAG;							/*!< The period value of the packets.
 																 This parameter can be a value from 0 to 0xFFFF. */
@@ -490,7 +490,7 @@ uint32_t ETH_WritePHYRegister(uint16_t PHYAddress, uint16_t PHYReg, uint16_t PHY
 void ETH_DMAFrameRx(uint32_t * DstBuf, uint32_t BufferSize, uint32_t * SrcBuf);
 void ETH_DMAFrameTx(uint32_t * DstBuf, uint32_t BufferSize, uint32_t *  SrcBuf);
 uint32_t ETH_ReceivedFrame(uint32_t * ptr_InputBuffer, uint16_t maxLenght);
-void ETH_SendFrame(MDR_ETH_TypeDef * ETHERNETx, uint32_t * ptr_OututBuffer, uint32_t BufLen);
+void ETH_SendFrame(MDR_ETH_TypeDef * ETHERNETx, uint32_t * ptr_OutputBuffer, uint32_t BufLen);
 
 /** @} */ /* End of group ETH_Private_Function_Prototypes */
 
@@ -504,7 +504,7 @@ void ETH_SendFrame(MDR_ETH_TypeDef * ETHERNETx, uint32_t * ptr_OututBuffer, uint
 
 #endif /* __MDR1986VK01_ETH_H_ */
 
-/******************* (C) COPYRIGHT 2023 Milandr *********
+/******************* (C) COPYRIGHT 2025 Milandr *********
 *
 * END OF FILE MDR1986VK01_eth.h */
 

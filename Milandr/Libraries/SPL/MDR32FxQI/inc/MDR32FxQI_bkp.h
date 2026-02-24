@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_bkp.h
   * @author  Milandr Application Team
-  * @version V2.0.0i
-  * @date    10/03/2022
+  * @version V2.1.1i
+  * @date    23/07/2024
   * @brief   This file contains all the functions prototypes for the BKP
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -183,7 +183,7 @@ typedef enum
                                 ((TRIM) == BKP_DUcc_minus_060mV)|| \
                                 ((TRIM) == BKP_DUcc_minus_100mV))
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /**
   * @brief BKP Trim
   */
@@ -197,9 +197,9 @@ typedef enum
 #define IS_BKP_TRIM(TRIM)   (((TRIM) == BKP_TRIM_1_4_V) ||\
                              ((TRIM) == BKP_TRIM_1_6_V) ||\
                              ((TRIM) == BKP_TRIM_1_8_V))
-#endif // #if defined (USE_MDR32F1QI)
+#endif // #if defined (USE_K1986VE1xI)
 
-#if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
+#if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
 /**
   * @brief BKP Stop Entry Mode
   */
@@ -211,7 +211,7 @@ typedef enum
 
 #define IS_BKP_STOP_ENTRY(F) (((F) == BKP_STOPentry_WFI) || ((F) == BKP_STOPentry_WFE))
 
-#endif // #if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
+#endif // #if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
 
 /** @} */ /* End of group BKP_Exported_Types */
 
@@ -239,10 +239,10 @@ typedef enum
   * @{
   */
 void BKP_DeInit(void);
-#if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
+#if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
     void BKP_JTAGA_CMD(FunctionalState NewState);
     void BKP_JTAGB_CMD(FunctionalState NewState);
-#endif // #if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
+#endif // #if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
 void BKP_RTCclkSource(BKP_RTC_CLK RTC_CLK);
 void BKP_RTC_WorkPermit(FunctionalState NewState);
 void BKP_RTC_Calibration(uint32_t RTC_Calibration);
@@ -260,9 +260,9 @@ void BKP_DUccMode(BKP_DUcc_Mode DUccMode);
 void BKP_DUccTrim(BKP_DUcc_Trim DUccTrim);
 void BKP_SetFlagPOR(void);
 ErrorStatus BKP_FlagPORstatus(void);
-#if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
+#if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
     void BKP_EnterSTOPMode(FunctionalState BKP_Regulator_state, BKP_Stop_Entry_Mode BKP_STOPEntry);
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
     void BKP_EnterSLEEPMode(void);
     void BKP_SetTrim(BKP_TRIM trim);
     void BKP_CurrentLimitProtection150mA(FunctionalState NewState);
@@ -282,7 +282,7 @@ void BKP_EnterSTANDBYMode(void);
 
 #endif /* __MDR32FxQI_BKP_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_bkp.h */
 

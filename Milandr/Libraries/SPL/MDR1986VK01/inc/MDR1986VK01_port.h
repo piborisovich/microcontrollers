@@ -2,21 +2,21 @@
   ******************************************************************************
   * @file	 MDR1986VK01_port.h
   * @author	 Milandr Application Team
-  * @version V1.1.0
-  * @date    06/04/2022
+  * @version V1.1.1
+  * @date    19/01/2024
   * @brief   This file contains all the functions prototypes for the PORTs
   * 		 firmware library.
   ******************************************************************************
   * <br><br>
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr </center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr </center></h2>
   ******************************************************************************
   * FILE MDR1986VK01_port.h
   */
@@ -108,22 +108,22 @@ typedef enum
 	PORT_CFUNC_15          = 0xF	
 }PORT_CFUNC_TypeDef;
 
-#define IS_PORT_SFUNC(SFUNC) 	(((SFUNC) == PORT_SFUNC_USER)  || ((SFUNC) == PORT_SFUNC_1) || \
-((SFUNC) == PORT_SFUNC_2) 	|| ((SFUNC) == PORT_SFUNC_3)) 	|| \
-    ((SFUNC) == PORT_SFUNC_4) 	|| ((SFUNC) == PORT_SFUNC_5)) 	|| \
-        ((SFUNC) == PORT_SFUNC_6) 	|| ((SFUNC) == PORT_SFUNC_7)) 	|| \
-            ((SFUNC) == PORT_SFUNC_8) 	|| ((SFUNC) == PORT_SFUNC_9)) 	|| \
-                ((SFUNC) == PORT_SFUNC_10) 	|| ((SFUNC) == PORT_SFUNC_11)) 	|| \
-                    ((SFUNC) == PORT_SFUNC_12) 	|| ((SFUNC) == PORT_SFUNC_13)) 	|| \
-                        ((SFUNC) == PORT_SFUNC_14) 	|| ((SFUNC) == PORT_SFUNC_15)))
-#define IS_PORT_CFUNC(CFUNC) 	(((CFUNC) == PORT_CFUNC_USER)  || ((CFUNC) == PORT_CFUNC_1) || \
-((CFUNC) == PORT_CFUNC_2) 	|| ((CFUNC) == PORT_CFUNC_3)) 	|| \
-    ((CFUNC) == PORT_CFUNC_4) 	|| ((CFUNC) == PORT_CFUNC_5)) 	|| \
-        ((CFUNC) == PORT_CFUNC_6) 	|| ((CFUNC) == PORT_CFUNC_7)) 	|| \
-            ((CFUNC) == PORT_CFUNC_8) 	|| ((CFUNC) == PORT_CFUNC_9)) 	|| \
-                ((CFUNC) == PORT_CFUNC_10) 	|| ((CFUNC) == PORT_CFUNC_11)) 	|| \
-                    ((CFUNC) == PORT_CFUNC_12) 	|| ((CFUNC) == PORT_CFUNC_13)) 	|| \
-                        ((CFUNC) == PORT_CFUNC_14) 	|| ((CFUNC) == PORT_CFUNC_15)))
+#define IS_PORT_SFUNC(SFUNC) 	(((SFUNC) == PORT_SFUNC_PORT)  || ((SFUNC) == PORT_SFUNC_1) || \
+((SFUNC) == PORT_SFUNC_2) 	|| ((SFUNC) == PORT_SFUNC_3) 	|| \
+    ((SFUNC) == PORT_SFUNC_4) 	|| ((SFUNC) == PORT_SFUNC_5) 	|| \
+        ((SFUNC) == PORT_SFUNC_6) 	|| ((SFUNC) == PORT_SFUNC_7) 	|| \
+            ((SFUNC) == PORT_SFUNC_8) 	|| ((SFUNC) == PORT_SFUNC_9) 	|| \
+                ((SFUNC) == PORT_SFUNC_10) 	|| ((SFUNC) == PORT_SFUNC_11) 	|| \
+                    ((SFUNC) == PORT_SFUNC_12) 	|| ((SFUNC) == PORT_SFUNC_13) 	|| \
+                        ((SFUNC) == PORT_SFUNC_14) 	|| ((SFUNC) == PORT_SFUNC_15))
+#define IS_PORT_CFUNC(CFUNC) 	(((CFUNC) == PORT_CFUNC_PORT)  || ((CFUNC) == PORT_CFUNC_1) || \
+((CFUNC) == PORT_CFUNC_2) 	|| ((CFUNC) == PORT_CFUNC_3) 	|| \
+    ((CFUNC) == PORT_CFUNC_4) 	|| ((CFUNC) == PORT_CFUNC_5) 	|| \
+        ((CFUNC) == PORT_CFUNC_6) 	|| ((CFUNC) == PORT_CFUNC_7) 	|| \
+            ((CFUNC) == PORT_CFUNC_8) 	|| ((CFUNC) == PORT_CFUNC_9) 	|| \
+                ((CFUNC) == PORT_CFUNC_10) 	|| ((CFUNC) == PORT_CFUNC_11) 	|| \
+                    ((CFUNC) == PORT_CFUNC_12) 	|| ((CFUNC) == PORT_CFUNC_13) 	|| \
+                        ((CFUNC) == PORT_CFUNC_14) 	|| ((CFUNC) == PORT_CFUNC_15))
 
 /**
 * @brief  Configuration Mode enumeration
@@ -280,7 +280,7 @@ typedef enum
     PORT_CIT_HIGH        	= 0x1
 }PORT_CIT_TypeDef;
 
-#define IS_PORT_SIT(SIT) (((SIT) == PORT_SIT_LOW) || ((SIE) == PORT_SIT_HIGH))
+#define IS_PORT_SIT(SIT) (((SIT) == PORT_SIT_LOW) || ((SIT) == PORT_SIT_HIGH))
 #define IS_PORT_CIT(CIT) (((CIT) == PORT_CIT_LOW) || ((CIT) == PORT_CIT_HIGH))
 
 /**
@@ -463,7 +463,7 @@ uint8_t PORT_ReadInputDataBit(PortControl* PORTx, uint32_t PORT_Pin);
 
 #endif /* __MDR1986VK01_PORT_H */
 
-/******************* (C) COPYRIGHT 2023 Milandr *********************************
+/******************* (C) COPYRIGHT 2025 Milandr *********************************
 *
 * END OF FILE MDR1986VK01_port.h */
 

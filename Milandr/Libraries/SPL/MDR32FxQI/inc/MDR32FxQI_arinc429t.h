@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_arinc429t.h
   * @author  Milandr Application Team
-  * @version V2.0.1i
-  * @date    07/07/2023
+  * @version V2.0.2i
+  * @date    24/07/2024
   * @brief   This file contains all the functions prototypes for the ARINC429T
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -36,11 +36,11 @@ extern "C" {
   */
 
 /** @addtogroup ARINC429T ARINC429T
-  * @warning This module can be used only for microcontrollers MDR32F1QI.
+  * @warning This module can be used only for microcontrollers MDR32F1QI, K1986VE1xI.
   * @{
   */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 
 /** @defgroup ARINC429T_Exported_Types ARINC429T Exported Types
   * @{
@@ -160,7 +160,7 @@ void ARINC429T_SendData(ARINC429T_Channel ARINC429T_CHANNELx, uint32_t Data);
 
 /** @} */ /* End of group ARINC429T_Exported_Funstions */
 
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group ARINC429T */
 
@@ -172,8 +172,7 @@ void ARINC429T_SendData(ARINC429T_Channel ARINC429T_CHANNELx, uint32_t Data);
 
 #endif /* MDR32FxQI_ARINC429T_H_ */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_arinc429t.h */
-
 

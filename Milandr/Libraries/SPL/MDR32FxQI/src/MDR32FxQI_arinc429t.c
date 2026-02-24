@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_arinc429t.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    25/04/2023
+  * @version V2.1.0i
+  * @date    23/10/2024
   * @brief   This file contains all the ARINC429T firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -27,11 +27,11 @@
   */
 
 /** @defgroup ARINC429T ARINC429T
-  * @warning This module can be used only for microcontrollers MDR32F1QI.
+  * @warning This module can be used only for microcontrollers MDR32F1QI, K1986VE9xI.
   * @{
   */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /** @defgroup ARINC429T_Exported_Funstions ARINC429T Exported Funstions
   * @{
   */
@@ -73,6 +73,10 @@ void ARINC429T_DeInit(void)
     MDR_ARINC429T->CONTROL1 = 0;
     MDR_ARINC429T->CONTROL2 = 0;
     MDR_ARINC429T->CONTROL3 = 0;
+    MDR_ARINC429T->CONTROL4 = 0;
+#if defined (USE_K1986VE1xI) && !defined (USE_MDR32F1QI)
+    MDR_ARINC429T->CONTROL5 = 0;
+#endif
     MDR_ARINC429T->STATUS   = 0;
 }
 
@@ -269,14 +273,13 @@ void ARINC429T_SendData(ARINC429T_Channel ARINC429T_CHANNELx, uint32_t Data)
 
 /** @} */ /* End of group ARINC429T_Exported_Funstions */
 
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /** @} */ /* End of group ARINC429T */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_arinc429t.c */
-
 

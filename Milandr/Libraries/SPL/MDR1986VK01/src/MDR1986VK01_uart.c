@@ -1,21 +1,21 @@
 /**
   ******************************************************************************
-  * @file	 MDR1986VK01_uart.c
-  * @author	 Milandr Application Team
-  * @version V1.1.0
-  * @date    06/04/2022
+  * @file    MDR1986VK01_uart.c
+  * @author  Milandr Application Team
+  * @version V1.1.1
+  * @date    18/01/2024
   * @brief   This file contains all the UART firmware functions.
   ******************************************************************************
   * <br><br>
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr </center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr </center></h2>
   ******************************************************************************
   * FILE MDR1986VK01_uart.c
   */
@@ -59,12 +59,10 @@
 #define UART2_BRG_Offs            ((uint32_t)0x0008)  /*!< UART2 clock divider Offset */
 
 
-#if defined (USE_MDR1986VE3)
-#define UART3_BRG_Mask				((uint32_t)0x0007) /*!< UART3 clock divider Mask */
-#define UART4_BRG_Mask				((uint32_t)0x0700) /*!< UART4 clock divider Mask */
-#define UART4_BRG_Offs              ((uint32_t)0x0008) /*!< UART4 clock divider Offset */
+#define UART_IT_MASK (UART_IMSC_RIMIM | UART_IMSC_CTSMIM | UART_IMSC_DCDMIM | UART_IMSC_DSRMIM | \
+                      UART_IMSC_RXIM | UART_IMSC_TXIM | UART_IMSC_RTIM | UART_IMSC_FEIM |        \
+                      UART_IMSC_PEIM | UART_IMSC_BEIM | UART_IMSC_OEIM)
 
-#endif // #if defined (USE_MDR1986VE3)
 
 /** @} */ /* End of group UART_Private_Defines */
 
@@ -87,12 +85,12 @@ void UART_DeInit(MDR_UART_TypeDef* UARTx)
     UARTx->CR = 0;
     UARTx->LCR_H = 0;
     UARTx->RSR_ECR = 0;
-    UARTx->FR = UART_FLAG_TXFE | UART_FLAG_RXFE;
     UARTx->ILPR = 0;
     UARTx->IBRD = 0;
     UARTx->FBRD = 0;
     UARTx->IFLS = UART_IT_FIFO_LVL_8words;
     UARTx->IMSC = 0;
+    UARTx->ICR = UART_IT_MASK;
     UARTx->DMACR = 0;
     /* Set UART CR[RXE] and UART CR[TXE] bits */
     UARTx->CR = UART_HardwareFlowControl_RXE | UART_HardwareFlowControl_TXE;
@@ -163,25 +161,18 @@ BaudRateStatus UART_Init ( MDR_UART_TypeDef* UARTx,
 	if (speederror > 2) {
 		return BaudRateInvalid;
 	}
-	/* Write UART Baud Rate */
-//	UARTx->IBRD = 13;
-//	UARTx->FBRD = 35;
-	
-//	UARTx->IBRD = 4;
-//	UARTx->FBRD = 21;
-	
-		UARTx->IBRD = integerdivider;
-	UARTx->FBRD = fractionaldivider;
     
-	/* UART LCR_H configuration */
-	/* Set the WLEN bits according to UART_WordLength value */
-	/* Set STP2 bit according to UART_StopBits value */
-	/* Set PEN, EPS and SPS bits according to UART_Parity value */
-	/* Set FEN bit according to UART_FIFOMode value */
-	tmpreg = UARTx->LCR_H;
-	tmpreg |= UART_InitStruct->UART_WordLength | UART_InitStruct->UART_StopBits
-        | UART_InitStruct->UART_Parity | UART_InitStruct->UART_FIFOMode;
-	UARTx->LCR_H = tmpreg;
+    /* Write UART Baud Rate */
+    UARTx->IBRD = integerdivider;
+    UARTx->FBRD = fractionaldivider;
+    
+    /* UART LCR_H configuration */
+    /* Set WLEN bits according to UART_WordLength value */
+    /* Set STP2 bit according to UART_StopBits value */
+    /* Set PEN, EPS and SPS bits according to UART_Parity value */
+    /* Set FEN bit according to UART_FIFO_State value */
+    UARTx->LCR_H = UART_InitStruct->UART_WordLength | UART_InitStruct->UART_StopBits
+                 | UART_InitStruct->UART_Parity | UART_InitStruct->UART_FIFOMode;
     
 	/* UART CR configuration */
 	tmpreg = UARTx->CR;
@@ -384,7 +375,7 @@ void UART_ClearITPendingBit(MDR_UART_TypeDef* UARTx, uint32_t UART_IT)
     assert_param(IS_UART_ALL_PERIPH(UARTx));
     assert_param(IS_UART_CONFIG_IT(UART_IT));
     
-    UARTx->ICR |= UART_IT;
+    UARTx->ICR = UART_IT;
 }
 
 /**
@@ -671,7 +662,7 @@ void UART_BRGInit(MDR_UART_TypeDef* UARTx, uint16_t UART_BRG, uint32_t UART_CLK_
 
 /** @} */ /* End of group __MDR1986VK01_StdPeriph_Driver */
 
-/******************* (C) COPYRIGHT 2023 Milandr *********************************
+/******************* (C) COPYRIGHT 2025 Milandr *********************************
 *
 * END OF FILE MDR1986VK01_uart.c */
 

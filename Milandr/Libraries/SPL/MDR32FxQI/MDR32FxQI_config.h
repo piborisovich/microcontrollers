@@ -1,9 +1,9 @@
-/**
+﻿/**
   ******************************************************************************
   * @file    MDR32FxQI_config.h
   * @author  Milandr Application Team
-  * @version V2.1.0i
-  * @date    27/06/2023
+  * @version V2.3.0i
+  * @date    09/12/2024
   * @brief   Library configuration file.
   ******************************************************************************
   * <br><br>
@@ -14,14 +14,14 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   */
 
 /**
   * @mainpage MDR32FxQI Standard Peripherals Library.
   * MDR32FxQI Standard Peripherals Library is a package consisting of
-  * all standard peripheral device drivers for MDR32F1QI, MDR32F9Q2I,
-  * MDR32FG16S1QI microcontrollers.
+  * all standard peripheral device drivers for MDR32F1QI, K1986VE1xI,
+  * MDR32F9Q2I, K1986VE9xI, MDR32FG16S1QI microcontrollers.
   * This library is a firmware package which contains a collection of routines,
   * data structures and macros covering the features of Milandr MDR32FxQI
   * peripherals. It includes a description of the device drivers plus a set of
@@ -35,6 +35,7 @@
   * The MDR32FxQI Standard Peripherals Library is full CMSIS compliant.
   */
 
+// <<< Use Configuration Wizard in Context Menu >>>
 
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -47,29 +48,46 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
+//#include <RTE_Components.h> // Keil uVision specific inclusion
 
 /* MDR32FxQI SPL version numbers - major, minor, patch */
 #define _MDR32FxQI_SPL_VERSION_MAJOR (1U) /*!< [23:16] major version */
-#define _MDR32FxQI_SPL_VERSION_MINOR (1U) /*!< [15:8]  minor version */
+#define _MDR32FxQI_SPL_VERSION_MINOR (3U) /*!< [15:8]  minor version */
 #define _MDR32FxQI_SPL_VERSION_PATCH (0U) /*!< [7:0]   patch version */
 
 /* MDR32FxQI SPL version number (combined value) */
 #define MDR32FxQI_SPL_VERSION ((_MDR32FxQI_SPL_VERSION_MAJOR << 16) | \
-                              (_MDR32FxQI_SPL_VERSION_MINOR << 8) |  \
-                              (_MDR32FxQI_SPL_VERSION_PATCH))
+                               (_MDR32FxQI_SPL_VERSION_MINOR << 8) |  \
+                               (_MDR32FxQI_SPL_VERSION_PATCH))
 
 /* Uncomment the line corresponding to the target microcontroller */
+/* When using Keil uVision, the definition is set automatically
+   (when RTE_Components.h included) according to the selected
+   microcontroller in "Options for Target->Device" window.
+   For MDR32F1QI revision is selected in 
+   "Device->Startup" variant in "Manage Run-Time Environment" window */
 // #define USE_MDR32F9Q2I
 // #define USE_MDR32F1QI_REV3_4
 // #define USE_MDR32F1QI_REV6
 // #define USE_MDR32FG16S1QI
+// #define USE_K1986VE92xI
+// #define USE_K1986VE94GI
+// #define USE_K1986VE1xI
 
 /* Select the header file for target microcontroller */
 #if defined (USE_MDR32F9Q2I)
+    #define USE_MDR32F9xI
+    #define USE_K1986VE9xI
     #include "MDR32F9Q2I.h"
+#elif defined (USE_K1986VE92xI) || defined (USE_K1986VE94GI)
+    #define USE_K1986VE9xI
+    #include "K1986VE9xI.h"
 #elif defined (USE_MDR32F1QI_REV3_4) || defined (USE_MDR32F1QI_REV6)
     #define USE_MDR32F1QI
+    #define USE_K1986VE1xI
     #include "MDR32F1QI.h"
+#elif defined (USE_K1986VE1xI)
+    #include "K1986VE1xI.h"
 #elif defined (USE_MDR32FG16S1QI)
     #include "MDR32FG16S1QI.h"
 #else
@@ -77,9 +95,9 @@ extern "C" {
 #endif
 
 
-#if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
-// <h> JTAG pins protection for MCU MDR32F9Q2I and MDR32FG16S1QI
-// <i> Prevents RTXT and OE bits setting for JTAG when doing GPIO read-modify-write
+#if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
+// <h> JTAG pins protection for MCU MDR32F9Q2I, K1986VE9xI and MDR32FG16S1QI
+// <i> Prevents RXTX and OE bits setting for JTAG when doing GPIO read-modify-write
 // <i> Uncomment the definition(s) below to define used JTAG port(s).
 // <i> Leave all commented/unchecked if there is no GPIO pins combined with JTAG.
 
@@ -93,6 +111,16 @@ extern "C" {
 // </h>
 #endif
 
+#if (defined(USE_K1986VE9xI) && !defined(USE_MDR32F9xI)) || (defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI))
+// <h> Factory data management for MCU K1986VE92xI (K1986VE92FI, K1986VE92F1I), K1986VE94GI and K1986VE1xI (K1986VE1FI, K1986VE1GI)
+// <o> Factory data initialization in SystemInit() (called before entering main())
+//   <0=> 0: REG_0E (Trim[2:0] bits) and REG_0F (HSI TRIM[5:0] and LSI TRIM[4:0] bits) are NOT initialized from factory data.
+//   <1=> 1: REG_0E (Trim[2:0] bits) and REG_0F (HSI TRIM[5:0] and LSI TRIM[4:0] bits) are initialized from factory data.
+// <i> Default: 1 (Use initialization).
+// <i> ATTENTION: Factory data stored in EEPROM must ALWAYS be used to ensure the correct operation of MCU. Setting this parameter to 0 is allowed only if the use of factory data is implemented elsewhere in the software.
+#define FACTORY_DATA_SYSTEM_INIT 1
+// </h>
+#endif
 
 // <h> Target system parameters
 // <h> RST_CLK generators frequencies
@@ -102,7 +130,7 @@ extern "C" {
 // <o> HSE clock value [Hz]
 // <i> Default: 8000000 (8MHz)
 #define HSE_Value       ((uint32_t)8000000)
-// <o> HSE2 clock value [Hz] for MDR32F1QI
+// <o> HSE2 clock value [Hz] for MDR32F1QI, K1986VE1xI
 // <i> Default: 25000000 (25MHz)
 #define HSE2_Value      ((uint32_t)25000000)
 // <o> LSI clock value [Hz]
@@ -118,7 +146,7 @@ extern "C" {
 // <o> HSE timeout startup value
 // <i> Default: 0x0600
 #define HSEonTimeOut    ((uint16_t)0x0600)
-// <o> HSE2 timeout startup value for MCU MDR32F1QI
+// <o> HSE2 timeout startup value for MCU MDR32F1QI, K1986VE1xI
 // <i> Default: 0x8000
 #define HSE2onTimeOut   ((uint16_t)0x8000)
 // <o> LSE timeout startup value
@@ -154,20 +182,35 @@ extern "C" {
 //   <0=> 0: DMA_ALternateDataDisabled
 //   <1=> 1: DMA_ALternateDataEnabled
 // <i> Default: 1 (DMA_ALternateDataEnabled)
-#define DMA_AlternateData       1
+#define DMA_AlternateData 1
 
 #if (DMA_AlternateData != 0) && (DMA_AlternateData != 1)
 #error "DMA_AlternateData  should be 0 (DMA_ALternateDataDisabled) or 1 (DMA_ALternateDataEnabled)"
 #endif
 
 #if (DMA_AlternateData == 0)
-// <o.0..5> Number of DMA channels to use.
+// <o.0..5> Number of DMA channels main structure to use.
 // <i> Specifies size of structure table for channels in range [0; DMA_Channels_Number-1] where 0 is channel 0.
-// <i> Could be changed ONLY IF DMA_AlternateData = 0 to reduce RAM usage.
-// <i> If DMA_AlternateData = 1, 32 channels are always used.
+// <i> Could be changed to reduce RAM usage.
+// <i> If DMA_AlternateData = 1, 32 channels for main structure are always used.
 // <i> This parameter is in range [1; 32]
 // <i> Default: 32
-#define DMA_Channels_Number     32
+#define DMA_Channels_Number 32
+
+#if (DMA_Channels_Number < 1) || (DMA_Channels_Number > 32)
+#error "DMA_Channels_Number should be in range [1; 32]"
+#endif
+
+#endif
+
+#if (DMA_AlternateData == 1)
+// <o.0..5> Number of DMA channels alternate structure to use.
+// <i> Specifies size of structure table for channels in range [0; 32 + DMA_Channels_Number-1] where 0 is channel 0.
+// <i> Could be changed to reduce RAM usage.
+// <i> If DMA_AlternateData = 1, 32 channels for main structure are always used.
+// <i> This parameter is in range [1; 32]
+// <i> Default: 32
+#define DMA_Channels_Number 32
 
 #if (DMA_Channels_Number < 1) || (DMA_Channels_Number > 32)
 #error "DMA_Channels_Number should be in range [1; 32]"
@@ -191,12 +234,12 @@ extern "C" {
 #define DEBUG_STOP_BITS                 UART_StopBits1
 #define DEBUG_BAUD_PARITY               UART_Parity_No
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     #define DEBUG_UART                  MDR_UART1
     #define DEBUG_UART_PORT             MDR_PORTC
     #define DEBUG_UART_PINS             (PORT_Pin_3 | PORT_Pin_4)
     #define DEBUG_UART_PINS_FUNCTION    PORT_FUNC_MAIN
-#elif defined (USE_MDR32F9Q2I)
+#elif defined (USE_K1986VE9xI)
     #define DEBUG_UART                  MDR_UART2
     #define DEBUG_UART_PORT             MDR_PORTF
     #define DEBUG_UART_PINS             (PORT_Pin_0 | PORT_Pin_1)
@@ -213,11 +256,11 @@ extern "C" {
 
 
 // <h> Examples settings
-#if defined (USE_MDR32F1QI)
-    // <o> MIL STD 1553 terminal address for MDR32F1QI
+#if defined (USE_K1986VE1xI)
+    // <o> MIL STD 1553 terminal address for MDR32F1QI, K1986VE1xI
     // <i> Default: 0x01
     #define MIL_STD_1553_TERMINAL_ADDRESS    0x01
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 // <h> RTC configuration parameters
 // <o> RTC calibration value
@@ -269,25 +312,23 @@ extern "C" {
 
 
 // <h> Known errors workaround control
-// <c2> MDR32F9Q2I Series Errata Notice, Error 0002
-// <i> CAN error workaround
-// <i> Default: not commented/defined
-#define WORKAROUND_MDR32F9QX_ERROR_0002
-// </c>
-// <c2> MDR32F1QI Series Errata Notice, ETH PHY data inversion error in 10Base-T mode
+// <c2> MDR32F1QI, K1986VE1xI Series Errata Notice, ETH PHY data inversion error in 10Base-T mode
 // <i>  Workaround for "10Base-T HD/FD transmitted data inverted after EthernetPHY reset" error
 // <i> Default: not commented/defined
-#define WORKAROUND_MDR32F1QI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
+#define WORKAROUND_K1986VE1xI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
 // </c>
 // </h>
 
+#ifdef WORKAROUND_K1986VE1xI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
+#define WORKAROUND_MDR32F1QI_ERROR_ETH_PHY_10BASE_T_DATA_INVERSION
+#endif
 
 #if defined (__ICCARM__) /* IAR Compiler */
     #define __attribute__(name_section)
-    #if defined (USE_MDR32F1QI)
+    #if defined (USE_K1986VE1xI)
         #pragma section = "EXECUTABLE_MEMORY_SECTION"
         #define IAR_SECTION(section) @ section
-    #elif defined (USE_MDR32F9Q2I)
+    #elif defined (USE_K1986VE9xI)
         #define IAR_SECTION(section)
     #endif
     #define __RAMFUNC __ramfunc
@@ -299,7 +340,7 @@ extern "C" {
 #endif
 #if defined (__ARMCC_VERSION) /* ARM Compiler */
     #define IAR_SECTION(section)
-    #define __RAMFUNC
+    #define __RAMFUNC __attribute__((section("EXECUTABLE_MEMORY_SECTION")))
 #endif
 
 
@@ -340,7 +381,7 @@ extern "C" {
 
 #endif /* __MDR32FxQI_CONFIG_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_config.h */
 

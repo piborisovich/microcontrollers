@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_i2c.h
   * @author  Milandr Application Team
-  * @version V2.0.2i
-  * @date    10/03/2022
+  * @version V2.1.1i
+  * @date    23/03/2024
   * @brief   This file contains all the functions prototypes for the I2C
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -35,7 +35,7 @@ extern "C" {
   * @{
   */
 
-#if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI))
+#if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI))
 /** @addtogroup I2C
   * @{
   */
@@ -379,7 +379,7 @@ FlagStatus I2C_GetFlagStatus(uint32_t Flag);
 /** @} */ /* End of group I2C_Exported_Functions */
 
 /** @} */ /* End of group I2C */
-#endif /* #if (defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)) */
+#endif /* #if (defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)) */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
@@ -389,7 +389,7 @@ FlagStatus I2C_GetFlagStatus(uint32_t Flag);
 
 #endif /* __MDR32FxQI_I2C_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_i2c.h */
 

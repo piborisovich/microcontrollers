@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_dsp.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    25/04/2023
+  * @version V2.0.4i
+  * @date    22/07/2024
   * @brief   This file contains all the DSP firmware functions for MCU MDR32FG16S1QI.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -36,8 +36,6 @@
   */
 
 /* RCC_CLK registers bit address in the alias region */
-#define PERIPH_BASE                 0x40000000
-#define PERIPH_BB_BASE              0x42000000
 #define RST_CLK_OFFSET              (MDR_RST_CLK_BASE - PERIPH_BASE)
 
 #define SFR_OFFSET(TP, MOD, SFR)    ((uint32_t)&((TP*)MOD)->SFR)
@@ -254,7 +252,7 @@ void DSP_DSPToRISCInterruptCmd(uint16_t Interrupt, FlagStatus NewStatus)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_dsp.c */
 

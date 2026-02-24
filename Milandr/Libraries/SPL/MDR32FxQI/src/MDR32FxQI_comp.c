@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_comp.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    06/07/2023
+  * @version V2.1.1i
+  * @date    23/07/2024
   * @brief   This file contains all the COMP firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -26,9 +26,9 @@
   * @{
   */
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
 /** @defgroup COMP COMP
-  * @warning This module can be used only for MCU MDR32F9Q2I and MDR32FG16S1QI.
+  * @warning This module can be used only for MCU MDR32F9Q2I, K1986VE9xI and MDR32FG16S1QI.
   * @{
   */
 
@@ -295,7 +295,7 @@ void COMP_CVRefScaleConfig(COMP_CVRef_Scale Scale)
     assert_param(IS_COMP_CVREF_SCALE_CONFIG(Scale));
 
     tmpreg_CFG = MDR_COMP->CFG;
-    tmpreg_CFG &= ~COMP_CFG_CVR_Msk;
+    tmpreg_CFG &= ~(COMP_CFG_CVR_Msk | COMP_CFG_CVRR);
     tmpreg_CFG += Scale;
 
     MDR_COMP->CFG = tmpreg_CFG;
@@ -378,11 +378,11 @@ void COMP_ITConfig(FunctionalState NewState)
 /** @} */ /* End of group COMP_Exported_Functions */
 
 /** @} */ /* End of group COMP */
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_comp.c */
 

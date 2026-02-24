@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_wwdg.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    25/04/2023
+  * @version V2.1.1i
+  * @date    24/07/2024
   * @brief   This file contains all the WWDG firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -33,18 +33,16 @@
 /** @defgroup WWDG_Private_Defines WWDG Private Defines
   * @{
   */
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     /* WWDG registers bit address in the alias region */
-    #define PERIPH_BASE                 0x40000000
-    #define PERIPH_BB_BASE              0x42000000
     #define WWDG_OFFSET                 (MDR_WWDG_BASE - PERIPH_BASE)
-    
+
     #define SFR_OFFSET(TP, MOD, SFR)    ((uint32_t)&((TP*)MOD)->SFR)
     #define BB_ADDR(TP, MOD, SFR, BIT)  (PERIPH_BB_BASE + SFR_OFFSET(TP, MOD, SFR)*32 + BIT*4)
     #define WWDG_BB(SFR, BIT)           BB_ADDR(MDR_WWDG_TypeDef, WWDG_OFFSET, SFR, BIT)
-    
+
     #define EWI_BB                      WWDG_BB(CFR, WWDG_CFR_EWI_Pos)
-#endif /* #if defined  (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined  (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
 /* --------------------- WWDG registers bit mask ------------------------ */
 
@@ -148,9 +146,9 @@ uint32_t WWDG_GetWindowValue(void)
   */
 void WWDG_EnableIT(void)
 {
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) EWI_BB = (uint32_t) ENABLE;
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
     MDR_WWDG->CFR |= WWDG_CFR_EWI;
 #endif
 }
@@ -221,7 +219,7 @@ void WWDG_ClearFlag(void)
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_wwdg.c */
 

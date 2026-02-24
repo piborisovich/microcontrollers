@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "D:\GitHub\microcontrollers\Milandr\ExDev\settings\exdev.Debug.general.xcl" --backend -f "D:\GitHub\microcontrollers\Milandr\ExDev\settings\exdev.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "D:\GitHub\microcontrollers\Milandr\App\ExDev\settings\exdev.Debug.general.xcl" --backend -f "D:\GitHub\microcontrollers\Milandr\App\ExDev\settings\exdev.Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "D:\GitHub\microcontrollers\Milandr\ExDev\settings\exdev.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\GitHub\microcontrollers\Milandr\ExDev\settings\exdev.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "D:\GitHub\microcontrollers\Milandr\App\ExDev\settings\exdev.Debug.general.xcl" --debug_file=$debugfile --backend -f "D:\GitHub\microcontrollers\Milandr\App\ExDev\settings\exdev.Debug.driver.xcl" 
 }

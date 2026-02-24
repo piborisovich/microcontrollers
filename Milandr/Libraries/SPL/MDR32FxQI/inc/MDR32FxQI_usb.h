@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_usb.h
   * @author  Milandr Application Team
-  * @version V2.0.0i
-  * @date    14/03/2022
+  * @version V2.0.1i
+  * @date    03/06/2024
   * @brief   This file contains all the functions prototypes for the USB
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -76,8 +76,10 @@ typedef enum
 typedef enum
 {
     USB_PLLUSBMUL1  = ((uint32_t)0x00),
+#if defined (USE_MDR32F9xI) || defined (USE_MDR32F1QI) || defined (USE_MDR32FG16S1QI)
     USB_PLLUSBMUL2  = ((uint32_t)0x01),
     USB_PLLUSBMUL3  = ((uint32_t)0x02),
+#endif
     USB_PLLUSBMUL4  = ((uint32_t)0x03),
     USB_PLLUSBMUL5  = ((uint32_t)0x04),
     USB_PLLUSBMUL6  = ((uint32_t)0x05),
@@ -93,8 +95,12 @@ typedef enum
     USB_PLLUSBMUL16 = ((uint32_t)0x0F)
 } USB_PLL_Source_TypeDef;
 
-#define IS_PLLUSBMUL(MUL)              (((MUL) & ~0xF) == 0)
-
+#if defined (USE_MDR32F9xI) || defined (USE_MDR32F1QI) || defined (USE_MDR32FG16S1QI)
+    #define IS_PLLUSBMUL(MUL)    (((MUL) & ~0xF) == 0)
+#else
+    #define IS_PLLUSBMUL(MUL)    (((MUL) == 0) || \
+                                 (((MUL) >= 0x03) && ((MUL) <= 0x0F)))
+#endif
 
 /**
   * @brief USB Clock Init Structure definition
@@ -723,7 +729,7 @@ void USB_SEPxToggleEPDATASEQ(USB_EP_TypeDef EndPointNumber);
 
 #endif /* __MDR32FxQI_USB_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_usb.h */
 

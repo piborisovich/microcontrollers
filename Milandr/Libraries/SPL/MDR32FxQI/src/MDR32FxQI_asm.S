@@ -2,8 +2,8 @@
 ;  ******************************************************************************
 ;  * @file    MDR32FxQI_asm.S
 ;  * @author  Milandr Application Team
-;  * @version V2.0.2i
-;  * @date    30/05/2023
+;  * @version V2.0.4i
+;  * @date    24/07/2024
 ;  * @brief   This file contains assembler functions.
 ;  ******************************************************************************
 ;  * <br><br>
@@ -15,7 +15,7 @@
 ;  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
 ;  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
 ;  *
-;  * <h2><center>&copy; COPYRIGHT {YYYY} Milandr</center></h2>
+;  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
 ;  ******************************************************************************
 ;  */
 
@@ -42,7 +42,7 @@
 
 ;/**
 ;  * @brief   Updates data cache.
-;  * @warning This function can be used only for MCU MDR1986VE1 and MDR1986VE3 (errata 0007).
+;  * @warning This function can be used only for MCU MDR32F1QI, K1986VE1xI (errata 0007).
 ;  *          To call the function use the name EEPROM_UpdateDCache().
 ;  *          Registers r0-r1 are not stored on the stack, as they are non preserved registers.
 ;  * @param   None
@@ -86,3 +86,5 @@ DELAY_PROGRAM_Exit
         ENDP
 
         END
+
+

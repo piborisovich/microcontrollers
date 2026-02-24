@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_utils.c
   * @author  Milandr Application Team
-  * @version V1.0.0i
-  * @date    30/06/2023
+  * @version V1.1.1i
+  * @date    24/07/2024
   * @brief   This file contains all utility functions of the firmware library.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -83,11 +83,11 @@ FILE __stdin;
   * @{
   */
 
-#if ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#if ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
     #define IS_DELAY_TIMER_ALL_PERIPH(PERIPH) (((PERIPH) == MDR_TIMER1) || \
                                                ((PERIPH) == MDR_TIMER2) || \
                                                ((PERIPH) == MDR_TIMER3))
-#elif (defined (USE_MDR32F1QI))
+#elif (defined (USE_K1986VE1xI))
     #define IS_DELAY_TIMER_ALL_PERIPH(PERIPH) (((PERIPH) == MDR_TIMER1) || \
                                                ((PERIPH) == MDR_TIMER2) || \
                                                ((PERIPH) == MDR_TIMER3) || \
@@ -103,7 +103,7 @@ FILE __stdin;
 #define STDIO_PUTCHAR                int fputc(int ch, FILE* f)
 #define STDIO_GETCHAR                int fgetc(FILE* f)
 
-#if defined (USE_MDR32F9Q2I) || defined(USE_MDR32F1QI)
+#if defined (USE_K1986VE9xI) || defined(USE_K1986VE1xI)
     #define IS_STDIO_UART_ALL_PERIPH(PERIPH) (((PERIPH) == MDR_UART1) || \
                                               ((PERIPH) == MDR_UART2))
 #elif defined (USE_MDR32FG16S1QI)
@@ -112,7 +112,7 @@ FILE __stdin;
                                               ((PERIPH) == MDR_UART3))
 #endif
 
-#if defined (USE_MDR32F9Q2I)
+#if defined (USE_K1986VE9xI)
 #define IS_STDIO_PORT_ALL_PERIPH(PERIPH) (((PERIPH) == MDR_PORTA) || \
                                           ((PERIPH) == MDR_PORTB) || \
                                           ((PERIPH) == MDR_PORTD) || \
@@ -124,7 +124,7 @@ FILE __stdin;
                                           ((PERIPH) == MDR_PORTD) || \
                                           ((PERIPH) == MDR_PORTE) || \
                                           ((PERIPH) == MDR_PORTF))
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
 #define IS_STDIO_PORT_ALL_PERIPH(PERIPH) (((PERIPH) == MDR_PORTC) || \
                                           ((PERIPH) == MDR_PORTD))
 #endif
@@ -158,9 +158,9 @@ typedef struct
     UART_Parity_TypeDef      STDIO_UART_Parity;     /*!< Specifies the parity mode.
                                                          This parameter can be a value of @ref UART_Parity_TypeDef */
     MDR_PORT_TypeDef*        STDIO_UART_PORTx;      /*!< Select the MDR_PORTx peripheral with UART function. x can be:
-                                                          - (A, B, D, F) for MDR32F9Q2I;
+                                                          - (A, B, D, F) for MDR32F9Q2I, K1986VE9xI;
                                                           - (A..F) for MDR32FG16S1QI;
-                                                          - (C, D) for MDR32F1QI. */
+                                                          - (C, D) for MDR32F1QI, K1986VE1xI. */
     uint16_t                 STDIO_UART_PORT_Pin;   /*!< Specifies PORT pins with UART function to be configured.
                                                          This parameter is a mask of @ref PORT_Pin_TypeDef values. */
     PORT_FUNC_TypeDef        STDIO_UART_PORT_Func;  /*!< Specifies function UART for the selected pins.
@@ -184,7 +184,7 @@ void DELAY_SYSTICK_Init(void);
 void DELAY_SYSTICK_WaitTicks(uint32_t Ticks);
 void DELAY_TIMER_Init(MDR_TIMER_TypeDef* TIMERx);
 void DELAY_TIMER_WaitTicks(MDR_TIMER_TypeDef* TIMERx, uint32_t Ticks);
-#if ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#if ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
 void DELAY_DWT_Init(void);
 void DELAY_DWT_WaitTicks(uint32_t Ticks);
 #endif
@@ -251,12 +251,12 @@ void DELAY_Init(DELAY_Mode_TypeDef Mode)
                 DELAY_TIMER_Init(MDR_TIMER3);
                 DelayTimer = MDR_TIMER3;
                 break;
-#if (defined (USE_MDR32F1QI))
+#if (defined (USE_K1986VE1xI))
             case DELAY_MODE_TIMER4:
                 DELAY_TIMER_Init(MDR_TIMER4);
                 DelayTimer = MDR_TIMER4;
                 break;
-#elif ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#elif ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
             case DELAY_MODE_DWT:
                 DELAY_DWT_Init();
                 break;
@@ -272,9 +272,9 @@ void DELAY_Init(DELAY_Mode_TypeDef Mode)
   * @param  Us: specifies the delay time in microseconds.
   *         This parameter can be a value:
   *         - DELAY_MODE_PROGRAM:
-  *                               Us <= 16784000 / CPU_CLK (MHz) for MDR1901VC1;
-  *                               Us <= 25177000 / CPU_CLK (MHz) for MDR1986VE9x;
-  *                               Us <= 33569000 / CPU_CLK (MHz) for MDR1986VE1 and MDR1986VE3;
+  *                               Us <= 16784000 / CPU_CLK (MHz) for MDR32FG16S1QI;
+  *                               Us <= 25177000 / CPU_CLK (MHz) for MDR32F9Q2I, K1986VE9xI;
+  *                               Us <= 33569000 / CPU_CLK (MHz) for MDR32F1QI, K1986VE1xI;
   *         - DELAY_MODE_SYSTICK: Us <= (2^32-1) / CPU_CLK (MHz);
   *         - DELAY_MODE_TIMERx:  Us <= (2^32-1) / CPU_CLK (MHz);
   *         - DELAY_MODE_DWT:     Us <= (2^32-1) / CPU_CLK (MHz).
@@ -293,12 +293,12 @@ void DELAY_WaitUs(uint32_t Us)
         case DELAY_MODE_TIMER1:
         case DELAY_MODE_TIMER2:
         case DELAY_MODE_TIMER3:
-#if (defined (USE_MDR32F1QI))
+#if (defined (USE_K1986VE1xI))
         case DELAY_MODE_TIMER4:
 #endif
             DELAY_TIMER_WaitTicks(DelayTimer, DELAY_COUNTER_GET_TICKS(Us, DelayCounterConstUs));
             break;
-#if ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#if ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
         case DELAY_MODE_DWT:
             DELAY_DWT_WaitTicks(DELAY_COUNTER_GET_TICKS(Us, DelayCounterConstUs));
             break;
@@ -311,9 +311,9 @@ void DELAY_WaitUs(uint32_t Us)
   * @param  Ms: specifies the delay time in milliseconds.
   *         This parameter can be a value:
   *         - DELAY_MODE_PROGRAM:
-  *                               Ms <= 17179000 / CPU_CLK (MHz) for MDR1901VC1;
-  *                               Ms <= 25769000 / CPU_CLK (MHz) for MDR1986VE9x;
-  *                               Ms <= 34359000 / CPU_CLK (MHz) for MDR1986VE1 and MDR1986VE3;
+  *                               Ms <= 17179000 / CPU_CLK (MHz) for MDR32FG16S1QI;
+  *                               Ms <= 25769000 / CPU_CLK (MHz) for MDR32F9Q2I, K1986VE9xI;
+  *                               Ms <= 34359000 / CPU_CLK (MHz) for MDR32F1QI, K1986VE1xI;
   *         - DELAY_MODE_SYSTICK: Ms <= ((2^32-1) / 1000) / CPU_CLK (MHz);
   *         - DELAY_MODE_TIMERx:  Ms <= ((2^32-1) / 1000) / CPU_CLK (MHz);
   *         - DELAY_MODE_DWT:     Ms <= ((2^32-1) / 1000) / CPU_CLK (MHz).
@@ -332,12 +332,12 @@ void DELAY_WaitMs(uint32_t Ms)
         case DELAY_MODE_TIMER1:
         case DELAY_MODE_TIMER2:
         case DELAY_MODE_TIMER3:
-#if (defined (USE_MDR32F1QI))
+#if (defined (USE_K1986VE1xI))
         case DELAY_MODE_TIMER4:
 #endif
             DELAY_TIMER_WaitTicks(DelayTimer, DELAY_COUNTER_GET_TICKS(Ms, DelayCounterConstMs));
             break;
-#if ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#if ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
         case DELAY_MODE_DWT:
             DELAY_DWT_WaitTicks(DELAY_COUNTER_GET_TICKS(Ms, DelayCounterConstMs));
             break;
@@ -353,7 +353,7 @@ void DELAY_WaitMs(uint32_t Ms)
 
 #if defined (_USE_DEBUG_UART_)
 /**
-  * @brief  Initializes the UARTx peripheral selected in MDR32F9Qx_config.h for standard input/output.
+  * @brief  Initializes the UARTx peripheral selected in MDR32FxQI_config.h for standard input/output.
   * @param  None.
   * @retval @ref ErrorStatus - The UARTx peripheral initialization status.
   */
@@ -458,8 +458,8 @@ void DELAY_SYSTICK_WaitTicks(uint32_t Ticks)
   * @brief  Initializes and starts the TIMERx peripheral. The TIMERx is clocked at the core clock.
   * @param  TIMERx: select the TIMER peripheral.
   *         This parameter can be one of the MDR_TIMERx values, where x is a number:
-  *             1, 2, 3 for MDR1986VE9x and MDR1901VC1;
-  *             1, 2, 3, 4 for MDR1986VE1 and MDR1986VE3.
+  *             1, 2, 3 for MDR32F9Q2I, K1986VE9xI and MDR32FG16S1QI;
+  *             1, 2, 3, 4 for MDR32F1QI, K1986VE1xI.
   * @retval None.
   */
 void DELAY_TIMER_Init(MDR_TIMER_TypeDef* TIMERx)
@@ -484,7 +484,7 @@ void DELAY_TIMER_Init(MDR_TIMER_TypeDef* TIMERx)
         MDR_RST_CLK->TIM_CLOCK &= ~RST_CLK_TIM_CLOCK_TIM3_BRG_Msk;
         MDR_RST_CLK->TIM_CLOCK |= RST_CLK_TIM_CLOCK_TIM3_CLK_EN;
     }
-#if (defined (USE_MDR32F1QI))
+#if (defined (USE_K1986VE1xI))
     else if(TIMERx == MDR_TIMER4)
     {
         MDR_RST_CLK->UART_CLOCK &= ~RST_CLK_UART_CLOCK_TIM4_BRG_Msk;
@@ -493,9 +493,9 @@ void DELAY_TIMER_Init(MDR_TIMER_TypeDef* TIMERx)
 #endif
 
     TIMERx->CNTRL = 0UL;
-#if ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#if ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
     TIMERx->ARR = 0xFFFF;
-#elif (defined (USE_MDR32F1QI))
+#elif (defined (USE_K1986VE1xI))
     TIMERx->ARR = 0xFFFFFFFF;
 #endif
     TIMERx->PSG = 0UL;
@@ -507,14 +507,14 @@ void DELAY_TIMER_Init(MDR_TIMER_TypeDef* TIMERx)
   * @brief  Performs a blocking delay with a TIMERx in ticks.
   * @param  TIMERx: select the TIMER peripheral.
   *         This parameter can be one of the MDR_TIMERx values, where x is a number:
-  *             1, 2, 3 for MDR1986VE9x and MDR1901VC1;
-  *             1, 2, 3, 4 for MDR1986VE1 and MDR1986VE3.
+  *             1, 2, 3 for MDR32F9Q2I, K1986VE9xI and MDR32FG16S1QI;
+  *             1, 2, 3, 4 for MDR32F1QI, K1986VE1xI.
   * @param  Ticks: specifies the delay time in ticks.
   * @retval None.
   */
 void DELAY_TIMER_WaitTicks(MDR_TIMER_TypeDef* TIMERx, uint32_t Ticks)
 {
-#if ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#if ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
     uint32_t NumOfReloads;
 
     TIMERx->CNT = 0UL;
@@ -533,7 +533,7 @@ void DELAY_TIMER_WaitTicks(MDR_TIMER_TypeDef* TIMERx, uint32_t Ticks)
             while((TIMERx->STATUS & TIMER_STATUS_CNT_ARR_EVENT) == 0UL){}
         }
     }
-#elif (defined (USE_MDR32F1QI))
+#elif (defined (USE_K1986VE1xI))
     uint32_t StartTicks;
 
     StartTicks = TIMERx->CNT;
@@ -541,7 +541,7 @@ void DELAY_TIMER_WaitTicks(MDR_TIMER_TypeDef* TIMERx, uint32_t Ticks)
 #endif
 }
 
-#if ((defined (USE_MDR32F9Q2I)) || (defined (USE_MDR32FG16S1QI)))
+#if ((defined (USE_K1986VE9xI)) || (defined (USE_MDR32FG16S1QI)))
 /**
   * @brief  Initializes and starts the DWT clock cycle counter (CYCCNT).
   * @param  None.
@@ -576,10 +576,10 @@ void DELAY_DWT_WaitTicks(uint32_t Ticks)
 #if defined (_USE_DEBUG_UART_)
 /**
  * @brief  Initializes the UARTx peripheral according to the specified
- *         parameters _USE_DEBUG_UART_ in MDR32F9Qx_config.h for standard input/output.
+ *         parameters _USE_DEBUG_UART_ in MDR32FxQI_config.h for standard input/output.
  * @param  STDIO_UARTx: Select the UART peripheral.
   *        This parameter can be one of the MDR_UARTx values, where x is a number:
-  *            1, 2 for MDR32F9Q2I and MDR32F1QI;
+  *            1, 2 for MDR32F9Q2I, K1986VE9xI and MDR32F1QI, K1986VE1xI;
   *            1, 2, 3 for MDR32FG16S1QI.
  * @param  STDIO_UART_InitStruct: pointer to a @ref STDIO_UART_InitTypeDef structure
  *         that contains the configuration information for the specified UART peripheral.
@@ -646,7 +646,7 @@ ErrorStatus STDIO_UartInit(MDR_UART_TypeDef* STDIO_UARTx, STDIO_UART_InitTypeDef
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_utils.c */
 

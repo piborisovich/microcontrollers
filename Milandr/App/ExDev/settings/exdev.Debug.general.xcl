@@ -1,10 +1,12 @@
 "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\bin\armproc.dll" 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\bin\armsim2.dll" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\bin\armjlink2.dll" 
 
-"D:\GitHub\microcontrollers\Milandr\ExDev\Debug\Exe\exdev.out" 
+"D:\GitHub\microcontrollers\Milandr\App\ExDev\Debug\Exe\exdev.out" 
 
 --plugin="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\bin\armbat.dll" 
+
+--flash_loader="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\arm\config\flashloader\Milandr\MDR32F9Q2I\FlashMDR32F9Q2I.board" 
 
 
 

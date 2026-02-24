@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_eeprom.h
   * @author  Milandr Application Team
-  * @version V2.0.1i
-  * @date    30/05/2023
+  * @version V2.1.0i
+  * @date    09/12/2024
   * @brief   This file contains all the functions prototypes for the EEPROM
   *          firmware library.
   ******************************************************************************
@@ -16,7 +16,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -101,6 +101,26 @@ typedef enum
 
 /** @} */ /* End of group EEPROM_Exported_Types */
 
+/** @defgroup EEPROM_Exported_Defines EEPROM Exported Defines
+  * @{
+  */
+
+/**
+  * @brief EEPROM parameters with a safe margin of 25% (HSI spread)
+  */
+#define EEPROM_TNVS_US   (7)
+#define EEPROM_TNVH_US   (7)
+#define EEPROM_TNVH1_US  (125)
+#define EEPROM_TPGS_US   (13)
+#define EEPROM_TRCV_US   (2)
+#define EEPROM_THV_US    (5000)
+
+#define EEPROM_TPROG_US  (25)
+#define EEPROM_TERASE_US (25000)
+#define EEPROM_TME_US    (25000)
+
+/** @} */ /* End of group EEPROM_Exported_Defines */
+
 /** @defgroup EEPROM_Exported_Functions EEPROM Exported Functions
   * @{
   */
@@ -123,15 +143,20 @@ EEPROM_Latency_Cycles EEPROM_GetLatency(void);
   * @{
   */
 
-__RAMFUNC uint8_t EEPROM_ReadByte(uint32_t Address, EEPROM_Mem_Bank BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC uint16_t EEPROM_ReadHalfWord(uint32_t Address, EEPROM_Mem_Bank BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC uint32_t EEPROM_ReadWord(uint32_t Address, EEPROM_Mem_Bank BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ErasePage(uint32_t Address, EEPROM_Mem_Bank BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_EraseAllPages(EEPROM_Mem_Bank BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ProgramByte(uint32_t Address, EEPROM_Mem_Bank BankSelector, uint32_t Data) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ProgramHalfWord(uint32_t Address, EEPROM_Mem_Bank BankSelector, uint32_t Data) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ProgramWord(uint32_t Address, EEPROM_Mem_Bank BankSelector, uint32_t Data) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_UpdateDCache(void) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
+__RAMFUNC uint8_t EEPROM_ReadByte(uint32_t Address, EEPROM_Mem_Bank BankSelector);
+__RAMFUNC uint16_t EEPROM_ReadHalfWord(uint32_t Address, EEPROM_Mem_Bank BankSelector);
+__RAMFUNC uint32_t EEPROM_ReadWord(uint32_t Address, EEPROM_Mem_Bank BankSelector);
+__RAMFUNC void EEPROM_ReadWordArrayBurst(const uint32_t* PtrAddressArray, uint32_t* PtrDataArray, uint32_t ArraySize, EEPROM_Mem_Bank BankSelector);
+
+__RAMFUNC void EEPROM_ErasePage(uint32_t Address, EEPROM_Mem_Bank BankSelector);
+__RAMFUNC void EEPROM_EraseAllPages(EEPROM_Mem_Bank BankSelector);
+
+__RAMFUNC void EEPROM_ProgramByte(uint32_t Address, EEPROM_Mem_Bank BankSelector, uint32_t Data);
+__RAMFUNC void EEPROM_ProgramHalfWord(uint32_t Address, EEPROM_Mem_Bank BankSelector, uint32_t Data);
+__RAMFUNC void EEPROM_ProgramWord(uint32_t Address, EEPROM_Mem_Bank BankSelector, uint32_t Data);
+__RAMFUNC void EEPROM_ProgramWordArrayBurst(const uint32_t* PtrAddressArray, const uint32_t* PtrDataArray, uint32_t ArraySize, EEPROM_Mem_Bank BankSelector);
+
+__RAMFUNC void EEPROM_UpdateDCache(void);
 
 /** @} */ /* End of group EEPROM_Functions_not_allowed_to_be_located_in_Flash */
 
@@ -147,7 +172,7 @@ __RAMFUNC void EEPROM_UpdateDCache(void) __attribute__((section("EXECUTABLE_MEMO
 
 #endif /* __MDR32FxQI_EEPROM_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_eeprom.h */
 

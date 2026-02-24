@@ -2,19 +2,19 @@
   ******************************************************************************
   * @file    MDR1986VK01_config.h
   * @author  Milandr Application Team
-  * @version V1.3.0
-  * @date    14/04/2022
+  * @version V1.4.0
+  * @date    18/01/2024
   * @brief   Library configuration file.
   ******************************************************************************
   * <br><br>
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * THE PRESENT FIRMWARE IS FOR GUIDANCE ONLY. IT AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING MILANDR'S PRODUCTS IN ORDER TO FACILITATE
+  * THE USE AND SAVE TIME. MILANDR SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES RESULTING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   */
 
 /**
@@ -49,6 +49,16 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
+
+/* MDR1986VK01 SPL version numbers - major, minor, patch */
+#define _MDR1986VK01_SPL_VERSION_MAJOR (1U) /*!< [23:16] major version */
+#define _MDR1986VK01_SPL_VERSION_MINOR (4U) /*!< [15:8]  minor version */
+#define _MDR1986VK01_SPL_VERSION_PATCH (0U) /*!< [7:0]   patch version */
+
+/* MDR1986VK01 SPL version number (combined value) */
+#define MDR1986VK01_SPL_VERSION ((_MDR1986VK01SPL_VERSION_MAJOR << 16) | \
+                                 (_MDR1986VK01SPL_VERSION_MINOR << 8) |  \
+                                 (_MDR1986VK01SPL_VERSION_PATCH))
 
 // <c2> Use legacy support
 // <i> Definition provides legacy support for previous versions of SPL for MCU.
@@ -202,7 +212,7 @@ extern "C" {
 
 #endif /* __MDR1986VK01_CONFIG_H */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR1986VK01_config.h */
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    MDR32FxQI_rst_clk.c
   * @author  Milandr Application Team
-  * @version V2.0.3i
-  * @date    25/01/2023
+  * @version V2.2.0i
+  * @date    19/11/2024
   * @brief   This file contains all the RST_CLK firmware functions.
   ******************************************************************************
   * <br><br>
@@ -15,7 +15,7 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR A USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2023 Milandr</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2025 Milandr</center></h2>
   ******************************************************************************
   */
 
@@ -35,8 +35,6 @@
   */
 
 /* RCC_CLK registers bit address in the alias region */
-#define PERIPH_BASE                 0x40000000
-#define PERIPH_BB_BASE              0x42000000
 #define RST_CLK_OFFSET              (MDR_RST_CLK_BASE - PERIPH_BASE)
 #define BKP_OFFSET                  (MDR_BKP_BASE - PERIPH_BASE)
 
@@ -85,7 +83,7 @@
 #define LSION_OFFSET                15
 #define LSION_MASK                  ((uint32_t)(1 << LSION_OFFSET))
 
-#if defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     #define PLLCPUON_BB                 RST_CLK_BB(PLL_CONTROL, 2)
     #define PLLCPURLD_BB                RST_CLK_BB(PLL_CONTROL, 3)
     #define PLLUSBON_BB                 RST_CLK_BB(PLL_CONTROL, 0)
@@ -105,7 +103,7 @@
     #define CPU_C1_SEL1_BB              RST_CLK_BB(CPU_CLOCK, 1)
     #define USB_C1_SEL0_BB              RST_CLK_BB(USB_CLOCK, 0)
     #define USB_C1_SEL1_BB              RST_CLK_BB(USB_CLOCK, 1)
-#endif /* #if defined(USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined(USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
 #if defined (USE_MDR32FG16S1QI)
     #define PLL_DSP_RDY_BB              RST_CLK_BB(CLOCK_STATUS, RST_CLK_CLOCK_STATUS_PLL_DSP_RDY_Pos)
@@ -130,22 +128,64 @@
   */
 void RST_CLK_DeInit(void)
 {
-    RST_CLK_WarmDeInit();
-    /* Reset SELECTRI and LOW bits */
-    MDR_BKP->REG_0E &= ~(BKP_REG_0E_SELECTRI_Msk | BKP_REG_0E_LOW_Msk); 
-    MDR_BKP->REG_0F = ((0x20 << BKP_REG_0F_HSI_TRIM_Pos) | BKP_REG_0F_HSI_ON |
-                       (0x10 << BKP_REG_0F_LSI_TRIM_Pos) | BKP_REG_0F_LSI_ON); /* HSION & LSION */
+
+    uint32_t Reg_0E;
+
+    MDR_RST_CLK->PER_CLOCK = (RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_BKP);
+    Reg_0E = MDR_BKP->REG_0E;
+
+    switch (Reg_0E & (BKP_REG_0E_SELECTRI_Msk | BKP_REG_0E_LOW_Msk))
+    {
+        case (4 | (4 << BKP_REG_0E_SELECTRI_Pos)): /* All clocks are switched off. */
+        case (1 | (1 << BKP_REG_0E_SELECTRI_Pos)): /* System clock is up to 200 kHz. */
+        case (2 | (2 << BKP_REG_0E_SELECTRI_Pos)): /* System clock is up to 500 kHz. */
+        case (3 | (3 << BKP_REG_0E_SELECTRI_Pos)): /* System clock is up to 1 MHz. */
+            /* Reset SELECTRI and LOW bits to default value (system clock is up to 10 MHz). */
+            MDR_BKP->REG_0E = (Reg_0E & ~(BKP_REG_0E_SELECTRI_Msk | BKP_REG_0E_LOW_Msk));
+            RST_CLK_WarmDeInit();
+            break;
+
+        case 0: /* System clock is up to 10 MHz. */
+            RST_CLK_WarmDeInit();
+            break;
+
+        case (5 | (5 << BKP_REG_0E_SELECTRI_Pos)): /* System clock is up to 40 MHz. */
+        case (6 | (6 << BKP_REG_0E_SELECTRI_Pos)): /* System clock is up to 80 MHz. */
+        case (7 | (7 << BKP_REG_0E_SELECTRI_Pos)): /* System clock is over 80 MHz. */
+            RST_CLK_WarmDeInit();
+            /* Reset SELECTRI and LOW bits to default value (system clock is up to 10 MHz). */
+            MDR_BKP->REG_0E = (Reg_0E & ~(BKP_REG_0E_SELECTRI_Msk | BKP_REG_0E_LOW_Msk));
+            break;
+
+        default: /* Forbidden value: SELECTRI != LOW. */
+            /* Fallback to worst case - max core clock. */
+            Reg_0E &= ~(BKP_REG_0E_SELECTRI_Msk | BKP_REG_0E_LOW_Msk);
+#if defined (USE_K1986VE9xI)
+            /* Max core clock is 80 MHz or lower. */
+            Reg_0E |= ((6 << BKP_REG_0E_SELECTRI_Pos) | (6 << BKP_REG_0E_LOW_Pos));
+#elif defined (USE_K1986VE1xI) || defined (USE_MDR32FG16S1QI)
+            /* Max core clock is over 80 MHz. */
+            Reg_0E |= ((7 << BKP_REG_0E_SELECTRI_Pos) | (7 << BKP_REG_0E_LOW_Pos));
+#endif
+            MDR_BKP->REG_0E = Reg_0E;
+
+            RST_CLK_WarmDeInit();
+            /* Reset SELECTRI and LOW bits to default value (system clock is up to 10 MHz). */
+            MDR_BKP->REG_0E = (Reg_0E & ~(BKP_REG_0E_SELECTRI_Msk | BKP_REG_0E_LOW_Msk));
+            break;
+    }
 }
 
 /**
   * @brief  Set the RST_CLK clock configuration to the default reset state.
+  * @note   This function doesn't modify RTC_CLOCK register as RTC may depend on it.
   * @param  None
   * @retval None
   */
 void RST_CLK_WarmDeInit(void)
 {
     /* Reset all clock but RST_CLK and BKP_CLK bits */
-    MDR_RST_CLK->PER_CLOCK = (uint32_t)RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_BKP;
+    MDR_RST_CLK->PER_CLOCK = (uint32_t)(RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_BKP);
     
     /* Prepare HSI clk */
     RST_CLK_HSIcmd(ENABLE);
@@ -157,17 +197,16 @@ void RST_CLK_WarmDeInit(void)
     MDR_RST_CLK->HS_CONTROL    = (uint32_t)0x00000000;
     MDR_RST_CLK->USB_CLOCK     = (uint32_t)0x00000000;
     MDR_RST_CLK->ADC_MCO_CLOCK = (uint32_t)0x00000000;
-    MDR_RST_CLK->RTC_CLOCK     = (uint32_t)0x00000000;
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_K1986VE1xI)
     MDR_RST_CLK->CAN_CLOCK     = (uint32_t)0x00000000;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_K1986VE1xI) */
     MDR_RST_CLK->TIM_CLOCK     = (uint32_t)0x00000000;
     MDR_RST_CLK->UART_CLOCK    = (uint32_t)0x00000000;
     MDR_RST_CLK->SSP_CLOCK     = (uint32_t)0x00000000;
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     MDR_RST_CLK->ETH_CLOCK     = (uint32_t)0x00000000;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 #if defined (USE_MDR32FG16S1QI)
     MDR_RST_CLK->DSP_CLOCK     = (uint32_t)0x00000000;
     MDR_RST_CLK->SPP2_CLOCK    = (uint32_t)0x00000000;
@@ -236,10 +275,10 @@ ErrorStatus RST_CLK_HSEstatus(void)
 }
 
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 /**
   * @brief   HSE2 (High Speed External 2) clock mode and source selection
-  * @warning This function can be used only for MCU MDR32F1QI.
+  * @warning This function can be used only for MCU MDR32F1QI, K1986VE1xI.
   * @param   RST_CLK_HSE2 - @ref RST_CLK_HSE2_Mode - mode selector.
   * @retval  None
   */
@@ -271,7 +310,7 @@ void RST_CLK_HSE2config(RST_CLK_HSE2_Mode RST_CLK_HSE2)
 
 /**
   * @brief   HSE2 clock status
-  * @warning This function can be used only for MCU MDR32F1QI.
+  * @warning This function can be used only for MCU MDR32F1QI, K1986VE1xI.
   * @param   None
   * @retval  @ref ErrorStatus - SUCCESS if HSE2 clock is ready, else ERROR
   */
@@ -298,7 +337,7 @@ ErrorStatus RST_CLK_HSE2status(void)
 
     return state;
 }
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 /**
   * @brief  LSE (Low Speed External) clock mode and source selection
@@ -366,17 +405,17 @@ ErrorStatus RST_CLK_LSEstatus(void)
   */
 void RST_CLK_HSIcmd(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
 #endif
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) HSION_BB = (uint32_t)NewState;
 #endif
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
 
     temp = MDR_BKP->REG_0F;
     /* Form new value */
@@ -392,7 +431,7 @@ void RST_CLK_HSIcmd(FunctionalState NewState)
     }
     /* Configure REG_0F register with new value */
     MDR_BKP->REG_0F = temp;
-#endif /* defined (USE_MDR32F1QI) */
+#endif /* defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -455,17 +494,17 @@ ErrorStatus RST_CLK_HSIstatus(void)
   */
 void RST_CLK_LSIcmd(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) LSION_BB = (uint32_t) NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_BKP->REG_0F;
 
     /* Form new value */
@@ -482,7 +521,7 @@ void RST_CLK_LSIcmd(FunctionalState NewState)
 
  /* Configure REG_0F register with new value */
     MDR_BKP->REG_0F = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -540,10 +579,12 @@ ErrorStatus RST_CLK_LSIstatus(void)
 }
 
 /**
-  * @brief  Configures the CPU_PLL clock source and multiplication factor.
-  * @param  RST_CLK_CPU_PLLsource - @ref RST_CLK_CPU_PLL_Source - specifies the PLL entry clock source.
-  * @param  RST_CLK_CPU_PLLmul - @ref RST_CLK_CPU_PLL_Multiplier - specifies the PLL multiplication factor.
-  * @retval None
+  * @brief   Configures the CPU_PLL clock source and multiplication factor.
+  * @param   RST_CLK_CPU_PLLsource - @ref RST_CLK_CPU_PLL_Source - specifies the PLL entry clock source.
+  * @param   RST_CLK_CPU_PLLmul - @ref RST_CLK_CPU_PLL_Multiplier - specifies the PLL multiplication factor.
+  * @warning For K1986VE9xI, K1986VE1xI:
+  *          RST_CLK_CPU_PLLmul must not be equal to @arg RST_CLK_CPU_PLLmul2 (0x1), @arg RST_CLK_CPU_PLLmul3 (0x2).
+  * @retval  None
   */
 void RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLL_Source RST_CLK_CPU_PLLsource, uint32_t RST_CLK_CPU_PLLmul)
 {
@@ -570,13 +611,13 @@ void RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLL_Source RST_CLK_CPU_PLLsource, uint32_
     /* Store the new value */
     MDR_RST_CLK->PLL_CONTROL = temp;
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     if (*(__IO uint32_t *) PLLCPUON_BB)
     {
         *(__IO uint32_t *) PLLCPURLD_BB = (uint32_t)0x01;
         *(__IO uint32_t *) PLLCPURLD_BB = (uint32_t)0x00;
     }
-#elif defined (USE_MDR32F1QI)
+#elif defined (USE_K1986VE1xI)
     if( (MDR_RST_CLK->PLL_CONTROL & RST_CLK_PLL_CONTROL_PLL_CPU_ON) == RST_CLK_PLL_CONTROL_PLL_CPU_ON )
     {
         temp = MDR_RST_CLK->PLL_CONTROL;
@@ -595,17 +636,17 @@ void RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLL_Source RST_CLK_CPU_PLLsource, uint32_
   */
 void RST_CLK_CPU_PLLuse(FunctionalState UsePLL)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(UsePLL));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) CPU_C2_SEL_BB = (uint32_t) UsePLL;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->CPU_CLOCK;
 
     /* Form new value */
@@ -623,7 +664,7 @@ void RST_CLK_CPU_PLLuse(FunctionalState UsePLL)
     }
     /* Configure CPU_CLOCK register with new value */
     MDR_RST_CLK->CPU_CLOCK = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -633,17 +674,17 @@ void RST_CLK_CPU_PLLuse(FunctionalState UsePLL)
   */
 void RST_CLK_CPU_PLLcmd(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) PLLCPUON_BB = (uint32_t) NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->PLL_CONTROL;
 
     if(NewState != DISABLE)
@@ -655,7 +696,7 @@ void RST_CLK_CPU_PLLcmd(FunctionalState NewState)
         temp &= ~RST_CLK_PLL_CONTROL_PLL_CPU_ON;
     }
     MDR_RST_CLK->PLL_CONTROL = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -732,10 +773,12 @@ void RST_CLK_CPUclkSelection(RST_CLK_HCLK_Source CPU_CLK)
 }
 
 /**
-  * @brief  Configures the USB_PLL clock source and multiplication factor.
-  * @param  RST_CLK_USB_PLLsource - @ref RST_CLK_USB_PLL_Source - specifies the PLL entry clock source.
-  * @param  RST_CLK_USB_PLLmul - @ref RST_CLK_USB_PLL_Multiplier - specifies the PLL multiplication factor.
-  * @retval None
+  * @brief   Configures the USB_PLL clock source and multiplication factor.
+  * @param   RST_CLK_USB_PLLsource - @ref RST_CLK_USB_PLL_Source - specifies the PLL entry clock source.
+  * @param   RST_CLK_USB_PLLmul - @ref RST_CLK_USB_PLL_Multiplier - specifies the PLL multiplication factor.
+  * @warning For K1986VE9xI, K1986VE1xI:
+  *          RST_CLK_USB_PLLmul must not be equal to @arg RST_CLK_USB_PLLmul2 (0x1), @arg RST_CLK_USB_PLLmul3 (0x2).
+  * @retval  None
   */
 void RST_CLK_USB_PLLconfig(RST_CLK_USB_PLL_Source RST_CLK_USB_PLLsource, uint32_t RST_CLK_USB_PLLmul)
 {
@@ -763,15 +806,15 @@ void RST_CLK_USB_PLLconfig(RST_CLK_USB_PLL_Source RST_CLK_USB_PLLsource, uint32_
     /* Store the new value */
     MDR_RST_CLK->PLL_CONTROL = temp;
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     if (*(__IO uint32_t *) PLLUSBON_BB)
     {
         *(__IO uint32_t *) PLLUSBRLD_BB = (uint32_t) 0x01;
         *(__IO uint32_t *) PLLUSBRLD_BB = (uint32_t) 0x00;
     }
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     if ( MDR_RST_CLK->PLL_CONTROL & (RST_CLK_PLL_CONTROL_PLL_USB_ON) )
     {
         temp = MDR_RST_CLK->PLL_CONTROL;
@@ -780,7 +823,7 @@ void RST_CLK_USB_PLLconfig(RST_CLK_USB_PLL_Source RST_CLK_USB_PLLsource, uint32_
         temp &= ~RST_CLK_PLL_CONTROL_PLL_USB_RLD;
         MDR_RST_CLK->PLL_CONTROL = temp;
     }
-#endif /* #if defined (USE_MDR32F1QI)*/
+#endif /* #if defined (USE_K1986VE1xI)*/
 }
 
 /**
@@ -790,17 +833,17 @@ void RST_CLK_USB_PLLconfig(RST_CLK_USB_PLL_Source RST_CLK_USB_PLLsource, uint32_
   */
 void RST_CLK_USB_PLLuse(FunctionalState UsePLL)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(UsePLL));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) USB_C2_SEL_BB = (uint32_t) UsePLL;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->USB_CLOCK;
 
     /* Form new value */
@@ -819,7 +862,7 @@ void RST_CLK_USB_PLLuse(FunctionalState UsePLL)
 
     /* Configure USB_CLOCK register with new value */
     MDR_RST_CLK->USB_CLOCK = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -829,16 +872,16 @@ void RST_CLK_USB_PLLuse(FunctionalState UsePLL)
   */
 void RST_CLK_USB_PLLcmd(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) PLLUSBON_BB = (uint32_t) NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->PLL_CONTROL;
 
     /* Form a new value */
@@ -852,7 +895,7 @@ void RST_CLK_USB_PLLcmd(FunctionalState NewState)
     }
 
     MDR_RST_CLK->PLL_CONTROL = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -893,17 +936,17 @@ ErrorStatus RST_CLK_USB_PLLstatus(void)
   */
 void RST_CLK_USBclkPrescaler(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) USB_C3_SEL_BB = (uint32_t)NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->USB_CLOCK;
 
     /* Form new value */
@@ -919,7 +962,7 @@ void RST_CLK_USBclkPrescaler(FunctionalState NewState)
     }
     /* Configure USB_CLOCK register with new value */
     MDR_RST_CLK->USB_CLOCK = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 
 }
 
@@ -930,17 +973,17 @@ void RST_CLK_USBclkPrescaler(FunctionalState NewState)
   */
 void RST_CLK_USBclkEnable(FunctionalState NewState)
 {
-#if  defined (USE_MDR32F1QI)
+#if  defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) USB_CLK_EN_BB = (uint32_t) NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->USB_CLOCK;
 
     /* Form new value */
@@ -957,7 +1000,7 @@ void RST_CLK_USBclkEnable(FunctionalState NewState)
 
     /* Configure USB_CLOCK register with new value */
     MDR_RST_CLK->USB_CLOCK = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -1012,17 +1055,17 @@ void RST_CLK_ADCclkPrescaler(RST_CLK_ADC_C3_Divisor ADCclkDivValue)
   */
 void RST_CLK_ADCclkEnable(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) ADC_CLK_EN_BB = (uint32_t) NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->ADC_MCO_CLOCK;
 
     /* Form new value */
@@ -1039,7 +1082,7 @@ void RST_CLK_ADCclkEnable(FunctionalState NewState)
 
     /* Configure CPU_CLOCK register with new value */
     MDR_RST_CLK->ADC_MCO_CLOCK = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -1071,17 +1114,17 @@ void RST_CLK_HSIclkPrescaler(RST_CLK_HSI_C1_Divisor HSIclkDivValue)
   */
 void RST_CLK_RTC_HSIclkEnable(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) HSI_RTC_EN_BB = (uint32_t) NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->RTC_CLOCK;
 
     /* Form new value */
@@ -1098,7 +1141,7 @@ void RST_CLK_RTC_HSIclkEnable(FunctionalState NewState)
 
     /* Configure RTC_CLOCK register with new value */
     MDR_RST_CLK->RTC_CLOCK = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -1130,17 +1173,17 @@ void RST_CLK_HSEclkPrescaler(RST_CLK_HSE_C1_Divisor HSEclkDivValue)
   */
 void RST_CLK_RTC_HSEclkEnable(FunctionalState NewState)
 {
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     uint32_t temp = 0;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
     /* Check the parameters */
     assert_param(IS_FUNCTIONAL_STATE(NewState));
 
-#if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI)
+#if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI)
     *(__IO uint32_t *) HSE_RTC_EN_BB = (uint32_t)NewState;
-#endif /* #if defined (USE_MDR32F9Q2I) || defined (USE_MDR32FG16S1QI) */
+#endif /* #if defined (USE_K1986VE9xI) || defined (USE_MDR32FG16S1QI) */
 
-#if defined (USE_MDR32F1QI)
+#if defined (USE_K1986VE1xI)
     temp = MDR_RST_CLK->RTC_CLOCK;
 
     /* Form new value */
@@ -1157,7 +1200,7 @@ void RST_CLK_RTC_HSEclkEnable(FunctionalState NewState)
 
     /* Configure RTC_CLOCK register with new value */
     MDR_RST_CLK->RTC_CLOCK = temp;
-#endif /* #if defined (USE_MDR32F1QI) */
+#endif /* #if defined (USE_K1986VE1xI) */
 }
 
 /**
@@ -1186,7 +1229,7 @@ void RST_CLK_CPUclkSelectionC1(RST_CLK_CPU_C1_Source CPU_CLK)
   * @brief  Enables or disables clock of peripherals.
   * @param  RST_CLK_PCLK: specifies the peripheral to gates its clock.
   *         This parameter can be any combination of the following values:
-  *           @note for MDR32F9Q2I:
+  *           @note for MDR32F9Q2I, K1986VE9xI:
   *           @arg RST_CLK_PCLK_RST_CLK, RST_CLK_PCLK_EEPROM, RST_CLK_PCLK_DMA,
   *                RST_CLK_PCLK_CAN1,    RST_CLK_PCLK_CAN2,
   *                RST_CLK_PCLK_UART1,   RST_CLK_PCLK_UART2,  RST_CLK_PCLK_SSP1, RST_CLK_PCLK_SSP2,
@@ -1206,7 +1249,7 @@ void RST_CLK_CPUclkSelectionC1(RST_CLK_CPU_C1_Source CPU_CLK)
   *                RST_CLK_PCLK_ADC,     RST_CLK_PCLK_DAC,    RST_CLK_PCLK_COMP, RST_CLK_PCLK_AUDIO_IP,
   *                RST_CLK_PCLK_PORTA,   RST_CLK_PCLK_PORTB,  RST_CLK_PCLK_PORTC,
   *                RST_CLK_PCLK_PORTD,   RST_CLK_PCLK_PORTE,  RST_CLK_PCLK_PORTF.
-  *           @note for MDR32F1QI:
+  *           @note for MDR32F1QI, K1986VE1xI:
   *           @arg RST_CLK_PCLK_RST_CLK,       RST_CLK_PCLK_EEPROM, RST_CLK_PCLK_DMA,
   *                RST_CLK_PCLK_CAN1,          RST_CLK_PCLK_CAN2,
   *                RST_CLK_PCLK_UART1,         RST_CLK_PCLK_UART2,
@@ -1705,13 +1748,58 @@ void RST_CLK_DSPCmd(FunctionalState NewState)
 }
 #endif /* #if defined (USE_MDR32FG16S1QI) */
 
+#if defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI)
+/**
+ * @brief  Check whether the operation of the specified DMA channel is complete or not.
+ * @param  Channel: Specify the flag to check.
+ *         This parameter can be a value of the RST_CLK_DMA_DONE_STICK_CHANNEL_xxx definitions.
+ * @return @ref FlagStatus - current state of dma_done flag for specified channel (SET or RESET).
+ */
+FlagStatus RST_CLK_DMADone_GetFlagStatus(uint32_t Channel)
+{
+    FlagStatus Status;
+
+    /* Check the parameters. */
+    assert_param(IS_RST_CLK_DMA_DONE_STICK_CHANNEL(Channel));
+
+    if ((MDR_RST_CLK->DMA_DONE_STICK & (uint32_t)Channel) == 0) {
+        Status = RESET;
+    } else {
+        Status = SET;
+    }
+
+    return Status;
+}
+
+/**
+ * @brief  Return the dma_done combined value of all the channels.
+ * @param  None.
+ * @return dma_done status flags combined value.
+ */
+uint32_t RST_CLK_DMADone_GetStatus(void)
+{
+    return MDR_RST_CLK->DMA_DONE_STICK;
+}
+
+/**
+ * @brief  Clear dma_done flags for the specified channels.
+ * @param  Channels: Specify channels to clear.
+ *         This parameter can be any combination of RST_CLK_DMA_DONE_STICK_CHANNEL_xxx definitions values.
+ * @return None.
+ */
+void RST_CLK_DMADone_ClearFlags(uint32_t Channels)
+{
+    MDR_RST_CLK->DMA_DONE_STICK = ~Channels;
+}
+#endif /* #if defined(USE_K1986VE1xI) && !defined(USE_MDR32F1QI) */
+
 /** @} */ /* End of group RST_CLK_Exported_Functions */
 
 /** @} */ /* End of group RST_CLK */
 
 /** @} */ /* End of group __MDR32FxQI_StdPeriph_Driver */
 
-/*********************** (C) COPYRIGHT 2023 Milandr ****************************
+/*********************** (C) COPYRIGHT 2025 Milandr ****************************
 *
 * END OF FILE MDR32FxQI_rst_clk.c */
 
