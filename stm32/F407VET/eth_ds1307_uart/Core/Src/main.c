@@ -107,8 +107,8 @@ int main(void)
   MX_IWDG_Init();
   MX_LWIP_Init();
 
-  DS1307_init();
-  serial_init( dateTimeReceivedCallback );
+  //DS1307_init();
+  //serial_init( dateTimeReceivedCallback );
 
   netif_set_hostname(&gnetif, "STM32F4xx");
 
@@ -123,8 +123,8 @@ int main(void)
     /* USER CODE END WHILE */
 
 	  MX_LWIP_Process();
-	  DS1307_process();
-	  serial_process();
+	  //DS1307_process();
+	  //serial_process();
 
 	  if ( HAL_GetTick() - timers.blink_timer > BLINK_PERIOD_MS ) {
 		  timers.blink_timer = HAL_GetTick();
@@ -135,12 +135,12 @@ int main(void)
 		  }
 	  }
 
-	  if ( HAL_GetTick() - timers.serial_sending_period > SERIAL_SENDING_PERIOD ) {
+	  /*if ( HAL_GetTick() - timers.serial_sending_period > SERIAL_SENDING_PERIOD ) {
 		  timers.serial_sending_period = HAL_GetTick();
 
 		  DS1307_get_datetime(&dateTime);
 		  serial_print_date_time(&dateTime);
-	  }
+	  }*/
 
 	  HAL_IWDG_Refresh(&hiwdg);
 
