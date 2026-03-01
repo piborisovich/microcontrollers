@@ -2073,13 +2073,13 @@
             <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_port.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_power.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_rst_clk.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_timer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_uart.c</name>
         </file>
     </group>
     <group>
@@ -2100,4 +2100,7 @@
             <name>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F9Q2I\startup\system_MDR32F9Q2I.h</name>
         </file>
     </group>
+    <file>
+        <name>$PROJ_DIR$\MDR32FxQI_config.h</name>
+    </file>
 </project>
