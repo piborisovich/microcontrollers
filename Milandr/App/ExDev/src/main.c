@@ -63,15 +63,14 @@ enum LED_BLINK_TIMEOUTS
 enum LED_MODE  { LED_MODE_OFF, LED_MODE_CONTINUOUS, LED_MODE_SWITCH, LED_MODE_BLINK };
 enum LED_STATE { STATE_OFF, STATE_ON };
 
-const char *fullConverterInfoStr = "Z397-Guard converter S/N:00214\n"
-                                   "Pulsar Ltd. +7(812)703-77-65, +7(495)787-70-66\n"
-                                   "Copyright 2010 RF Enabled\n"
-                                   "http://www/ironlogic.ru\n"
-                                   "Version 3.3 build Oct 20 2011  17:22:41\n"
-                                   "----------------------------------\n"
-                                   "Current mode - Advanced\n";
+const char *fullConverterInfoStr = "Z397-Guard converter S/N:00214 "
+                                   "Pulsar Ltd. +7(812)703-77-65, +7(495)787-70-66 "
+                                   "Copyright 2010 RF Enabled http://www.ironlogic.ru "
+                                   "Version 3.3 build Oct 20 2011 17:22:41 "
+                                   "---------------------------------- "
+                                   "Current mode - Advanced\r";
 
-const char *briefConverterInfoStr = "Z397-Guard S/N:00214,Mode:1\n";
+const char *briefConverterInfoStr = "Z397-Guard S/N:00214,Mode:1\r";
                           
 typedef struct _LED_Typedef
 {
@@ -465,6 +464,7 @@ void UART_push(MDR_UART_TypeDef* uart, uint8_t *data, size_t len)
 void UART_main(void)
 {
   uint8_t rx_data;
+  //uint8_t buffer[10];
   if ( ( uartDataStr[0].RX_Tail != uartDataStr[0].RX_Head ) )
   {
     rx_data  = uartDataStr[0].RX_Buffer[uartDataStr[0].RX_Head];
@@ -491,6 +491,19 @@ void UART_main(void)
         break;
         //Full converter info
       case 0x49:
+        uartDataStr[0].RX_CommandCnt = 0;
+        //End of frame
+        if ( rx_data == 0x0D )
+        {
+          //buffer[0] = 0x50;
+          //buffer[1] = 0x0D;
+          //UART_push( MDR_UART1, buffer, 2 );
+          UART_push( MDR_UART1, (uint8_t*)fullConverterInfoStr, strlen(fullConverterInfoStr) );
+        }
+          
+        break;
+        
+      case 0x69:
         uartDataStr[0].RX_CommandCnt = 0;
         //End of frame
         if ( rx_data == 0x0D )
