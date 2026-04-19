@@ -47,12 +47,15 @@
 #define DE_OFF() PORT_ResetBits(MDR_PORTD, DE_PIN)
 
 #define CONNECTION_TIMEOUT 500 //ms
-                            
+
+#define MAX_UART_RX_COMMAND_LEN 100                            
 #define MAX_UART_RX_BUF_LEN 1024
 #define MAX_UART_TX_COMMAND_LEN 255
 #define MAX_UART_TX_COMMAND_COUNT 10
 
 #define UART_RECEIVE_TIMEOUT 50
+                            
+#define CONTROLLERS_COUNT 104
                             
 enum LED_BLINK_TIMEOUTS
 { 
@@ -71,6 +74,28 @@ const char *fullConverterInfoStr = "Z397-Guard converter S/N:00214 "
                                    "Current mode - Advanced\r";
 
 const char *briefConverterInfoStr = "Z397-Guard S/N:00214,Mode:1\r";
+
+/*!
+* \brief Controler state bits
+*/
+typedef struct _CtrlFlagsBits
+{
+  uint8_t connected : 1;
+  uint8_t reserv    : 7;
+} CtrlFlagsBits;
+
+
+typedef union _CtrlFlags
+{
+  CtrlFlagsBits bits;
+  uint8_t byte;
+} CtrlFlags;
+
+typedef struct _CONTROLLER_INFO
+{
+  uint8_t address;
+  CtrlFlags flags;
+} CONTROLLER_INFO;
                           
 typedef struct _LED_Typedef
 {
@@ -95,6 +120,7 @@ typedef struct _UART_TX_RX_Typedef
   uint32_t RX_Head;
   uint32_t RX_Tail;
   uint8_t RX_CommandCode;
+  uint8_t RX_CommandData[MAX_UART_RX_COMMAND_LEN];
   uint32_t RX_CommandCnt;
   uint8_t  RX_Buffer[MAX_UART_RX_BUF_LEN];
   
@@ -115,6 +141,7 @@ static LED_Typedef red_led   = { 0, 0, 0, MDR_PORTA, LED_PORT_PIN_R };
 static LED_Typedef green_led = { 0, 0, 0, MDR_PORTA, LED_PORT_PIN_G};
 
 static UART_TX_RX_Typedef uartDataStr[2]; //0 - UART1, 1 - UART2
+static CONTROLLER_INFO controllers[CONTROLLERS_COUNT];
 
 static TimersTypedef timersCounters = { 0 };
 
@@ -135,6 +162,9 @@ void InitTimers(void);
 //Init UART
 void InitUART(void);
 
+//Controllers struct init
+void initControllers(void);
+
 //Led function
 void LED_main(void);
 
@@ -150,6 +180,7 @@ int main()
   InitTick();
   InitTimers();
   InitUART();
+  initControllers();
   
   Delay(100);
   
@@ -375,6 +406,15 @@ void InitUART(void)
   UART_Cmd(MDR_UART2, ENABLE);
 }
 
+void initControllers(void)
+{
+  for ( int i = 0; i < CONTROLLERS_COUNT; ++i )
+  {
+    controllers[i].address = i + 2;
+    controllers[i].flags.bits.connected = ( i % 2 == 0 ? 1 : 0 ); //every even controller is connected
+  }
+}
+
 void LED_iter(LED_Typedef *led)
 {
   switch (led->mode)
@@ -461,10 +501,99 @@ void UART_push(MDR_UART_TypeDef* uart, uint8_t *data, size_t len)
   memcpy( command->data, data, len );
 }
 
+/*!
+* \brief Unpacking data
+*/
+uint8_t decode_input_data(const uint8_t *src, uint8_t *dst, uint8_t src_len)
+{
+  int i = 0, j = 0;
+  uint8_t tmpIn[5];
+  uint8_t *pOutput = dst;
+  
+  for ( i = 0; i < src_len; i += 5 )
+  {
+    memcpy( tmpIn, src + i, 5 );
+    
+    for ( j = 0; j < 5; ++j )
+    {
+      if ( ( tmpIn[j] ^ 0xCA ) < 48 ) tmpIn[j] ^= 0xCA;
+    }
+      
+    *pOutput       = (tmpIn[0] << 4) & 0x80;
+    *(pOutput + 1) = (tmpIn[0] << 5) & 0x80;
+    *(pOutput + 2) = (tmpIn[0] << 6) & 0x80;
+    *(pOutput + 3) = (tmpIn[0] << 7) & 0x80;
+    
+    for ( j = 0; j < 4; ++j )
+    {
+      pOutput[j] |= (tmpIn[j + 1] & 0x7F);
+    }
+    
+    pOutput += 4;
+  }
+  
+  return ( pOutput - dst );
+}
+
+/*!
+* \brief Packing data
+*/
+uint8_t encode_input_data(uint8_t *dst, const uint8_t *src, uint8_t src_len)
+{
+  /*
+
+def to_host(sub_list):
+
+    out = list([0,0,0,0,0])
+
+    for j in range(0, 4):
+        out[j] = sub_list[j] & 0x7F
+        out[4] |= ( ( ( sub_list[j] >> 7 ) & 0x01 ) << j )
+
+        if ( sub_list[j] ^ 0xCA ) & 0x80:
+            out[j] ^= 0xCA
+
+    return out
+
+*/
+  
+  return 0;
+}
+
+int md_check( uint8_t *data, uint8_t size )
+{
+  uint8_t summ = 0;
+  
+  while ( size-- != 0 )
+  {
+    summ += *(data++);
+  }
+
+  return ( summ == 0 ? 0 : -1  );
+}
+
+uint8_t md_calc(uint8_t *data, uint8_t size)
+{
+    int summ = 0;
+    
+    while ( size-- != 0 )
+    {
+      summ += *(data++);
+    }
+    
+    return 0x100 - summ & 0xFF;
+}
+      
+uint8_t UART_Unpacked_data[MAX_UART_RX_COMMAND_LEN];
+
 void UART_main(void)
 {
   uint8_t rx_data;
-  //uint8_t buffer[10];
+  uint8_t *pData;
+  uint8_t i = 0;
+  uint8_t cmd_len = 0;
+  int md = -1;
+  
   if ( ( uartDataStr[0].RX_Tail != uartDataStr[0].RX_Head ) )
   {
     rx_data  = uartDataStr[0].RX_Buffer[uartDataStr[0].RX_Head];
@@ -476,44 +605,72 @@ void UART_main(void)
       uartDataStr[0].RX_CommandCode = rx_data;
       uartDataStr[0].RX_CommandCnt = 1;
     }
-    else if ( uartDataStr[0].RX_CommandCnt == 1 )
+    else if ( rx_data == 0x0D ) //End of frame
     {
+      
+      if ( uartDataStr[0].RX_CommandCnt > 1 &&
+           ( ( uartDataStr[0].RX_CommandCnt - 1 ) % 5 ) == 0 )
+      {
+        cmd_len = decode_input_data( uartDataStr[0].RX_CommandData,
+                                     UART_Unpacked_data,
+                                     uartDataStr[0].RX_CommandCnt - 1 );
+        
+        md = md_check(UART_Unpacked_data, cmd_len);
+      }
+      
+      uartDataStr[0].RX_CommandCnt = 0;
+      
       switch ( uartDataStr[0].RX_CommandCode )
       {
         //Serial number request
       case 0xC8:
-        uartDataStr[0].RX_CommandCnt = 0;
-        //End of frame
-        if ( rx_data == 0x0D )
-        {
-          UART_push( MDR_UART1, (uint8_t*)briefConverterInfoStr, strlen(briefConverterInfoStr) );
-        }
+        UART_push( MDR_UART1, (uint8_t*)briefConverterInfoStr, strlen(briefConverterInfoStr) );
         break;
         //Full converter info
-      case 0x49:
-        uartDataStr[0].RX_CommandCnt = 0;
-        //End of frame
-        if ( rx_data == 0x0D )
-        {
-          //buffer[0] = 0x50;
-          //buffer[1] = 0x0D;
-          //UART_push( MDR_UART1, buffer, 2 );
-          UART_push( MDR_UART1, (uint8_t*)fullConverterInfoStr, strlen(fullConverterInfoStr) );
-        }
-          
-        break;
-        
       case 0x69:
-        uartDataStr[0].RX_CommandCnt = 0;
-        //End of frame
-        if ( rx_data == 0x0D )
-        {
-          UART_push( MDR_UART1, (uint8_t*)fullConverterInfoStr, strlen(fullConverterInfoStr) );
-        }
-          
+      case 0x49:
+        UART_push( MDR_UART1, (uint8_t*)fullConverterInfoStr, strlen(fullConverterInfoStr) );
         break;
-      default: uartDataStr[0].RX_CommandCnt = 0;
+      //Controller info request
+      case 0x20:
+      case 0x30:
+        
+        if ( md == 0 )
+        {
+          pData = UART_Unpacked_data + cmd_len; //+8
+          *pData = 0;
+          
+          for ( i = 0; i < 96; ++i )
+          {
+            if ( controllers[i].flags.bits.connected == 1 ) *pData |= ( 1 << ( i % 8 ) );
+            if ( ( i + 1 ) % 8  == 0 ) *(++pData) = 0;
+          }
+          
+          UART_Unpacked_data[0] = 0;
+          UART_Unpacked_data[1] = cmd_len + 12;
+          UART_Unpacked_data[0] = md_calc(UART_Unpacked_data, UART_Unpacked_data[1]) ;
+          
+          uartDataStr[0].RX_CommandData[0] = uartDataStr[0].RX_CommandCode;
+          
+          cmd_len = encode_input_data( uartDataStr[0].RX_CommandData + 1,
+                                       UART_Unpacked_data,
+                                       UART_Unpacked_data[1] );
+          
+          uartDataStr[0].RX_CommandData[cmd_len  + 1] = 0x0D;
+          
+        }
+        
+        break;
+       
+      default:;
       }
+    } else
+    {
+      if ( uartDataStr[0].RX_CommandCnt <= MAX_UART_RX_COMMAND_LEN )
+      {
+        uartDataStr[0].RX_CommandData[uartDataStr[0].RX_CommandCnt - 1] = rx_data;
+      }
+      ++uartDataStr[0].RX_CommandCnt;
     }
       
     UART_SendData( MDR_UART2, rx_data );
