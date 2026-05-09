@@ -56,6 +56,15 @@
 #define UART_RECEIVE_TIMEOUT 50
                             
 #define CONTROLLERS_COUNT 104
+ 
+
+#define MD_OFFSET  0
+#define LEN_OFFSET 1
+#define LIC_OFFSET 2
+#define PACKET_ID_OFFSET 3
+#define COMMAND_DATA_OFFSET 6
+#define OPERATION_OFFSET 4
+#define ADRESS_OFFSET 5
                             
 enum LED_BLINK_TIMEOUTS
 { 
@@ -71,9 +80,9 @@ const char *fullConverterInfoStr = "Z397-Guard converter S/N:00214 "
                                    "Copyright 2010 RF Enabled http://www.ironlogic.ru "
                                    "Version 3.3 build Oct 20 2011 17:22:41 "
                                    "---------------------------------- "
-                                   "Current mode - Advanced\r";
+                                   "Current mode - Advanced\r\n";
 
-const char *briefConverterInfoStr = "Z397-Guard S/N:00214,Mode:1\r";
+const char *briefConverterInfoStr = "Z397-Guard S/N:00214,Mode:1\r\n";
 
 /*!
 * \brief Controler state bits
@@ -538,26 +547,30 @@ uint8_t decode_input_data(const uint8_t *src, uint8_t *dst, uint8_t src_len)
 /*!
 * \brief Packing data
 */
-uint8_t encode_input_data(uint8_t *dst, const uint8_t *src, uint8_t src_len)
+uint8_t encode_output_data(uint8_t *dst, const uint8_t *src, uint8_t src_len)
 {
-  /*
-
-def to_host(sub_list):
-
-    out = list([0,0,0,0,0])
-
-    for j in range(0, 4):
-        out[j] = sub_list[j] & 0x7F
-        out[4] |= ( ( ( sub_list[j] >> 7 ) & 0x01 ) << j )
-
-        if ( sub_list[j] ^ 0xCA ) & 0x80:
-            out[j] ^= 0xCA
-
-    return out
-
-*/
+  int i = 0, j = 0;
+  uint8_t *pOut = dst;
+  const uint8_t *pIn = src;
   
-  return 0;
+  memset(pOut, 0, 5);
+ 
+  for ( i = 0; i < src_len; ++i )
+  {
+    j = i % 4;
+    *( pOut + j ) = *pIn & 0x7F; 
+    *( pOut + 4 ) |=  ( ( ( *pIn >> 7 ) & 0x01 ) << j );
+    
+    if ( ( ( *(pIn++) ^ 0xCA ) & 0x80 ) != 0 ) *( pOut + j ) ^= 0xCA;
+    
+    if ( ( i + 1 ) % 4 == 0 )
+    {
+      pOut += 5;
+      memset(pOut, 0, 5);
+    }
+  }
+
+  return ( pOut - dst );
 }
 
 int md_check( uint8_t *data, uint8_t size )
@@ -602,8 +615,21 @@ void UART_main(void)
     
     if ( uartDataStr[0].RX_CommandCnt == 0 )
     {
-      uartDataStr[0].RX_CommandCode = rx_data;
-      uartDataStr[0].RX_CommandCnt = 1;
+      switch ( rx_data )
+      {
+        //Serial number request
+        case 0xC8:
+        //Full converter info
+        case 0x69:
+        case 0x49:
+        //Controller info request
+        case 0x20:
+        case 0x30:
+          uartDataStr[0].RX_CommandCode = rx_data;
+          uartDataStr[0].RX_CommandCnt = 1;
+          break;
+       default:;
+      }
     }
     else if ( rx_data == 0x0D ) //End of frame
     {
@@ -635,29 +661,44 @@ void UART_main(void)
       case 0x20:
       case 0x30:
         
-        if ( md == 0 )
+        if ( md == 0 && cmd_len == 8 )
         {
-          pData = UART_Unpacked_data + cmd_len; //+8
-          *pData = 0;
-          
-          for ( i = 0; i < 96; ++i )
+          /*if ( UART_Unpacked_data[OPERATION_OFFSET] != 0x00 &&
+               UART_Unpacked_data[ADRESS_OFFSET] != 0x00 )
           {
-            if ( controllers[i].flags.bits.connected == 1 ) *pData |= ( 1 << ( i % 8 ) );
-            if ( ( i + 1 ) % 8  == 0 ) *(++pData) = 0;
-          }
+            uartDataStr[0].RX_CommandData[0] = uartDataStr[0].RX_CommandCode;
           
-          UART_Unpacked_data[0] = 0;
-          UART_Unpacked_data[1] = cmd_len + 12;
-          UART_Unpacked_data[0] = md_calc(UART_Unpacked_data, UART_Unpacked_data[1]) ;
+            cmd_len = encode_output_data( uartDataStr[0].RX_CommandData + 1,
+                                          UART_Unpacked_data,
+                                          UART_Unpacked_data[1] );
           
-          uartDataStr[0].RX_CommandData[0] = uartDataStr[0].RX_CommandCode;
+            uartDataStr[0].RX_CommandData[cmd_len  + 1] = 0x0D;
+            
+          } else {*/
+             pData = UART_Unpacked_data + cmd_len; //+8
+            *pData = 0;
           
-          cmd_len = encode_input_data( uartDataStr[0].RX_CommandData + 1,
+            for ( i = 0; i < 96; ++i )
+            {
+              if ( controllers[i].flags.bits.connected == 1 ) *pData |= ( 1 << ( i % 8 ) );
+              if ( ( i + 1 ) % 8  == 0 ) *(++pData) = 0;
+            }
+          
+            UART_Unpacked_data[0] = 0;
+            UART_Unpacked_data[1] = cmd_len + 12;
+            UART_Unpacked_data[0] = md_calc(UART_Unpacked_data, UART_Unpacked_data[1]) ;
+          
+            uartDataStr[0].RX_CommandData[0] = uartDataStr[0].RX_CommandCode;
+          
+            cmd_len = encode_output_data( uartDataStr[0].RX_CommandData + 1,
                                        UART_Unpacked_data,
                                        UART_Unpacked_data[1] );
           
-          uartDataStr[0].RX_CommandData[cmd_len  + 1] = 0x0D;
+            uartDataStr[0].RX_CommandData[cmd_len  + 1] = 0x0D;
+       //   }
           
+          UART_push( MDR_UART1, uartDataStr[0].RX_CommandData, cmd_len + 2 );
+              
         }
         
         break;

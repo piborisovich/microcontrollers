@@ -3,10 +3,16 @@ from tabnanny import check
 
 def read_packets(file_path):
     packets = list()
+    packet = []
     with open(file_path, 'r') as f:
         for line in f:
-            packet = [int(ch, 16) for ch in line.split(' ')]
-            packets.append(packet)
+            byte_array = [int(ch, 16) for ch in line.strip().split(' ')]
+
+            for byte in byte_array:
+                packet.append(byte)
+                if byte == 0x0D:
+                    packets.append(packet)
+                    packet = []
     return packets
 
 def to_converter(sub_list):
@@ -52,6 +58,21 @@ def from_host(sub_list):
 
     return out
 
+def from_host_check(in_list):
+
+    out = list([0, 0, 0, 0, 0])
+
+    out[0] = ( (in_list[0] & 0x80) >> 4 ) + ( (in_list[1] & 0x80) >> 5 ) + ( (in_list[2] & 0x80) >> 6 ) + ( (in_list[3] & 0x80) >> 7 )
+
+    for j in range(0, 4):
+        out[j + 1] = in_list[j] & 0x7F
+
+    for j in range(0, 5):
+        if out[j] < 48:
+            out[j] ^= 0xCA
+
+    return out
+
 def to_host(sub_list):
 
     out = list([0,0,0,0,0])
@@ -60,7 +81,7 @@ def to_host(sub_list):
         out[j] = sub_list[j] & 0x7F
         out[4] |= ( ( ( sub_list[j] >> 7 ) & 0x01 ) << j )
 
-        if ( sub_list[j] ^ 0xCA ) & 0x80:
+        if ( ( sub_list[j] ^ 0xCA ) & 0x80 ) != 0:
             out[j] ^= 0xCA
 
     return out
@@ -99,12 +120,15 @@ commands = read_packets('packets.txt')
 
 for command in commands:
     command4 = list([command[0]])
+    command4_check = list([command[0]])
     command5 = list([command[0]])
     command4_from_conv = list([command[0]])
 
     for i in range(1, len(command) - 1 , 5):
         out4 = from_host(command[i:i+5])
+        out4_chk = from_host_check(out4)
         command4 += out4
+        command4_check += out4_chk
 
         out5 = to_host(out4)
         command5 += out5
@@ -114,6 +138,7 @@ for command in commands:
         command4_from_conv += in4
 
     command4.append(command[len(command) - 1])
+    command4_check.append(command[len(command) - 1])
     command5.append(command[len(command) - 1])
     command4_from_conv.append(command[len(command) - 1])
 
@@ -124,5 +149,7 @@ for command in commands:
     converter_to_host = ' '.join(hex(item).removeprefix('0x').rjust(2, '0') for item in command5)
     from_converter_str = ' '.join(hex(item).removeprefix('0x').rjust(2, '0') for item in command4_from_conv)
 
-    print( "    -    ".join( [original, original_to_converter + " (" + hex(md) + ") " + str( md_check(command4) ), converter_to_host, from_converter_str] ) )
+    command4_check_str = ' '.join(hex(item).removeprefix('0x').rjust(2, '0') for item in command4_check)
+
+    print( "    -    ".join( [original, original_to_converter + " (" + hex(md) + ") " + str( md_check(command4) ), converter_to_host, from_converter_str, command4_check_str] ) )
 
