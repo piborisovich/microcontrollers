@@ -749,7 +749,7 @@
                 </option>
                 <option>
                     <name>JLinkInitialSpeed</name>
-                    <state>2000</state>
+                    <state>4000</state>
                 </option>
                 <option>
                     <name>CCDoJlinkMultiTarget</name>
@@ -896,7 +896,7 @@
                 </option>
                 <option>
                     <name>CCCpuClockEdit</name>
-                    <state>80</state>
+                    <state>16</state>
                 </option>
                 <option>
                     <name>CCSwoClockAuto</name>
