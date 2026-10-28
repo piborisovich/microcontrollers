@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <fileVersion>4</fileVersion>
+    <fileChecksum>1224362848</fileChecksum>
+    <configuration>
+        <name>Debug</name>
+        <outputs>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_port.c</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_rst_clk.c</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_eeprom.c</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_timer.c</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_bkp.c</file>
+            <file>$TOOLKIT_DIR$\lib\m6M_tl.a</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\CoreSupport\CM1\core_cm1.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_port.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\CoreSupport\CM1\core_cmFunc.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\inc\MDR32FxQI_rst_clk.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F1QI\startup\iar\startup_MDR32F1QI.S</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_port.__cstat.et</file>
+            <file>$PROJ_DIR$\src\main.c</file>
+            <file>$PROJ_DIR$\Debug\Obj\system_MDR32F1QI.__cstat.et</file>
+            <file>$PROJ_DIR$\MDR32FxQI_config.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\Termometer.pbd</file>
+            <file>$PROJ_DIR$\Debug\Obj\system_MDR32F1QI.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+            <file>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F1QI\startup\system_MDR32F1QI.c</file>
+            <file>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\CoreSupport\CM1\core_cmInstr.h</file>
+            <file>$TOOLKIT_DIR$\lib\rt6M_tl.a</file>
+            <file>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F1QI\inc\MDR32F1QI.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_rst_clk.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_rst_clk.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\inc\MDR32FxQI_port.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_rst_clk.o</file>
+            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+            <file>$TOOLKIT_DIR$\lib\dl6M_tln.a</file>
+            <file>$PROJ_DIR$\Debug\Obj\startup_MDR32F1QI.o</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\inc\MDR32FxQI_utils.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\inc\MDR32FxQI_timer.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\inc\MDR32FxQI_eeprom.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F1QI\startup\system_MDR32F1QI.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_timer.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Exe\Termometer.out</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_eeprom.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_timer.o</file>
+            <file>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\inc\MDR32FxQI_bkp.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_bkp.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\system_MDR32F1QI.pbi</file>
+            <file>$TOOLKIT_DIR$\config\linker\Milandr\MDR32F1QI\MDR32F1QI.icf</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_bkp.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_eeprom.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_port.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_eeprom.o</file>
+            <file>$PROJ_DIR$\Debug\Exe\Termometer.hex</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_timer.pbi</file>
+            <file>$PROJ_DIR$\Debug\List\Termometer.map</file>
+            <file>$PROJ_DIR$\Debug\Obj\MDR32FxQI_bkp.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stddef.h</file>
+            <file>$PROJ_DIR$\src\timeout.c</file>
+            <file>$PROJ_DIR$\src\timeout.h</file>
+            <file>$PROJ_DIR$\src\lcd.c</file>
+            <file>$PROJ_DIR$\src\lcd.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\timeout.o</file>
+            <file>$PROJ_DIR$\Debug\Obj\timeout.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\lcd.__cstat.et</file>
+            <file>$PROJ_DIR$\Debug\Obj\timeout.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\lcd.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\lcd.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+        </outputs>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 44 57</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_port.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 9</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 53</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 14</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 30 17 10 39 31 7 18 40 25 8 23 42 29 11 41</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 10 18 8 17 39 40 23 31 25 7 41 42 29 30 11</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_rst_clk.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 32</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 26</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 28</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 12 17 10 39 31 7 18 40 25 8 23 42 29 11 41</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 40 39 10 18 8 23 31 17 25 7 41 42 29 12 11</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_eeprom.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 54</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 45</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 52</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 38 17 10 39 31 7 18 40 25 8 23 42 29 11 41 36</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 17 42 10 18 8 39 40 11 36 25 31 7 41 38 23 29</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_timer.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 46</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 56</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 43</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 37 17 10 39 31 7 18 40 25 8 23 42 29 11 41</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 25 41 7 31 17 23 10 39 18 40 8 42 29 37 11</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_bkp.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 51</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 58</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 48</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 47 17 10 39 31 7 18 40 25 8 23 42 29 11 41</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 39 40 17 10 18 41 29 25 31 7 8 11 47 23 42</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F1QI\startup\iar\startup_MDR32F1QI.S</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 35</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 27</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 21</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 6</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 30 17 10 39 31 7 18 40 25 8 23 42 29 11 41 12 38 47 37</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 42 29 17 37 31 38 25 7 41 12 47 10 39 18 40 8 23 30 11</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F1QI\startup\system_MDR32F1QI.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 20</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 49</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 16</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 25 17 10 39 31 7 18 40 8 23 42 29 11 41</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 25 8 10 29 17 41 31 7 11 39 18 40 23 42</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Debug\Exe\Termometer.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 57</file>
+                </tool>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 55</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 50 70 27 51 54 9 32 46 35 20 65 33 24 5 34</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\timeout.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 65</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 68</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 66</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 62 10 39 31 7 18 40 71 60 59</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 7 39 10 31 62 71 18 40 60 59</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\lcd.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 70</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 69</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 67</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 64 30 17 10 39 31 7 18 40 25 8 23 42 29 11 41</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 25 17 31 7 8 10 29 30 39 18 40 41 11 64 23 42</file>
+                </tool>
+            </inputs>
+        </file>
+    </configuration>
+    <configuration>
+        <name>Release</name>
+        <outputs />
+        <forcedrebuild>
+            <name>[MULTI_TOOL]</name>
+            <tool>ILINK</tool>
+        </forcedrebuild>
+    </configuration>
+</project>
