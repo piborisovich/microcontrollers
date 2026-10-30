@@ -4,6 +4,8 @@
 #include <MDR32FxQI_bkp.h>
 #include <MDR32FxQI_timer.h>
 
+#include "lcd.h"
+
 #define LIGHT_PIN PORT_Pin_9
 #define PWR_PIN   PORT_Pin_10
 
@@ -51,6 +53,8 @@ void InitTimers(void);
 void LedMain(void);
 
 uint32_t GetMicros(void);
+void Delay_ms(uint32_t ms);
+void Delay_us(uint32_t us);
 
 int main()
 {
@@ -63,6 +67,9 @@ int main()
   
     PWR_ON();
     LIGHT_ON();
+    
+    Init_LCD();
+    LCD_String("    Welcome!    "); 
   
   while (1)
   {
@@ -165,7 +172,7 @@ void InitTimers(void)
 
 void LedMain(void)
 {
-    if ( global_ticks - timers.pwrLedTimer >= DELAY_1000MS ) {
+    if ( global_ticks - timers.pwrLedTimer > DELAY_1000MS ) {
         timers.pwrLedTimer = global_ticks;
         PWR_SWITCH();
     } 
@@ -174,6 +181,20 @@ void LedMain(void)
 uint32_t GetMicros(void)
 {
     return MDR_TIMER1->CNT;
+}
+
+// Задержка в миллисекундах на базе SysTick
+void Delay_ms(uint32_t ms)
+{
+    uint32_t start = global_ticks;
+    while ((global_ticks - start) < ms); // Ожидание
+}
+
+// Задержка в микросекундах
+void Delay_us(uint32_t us)
+{
+    uint32_t start = GetMicros();
+    while ( ( GetMicros() - start ) < us ); // Ожидание
 }
 
 void SysTick_Handler()
