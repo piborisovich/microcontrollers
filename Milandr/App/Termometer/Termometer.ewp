@@ -2090,6 +2090,12 @@
             <name>$PROJ_DIR$\src\lcd.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\src\lcd_buffer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\lcd_buffer.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\src\main.c</name>
         </file>
         <file>
