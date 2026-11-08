@@ -2078,6 +2078,9 @@
             <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_timer.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\Libraries\SPL\MDR32FxQI\src\MDR32FxQI_uart.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\Libraries\CMSIS\MDR32FxQI\DeviceSupport\MDR32F1QI\startup\system_MDR32F1QI.c</name>
         </file>
     </group>
@@ -2097,6 +2100,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\src\main.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\modbus.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\src\modbus.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\src\timeout.c</name>
