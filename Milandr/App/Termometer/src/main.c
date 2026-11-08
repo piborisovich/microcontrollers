@@ -157,10 +157,12 @@ void InitGpio(void)
 {
     PORT_InitTypeDef GPIOInitStruct = {0};
   
-    RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTA, ENABLE);
-    RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTB, ENABLE);
+    RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTA | 
+                     RST_CLK_PCLK_PORTB | 
+                     RST_CLK_PCLK_PORTD, ENABLE);
   
     PORT_DeInit(MDR_PORTB);
+    PORT_DeInit(MDR_PORTD);
   
     PORT_StructInit(&GPIOInitStruct);
   
