@@ -19,14 +19,6 @@
 #define  LIGHT_ON()    PORT_SetBits(MDR_PORTB, PORT_Pin_9)
 #define  LIGHT_OFF()   PORT_ResetBits(MDR_PORTB, PORT_Pin_9)
 
-//RS-485
-#define DI_PIN PORT_Pin_13
-#define RO_PIN PORT_Pin_14
-#define DE_PIN PORT_Pin_15
-
-#define DE_OFF() PORT_ResetBits(MDR_PORTD, DE_PIN) //Прием
-#define DE_ON()  PORT_SetBits(MDR_PORTD, DE_PIN)   //Передача
-
 #define PWR_SWITCH()   MDR_PORTB->RXTX ^= PORT_Pin_10
 
 volatile uint32_t global_ticks = 0;
@@ -91,10 +83,15 @@ int main()
     PWR_ON();
     LIGHT_ON();
     
+    //Установка буферов
+    for ( int i = 0; i < DEVICE_COUNT; ++i ) {
+        device_list[i].dest_buffer = sensor_buffers[i];
+    }
+    
+    ModbusManager_Init();
+    
     LCD_Init();
     Timeout_Start(&ring_timeout, 400000);
-    
-    DE_ON();
   
   while (1)
   {
@@ -104,8 +101,9 @@ int main()
     if ( Timeout_IsExpired(&ring_timeout) ) {
         LCD_ShowRowRing("Welcome!", 0, startIndex++);
         Timeout_Start(&ring_timeout, 400000);
-        UART_SendData(MDR_UART2, 0x55); //Тест
-    } 
+    }
+    
+    ModbusManager_Process(device_list, DEVICE_COUNT);
   }
 }
 
@@ -280,23 +278,4 @@ void Delay_us(uint32_t us)
 {
     uint32_t start = GetMicros();
     while ( ( GetMicros() - start ) < us ); // Ожидание
-}
-
-/**
-  * @brief  UART1 interrupt handler.
-  * @param  None
-  * @retval None
-  */
-void UART2_IRQHandler(void)
-{
-    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_TX) == SET )
-    {
-        //UART_SendData(MDR_UART1, uartDataStr[0].TX_Command[uartDataStr[0].TX_Head].data[(*current)]);
-        UART_ClearITPendingBit(MDR_UART2, UART_IT_TX);
-    }
-    
-    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_RX) == SET )
-    {
-        UART_ClearITPendingBit(MDR_UART2, UART_IT_RX);
-    }
 }

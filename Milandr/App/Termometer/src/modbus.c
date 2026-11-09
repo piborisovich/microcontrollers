@@ -1,4 +1,40 @@
 #include "modbus.h"
+#include "timeout.h"
+
+#include <MDR32FxQI_port.h>
+#include <MDR32FxQI_uart.h>
+
+#include <stddef.h>
+
+#define MODBUS_TIMEOUT_US  100000    // Таймаут ожидания ответа от датчика
+#define DEV_POOL_INTERVAL_US  100000 // Как часто опрашивать датчики
+#define DRIVER_ON_MAX_INTERVAL_US 6  //Время включения драйвера RS-485
+
+#define RX_BUF_SIZE 256
+#define TX_BUF_SIZE 8
+
+// Локальные переменные менеджера
+static ModbusState_t sm_state = MB_STATE_IDLE;
+static uint16_t current_target_idx = 0;
+
+typedef struct
+{
+    uint8_t tx_buf[TX_BUF_SIZE];
+    uint8_t tx_cnt;
+    uint8_t tx_len;
+    uint8_t rx_buf[RX_BUF_SIZE]; // Вх. буфер UART
+    uint8_t rx_len;
+} UART_Buffers;
+
+UART_Buffers UART_buf = { 0 };
+
+static Timeout_t mb_timeout;
+
+void ModbusManager_Init(void)
+{
+    current_target_idx = 0;
+    Timeout_Start(&mb_timeout, DEV_POOL_INTERVAL_US);
+}
 
 void Modbus_CreateRequest(uint8_t *packet, ModbusTarget_t *target)
 {
@@ -53,4 +89,83 @@ uint16_t Modbus_CRC16(uint8_t *buffer, uint16_t length) {
         }
     }
     return crc;
+}
+
+void ModbusManager_Process(ModbusTarget_t *targets, uint16_t target_count)
+{
+    if (target_count == 0 || targets == NULL) return;
+
+    ModbusTarget_t *current_device = &targets[current_target_idx];
+
+    switch (sm_state) {
+        
+    case MB_STATE_IDLE:
+        // Проверяем, пришло ли время опросить текущее устройство
+        if ( Timeout_IsExpired(&mb_timeout) ) {
+            // Формируем пакет
+            Modbus_CreateRequest(UART_buf.tx_buf, current_device);
+            DE_ON();
+            sm_state = MB_STATE_WAIT_TRANSMITTER_ENABLE;
+                
+            Timeout_Start(&mb_timeout, DRIVER_ON_MAX_INTERVAL_US);
+        }
+        break;
+    case MB_STATE_WAIT_TRANSMITTER_ENABLE:
+        
+        if ( Timeout_IsExpired(&mb_timeout) ) {
+            //Запускаем неблокирующую отправку
+            UART_buf.tx_cnt = 0;
+            UART_buf.rx_len = 0;
+            UART_buf.tx_len = 8;
+            UART_SendData(MDR_UART2, UART_buf.tx_buf[UART_buf.tx_cnt++]);
+            
+            sm_state = MB_STATE_WAIT_REPLY;
+            
+            Timeout_Start(&mb_timeout, MODBUS_TIMEOUT_US);
+        }
+        break;
+        
+    case MB_STATE_WAIT_REPLY: 
+            
+        if ( Timeout_IsExpired(&mb_timeout) ) {
+            if ( Modbus_ParseResponse(UART_buf.rx_buf, UART_buf.rx_len, current_device) == 0 ) {
+                current_device->is_connected = 1;
+            } else {
+                current_device->is_connected = 0;
+            }
+                
+            sm_state = MB_STATE_IDLE;
+                
+            current_target_idx = (current_target_idx + 1) % target_count;
+                
+            Timeout_Start(&mb_timeout, DEV_POOL_INTERVAL_US);
+        }
+            
+        break;
+    }
+}
+
+/**
+  * @brief  UART2 interrupt handler.
+  * @param  None
+  * @retval None
+  */
+void UART2_IRQHandler(void)
+{
+    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_TX) == SET )
+    {
+        if ( UART_buf.tx_cnt < UART_buf.tx_len ) {
+            UART_SendData(MDR_UART2, UART_buf.tx_buf[UART_buf.tx_cnt++]);
+        } else {
+            DE_OFF();
+        }
+        UART_ClearITPendingBit(MDR_UART2, UART_IT_TX);
+    }
+    
+    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_RX) == SET )
+    {
+        UART_buf.rx_buf[UART_buf.rx_len++] = (uint8_t)UART_ReceiveData(MDR_UART2);
+        
+        UART_ClearITPendingBit(MDR_UART2, UART_IT_RX);
+    }
 }
