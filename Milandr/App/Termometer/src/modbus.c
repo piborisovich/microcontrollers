@@ -9,6 +9,7 @@
 #define MODBUS_TIMEOUT_US  100000    // Таймаут ожидания ответа от датчика
 #define DEV_POOL_INTERVAL_US  100000 // Как часто опрашивать датчики
 #define DRIVER_ON_MAX_INTERVAL_US 6  //Время включения драйвера RS-485
+#define LAST_CHAR_TRANSMISSION_INTERVAL_US 1000  //Время отправки последнего символа
 
 #define RX_BUF_SIZE 256
 #define TX_BUF_SIZE 8
@@ -124,7 +125,18 @@ void ModbusManager_Process(ModbusTarget_t *targets, uint16_t target_count)
             Timeout_Start(&mb_timeout, MODBUS_TIMEOUT_US);
         }
         break;
+    case MB_STATE_SENT:
+        sm_state = MB_STATE_WAIT_RECEIVER_ENABLE;
+        Timeout_Start(&mb_timeout, LAST_CHAR_TRANSMISSION_INTERVAL_US);
+        break;
         
+    case MB_STATE_WAIT_RECEIVER_ENABLE:
+        if ( Timeout_IsExpired(&mb_timeout) ) {
+            DE_OFF();
+            sm_state = MB_STATE_WAIT_REPLY;
+            Timeout_Start(&mb_timeout, MODBUS_TIMEOUT_US);
+        }
+        break;
     case MB_STATE_WAIT_REPLY: 
             
         if ( Timeout_IsExpired(&mb_timeout) ) {
@@ -157,7 +169,7 @@ void UART2_IRQHandler(void)
         if ( UART_buf.tx_cnt < UART_buf.tx_len ) {
             UART_SendData(MDR_UART2, UART_buf.tx_buf[UART_buf.tx_cnt++]);
         } else {
-            DE_OFF();
+            sm_state = MB_STATE_SENT;
         }
         UART_ClearITPendingBit(MDR_UART2, UART_IT_TX);
     }

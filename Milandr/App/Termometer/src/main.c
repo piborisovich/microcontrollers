@@ -9,6 +9,7 @@
 #include "timeout.h"
 #include "modbus.h"
 
+#include <stdio.h>
 #include <stddef.h>
 
 #define LIGHT_PIN PORT_Pin_9
@@ -20,6 +21,11 @@
 #define  LIGHT_OFF()   PORT_ResetBits(MDR_PORTB, PORT_Pin_9)
 
 #define PWR_SWITCH()   MDR_PORTB->RXTX ^= PORT_Pin_10
+
+#define FRAME_TIMEOUT_US 1000000 //1000 мc
+#define NEXT_FRAME_TIMEOUT_US 5000000 //5 c
+
+volatile static uint8_t currentFrame = 0;
 
 volatile uint32_t global_ticks = 0;
 
@@ -35,6 +41,7 @@ typedef struct _Timers {
 
 TIMERS timers = { 0 };
 static Timeout_t ring_timeout;
+static Timeout_t frame_timeout;
 
 // Конфигурируем список датчиков
 ModbusTarget_t device_list[] = {
@@ -48,6 +55,8 @@ ModbusTarget_t device_list[] = {
 #define DEVICE_COUNT (sizeof(device_list) / sizeof(device_list[0]))
 
 uint16_t sensor_buffers[DEVICE_COUNT][7] = {0};
+
+char frame_line_buffer[17];
 
 /*!
 * \brief Cpu clock initialization
@@ -73,9 +82,15 @@ void Delay_us(uint32_t us);
 
 int main()
 {
+    uint8_t temp_int = 0;   //Целая часть температуры
+    uint8_t temp_fract = 0; //Дробная часть температуры (десятая)
+    
+    uint8_t humidity_int = 0; //Влажность (целая часть)
+    uint8_t humidity_fract = 0; //Влажность (дробная часть - десятая)
+    
+    
     SystemInit();
     InitCpuClock();
-    int startIndex = 0;
 
     InitGpio();
     InitTimers();
@@ -91,19 +106,46 @@ int main()
     ModbusManager_Init();
     
     LCD_Init();
-    Timeout_Start(&ring_timeout, 400000);
-  
+    LCD_String("    Welcome!    ");
+    Delay_us(2000000);
+    
+    Timeout_Start(&ring_timeout, NEXT_FRAME_TIMEOUT_US);
+    Timeout_Start(&frame_timeout, FRAME_TIMEOUT_US);
+    
   while (1)
   {
     LedMain();
     LCD_Process();
+    ModbusManager_Process(device_list, DEVICE_COUNT);
     
-    if ( Timeout_IsExpired(&ring_timeout) ) {
-        LCD_ShowRowRing("Welcome!", 0, startIndex++);
-        Timeout_Start(&ring_timeout, 400000);
+    if ( Timeout_IsExpired(&frame_timeout) ) {
+        temp_int = device_list[currentFrame].dest_buffer[0] / 10;
+        temp_fract = device_list[currentFrame].dest_buffer[0] % 10;
+        humidity_int = device_list[currentFrame].dest_buffer[1] / 10;
+        humidity_fract = device_list[currentFrame].dest_buffer[1] % 10;
+        LCD_SendCommand(0x01); //Очистка
+        LCD_SetCursor(0, 0);
+        snprintf(frame_line_buffer, sizeof(frame_line_buffer),
+                 "%d %d.%d" "\xDF" "C,%d.%d%%", currentFrame + 1,
+                 temp_int, temp_fract, humidity_int, humidity_fract);
+        LCD_Print(frame_line_buffer);
+        
+        LCD_SetCursor(0, 1);
+        snprintf(frame_line_buffer, sizeof(frame_line_buffer),
+                 "   %d lux", device_list[currentFrame].dest_buffer[6]);
+        LCD_Print(frame_line_buffer);
+
+        Timeout_Start(&frame_timeout, FRAME_TIMEOUT_US);
     }
     
-    ModbusManager_Process(device_list, DEVICE_COUNT);
+    if ( Timeout_IsExpired(&ring_timeout) ) {
+        
+        Timeout_Start(&ring_timeout, NEXT_FRAME_TIMEOUT_US);
+        
+        currentFrame = (currentFrame + 1) % DEVICE_COUNT;
+    }
+    
+    
   }
 }
 

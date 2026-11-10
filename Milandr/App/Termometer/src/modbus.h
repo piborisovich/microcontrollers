@@ -15,7 +15,7 @@
 typedef enum {
     MB_STATE_IDLE,                    // Ожидание начала опроса следующего датчика
     MB_STATE_WAIT_TRANSMITTER_ENABLE, // Ожидание включения передатчика
-    MB_STATE_SEND,                    // Отправка запроса
+    MB_STATE_SENT,                    // Запрос отправлен
     MB_STATE_WAIT_RECEIVER_ENABLE,    // Ожидание включения приемника после отправки последнего байта 
     MB_STATE_WAIT_REPLY,              // Ожидание ответа от датчика
 } ModbusState_t;
