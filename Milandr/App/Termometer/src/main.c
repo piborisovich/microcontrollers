@@ -115,14 +115,14 @@ int main()
   while (1)
   {
     LedMain();
-    LCD_Process();
+    
     ModbusManager_Process(device_list, DEVICE_COUNT);
     
     if ( Timeout_IsExpired(&frame_timeout) ) {
-        temp_int = device_list[currentFrame].dest_buffer[0] / 10;
-        temp_fract = device_list[currentFrame].dest_buffer[0] % 10;
-        humidity_int = device_list[currentFrame].dest_buffer[1] / 10;
-        humidity_fract = device_list[currentFrame].dest_buffer[1] % 10;
+        temp_int = device_list[currentFrame].dest_buffer[1] / 10;
+        temp_fract = device_list[currentFrame].dest_buffer[1] % 10;
+        humidity_int = device_list[currentFrame].dest_buffer[0] / 10;
+        humidity_fract = device_list[currentFrame].dest_buffer[0] % 10;
         LCD_SendCommand(0x01); //Очистка
         LCD_SetCursor(0, 0);
         snprintf(frame_line_buffer, sizeof(frame_line_buffer),
@@ -144,6 +144,8 @@ int main()
         
         currentFrame = (currentFrame + 1) % DEVICE_COUNT;
     }
+    
+    LCD_Process();
     
     
   }
@@ -282,8 +284,6 @@ void InitUART(void)
     /* Set the HCLK division factor = 8 for UART2 */
     UART_BRGInit(MDR_UART2, UART_HCLKdiv8); //144 MHz / 8 = 18 MHz
 
-    NVIC_EnableIRQ(UART2_IRQn);
-
     /* Initialize UART_InitStructure */
     UART_InitStructure.UART_BaudRate            = 9600;
     UART_InitStructure.UART_WordLength          = UART_WordLength8b;
@@ -296,10 +296,12 @@ void InitUART(void)
     UART_Init(MDR_UART2, &UART_InitStructure);
     
     /* Enable transmitter interrupt (UARTTXINTR)*/
-    UART_ITConfig(MDR_UART2, UART_IT_TX | UART_IT_RX, ENABLE);
+    UART_ITConfig(MDR_UART2, UART_IT_RX, ENABLE);
 
     /* Enables UART2 peripheral */
     UART_Cmd(MDR_UART2, ENABLE);
+    
+    NVIC_EnableIRQ(UART2_IRQn);
 }
 
 void LedMain(void)

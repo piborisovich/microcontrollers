@@ -5,26 +5,27 @@
 #include <MDR32FxQI_uart.h>
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #define MODBUS_TIMEOUT_US  100000    // Таймаут ожидания ответа от датчика
 #define DEV_POOL_INTERVAL_US  100000 // Как часто опрашивать датчики
-#define DRIVER_ON_MAX_INTERVAL_US 6  //Время включения драйвера RS-485
-#define LAST_CHAR_TRANSMISSION_INTERVAL_US 1000  //Время отправки последнего символа
+#define DRIVER_ON_MAX_INTERVAL_US 10  //Время включения драйвера RS-485
 
 #define RX_BUF_SIZE 256
 #define TX_BUF_SIZE 8
 
 // Локальные переменные менеджера
-static ModbusState_t sm_state = MB_STATE_IDLE;
+static volatile ModbusState_t sm_state = MB_STATE_IDLE;
 static uint16_t current_target_idx = 0;
 
 typedef struct
 {
     uint8_t tx_buf[TX_BUF_SIZE];
-    uint8_t tx_cnt;
+    volatile uint8_t tx_cnt;
     uint8_t tx_len;
+    volatile bool tx_done;
     uint8_t rx_buf[RX_BUF_SIZE]; // Вх. буфер UART
-    uint8_t rx_len;
+    volatile uint16_t rx_len;
 } UART_Buffers;
 
 UART_Buffers UART_buf = { 0 };
@@ -107,38 +108,43 @@ void ModbusManager_Process(ModbusTarget_t *targets, uint16_t target_count)
             Modbus_CreateRequest(UART_buf.tx_buf, current_device);
             DE_ON();
             sm_state = MB_STATE_WAIT_TRANSMITTER_ENABLE;
-                
             Timeout_Start(&mb_timeout, DRIVER_ON_MAX_INTERVAL_US);
         }
         break;
-    case MB_STATE_WAIT_TRANSMITTER_ENABLE:
         
+    case MB_STATE_WAIT_TRANSMITTER_ENABLE:
         if ( Timeout_IsExpired(&mb_timeout) ) {
             //Запускаем неблокирующую отправку
             UART_buf.tx_cnt = 0;
             UART_buf.rx_len = 0;
             UART_buf.tx_len = 8;
+            UART_buf.tx_done = false;
+            
+            UART_ITConfig(MDR_UART2, UART_IT_TX, ENABLE);
             UART_SendData(MDR_UART2, UART_buf.tx_buf[UART_buf.tx_cnt++]);
             
-            sm_state = MB_STATE_WAIT_REPLY;
-            
-            Timeout_Start(&mb_timeout, MODBUS_TIMEOUT_US);
+            sm_state = MB_STATE_SENDING; ;
         }
         break;
-    case MB_STATE_SENT:
-        sm_state = MB_STATE_WAIT_RECEIVER_ENABLE;
-        Timeout_Start(&mb_timeout, LAST_CHAR_TRANSMISSION_INTERVAL_US);
+        
+    case MB_STATE_SENDING:
+        
+        if ( UART_buf.tx_done ) {
+            sm_state = MB_STATE_WAIT_RECEIVER_ENABLE;
+        }
         break;
         
     case MB_STATE_WAIT_RECEIVER_ENABLE:
-        if ( Timeout_IsExpired(&mb_timeout) ) {
+        //Ждем, пока физически освободится сдвиговый регистр UART (флаг BUSY == RESET)
+        if ( UART_GetFlagStatus(MDR_UART2, UART_FLAG_BUSY) == RESET ) {
             DE_OFF();
+            UART_buf.rx_len = 0;
             sm_state = MB_STATE_WAIT_REPLY;
             Timeout_Start(&mb_timeout, MODBUS_TIMEOUT_US);
         }
         break;
+        
     case MB_STATE_WAIT_REPLY: 
-            
         if ( Timeout_IsExpired(&mb_timeout) ) {
             if ( Modbus_ParseResponse(UART_buf.rx_buf, UART_buf.rx_len, current_device) == 0 ) {
                 current_device->is_connected = 1;
@@ -147,9 +153,7 @@ void ModbusManager_Process(ModbusTarget_t *targets, uint16_t target_count)
             }
                 
             sm_state = MB_STATE_IDLE;
-                
             current_target_idx = (current_target_idx + 1) % target_count;
-                
             Timeout_Start(&mb_timeout, DEV_POOL_INTERVAL_US);
         }
             
@@ -164,19 +168,22 @@ void ModbusManager_Process(ModbusTarget_t *targets, uint16_t target_count)
   */
 void UART2_IRQHandler(void)
 {
-    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_TX) == SET )
-    {
+    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_TX) == SET ) {
+        UART_ClearITPendingBit(MDR_UART2, UART_IT_TX);
         if ( UART_buf.tx_cnt < UART_buf.tx_len ) {
             UART_SendData(MDR_UART2, UART_buf.tx_buf[UART_buf.tx_cnt++]);
         } else {
-            sm_state = MB_STATE_SENT;
+            UART_ITConfig(MDR_UART2, UART_IT_TX, DISABLE);
+            UART_buf.tx_done = true;
         }
-        UART_ClearITPendingBit(MDR_UART2, UART_IT_TX);
     }
     
-    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_RX) == SET )
-    {
-        UART_buf.rx_buf[UART_buf.rx_len++] = (uint8_t)UART_ReceiveData(MDR_UART2);
+    if ( UART_GetITStatusMasked(MDR_UART2, UART_IT_RX) == SET ) {
+        uint8_t data = (uint8_t)UART_ReceiveData(MDR_UART2);
+        
+        if ( sm_state == MB_STATE_WAIT_REPLY && UART_buf.rx_len < RX_BUF_SIZE ) {
+            UART_buf.rx_buf[UART_buf.rx_len++] = data;
+        }
         
         UART_ClearITPendingBit(MDR_UART2, UART_IT_RX);
     }
