@@ -7,9 +7,10 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define MODBUS_TIMEOUT_US  100000    // Таймаут ожидания ответа от датчика
-#define DEV_POOL_INTERVAL_US  100000 // Как часто опрашивать датчики
-#define DRIVER_ON_MAX_INTERVAL_US 10  //Время включения драйвера RS-485
+#define MODBUS_TIMEOUT_US  100000         // Таймаут ожидания ответа от датчика
+#define DEV_POOL_INTERVAL_US  10000      // Пауза между опросами датчиков (10 мс)
+#define DRIVER_ON_MAX_INTERVAL_US 10      //Время включения драйвера RS-485
+#define MODBUS_INTERFRAME_TIMEOUT_US 4000 // Межсимвольный таймаут 3.5T (4 мс для 9600 бит/с)
 
 #define RX_BUF_SIZE 256
 #define TX_BUF_SIZE 8
@@ -30,7 +31,8 @@ typedef struct
 
 UART_Buffers UART_buf = { 0 };
 
-static Timeout_t mb_timeout;
+static Timeout_t mb_timeout; //Таймер MODBUS
+static Timeout_t rx_char_timeout; // Таймер конца кадра
 
 void ModbusManager_Init(void)
 {
@@ -145,14 +147,20 @@ void ModbusManager_Process(ModbusTarget_t *targets, uint16_t target_count)
         break;
         
     case MB_STATE_WAIT_REPLY: 
-        if ( Timeout_IsExpired(&mb_timeout) ) {
+        // Условие 1: Пришел хотя бы 1 байт и выдержана пауза конца пакета (3.5T)
+        // Условие 2: Вышел общий таймаут ожидания ответа (датчик молчит)
+        if ( (UART_buf.rx_len > 0 && Timeout_IsExpired(&rx_char_timeout)) || 
+            Timeout_IsExpired(&mb_timeout))
+        {
+            // Запрещаем прием новых байтов на время разбора пакета
+            sm_state = MB_STATE_IDLE; 
+                
             if ( Modbus_ParseResponse(UART_buf.rx_buf, UART_buf.rx_len, current_device) == 0 ) {
                 current_device->is_connected = 1;
             } else {
                 current_device->is_connected = 0;
             }
                 
-            sm_state = MB_STATE_IDLE;
             current_target_idx = (current_target_idx + 1) % target_count;
             Timeout_Start(&mb_timeout, DEV_POOL_INTERVAL_US);
         }
@@ -183,6 +191,8 @@ void UART2_IRQHandler(void)
         
         if ( sm_state == MB_STATE_WAIT_REPLY && UART_buf.rx_len < RX_BUF_SIZE ) {
             UART_buf.rx_buf[UART_buf.rx_len++] = data;
+            // Перезапускаем таймер межсимвольного интервала при каждом новом байте
+            Timeout_Start(&rx_char_timeout, MODBUS_INTERFRAME_TIMEOUT_US);
         }
         
         UART_ClearITPendingBit(MDR_UART2, UART_IT_RX);

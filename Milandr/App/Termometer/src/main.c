@@ -22,7 +22,7 @@
 
 #define PWR_SWITCH()   MDR_PORTB->RXTX ^= PORT_Pin_10
 
-#define FRAME_TIMEOUT_US 1000000 //1000 мc
+#define FRAME_TIMEOUT_US 200000 //200 мc
 #define NEXT_FRAME_TIMEOUT_US 5000000 //5 c
 
 volatile static uint8_t currentFrame = 0;
@@ -119,20 +119,30 @@ int main()
     ModbusManager_Process(device_list, DEVICE_COUNT);
     
     if ( Timeout_IsExpired(&frame_timeout) ) {
+        
         temp_int = device_list[currentFrame].dest_buffer[1] / 10;
         temp_fract = device_list[currentFrame].dest_buffer[1] % 10;
+        
         humidity_int = device_list[currentFrame].dest_buffer[0] / 10;
         humidity_fract = device_list[currentFrame].dest_buffer[0] % 10;
-        LCD_SendCommand(0x01); //Очистка
+        
+        // Вспомогательный буфер для чистой строки без добивки пробелами
+        char raw_str[17]; 
+        
+        // --- Первая строка ---
         LCD_SetCursor(0, 0);
-        snprintf(frame_line_buffer, sizeof(frame_line_buffer),
+        snprintf(raw_str, sizeof(raw_str),
                  "%d %d.%d" "\xDF" "C,%d.%d%%", currentFrame + 1,
                  temp_int, temp_fract, humidity_int, humidity_fract);
+        // Выравнивание по левому краю с добивкой пробелами до 16 символов
+        snprintf(frame_line_buffer, sizeof(frame_line_buffer), "%-16s", raw_str);
         LCD_Print(frame_line_buffer);
         
+        // --- Вторая строка ---
         LCD_SetCursor(0, 1);
-        snprintf(frame_line_buffer, sizeof(frame_line_buffer),
+        snprintf(raw_str, sizeof(raw_str),
                  "   %d lux", device_list[currentFrame].dest_buffer[6]);
+        snprintf(frame_line_buffer, sizeof(frame_line_buffer), "%-16s", raw_str);
         LCD_Print(frame_line_buffer);
 
         Timeout_Start(&frame_timeout, FRAME_TIMEOUT_US);
